@@ -1,0 +1,51 @@
+{% extends "tabla.twig" %}
+
+{% block titlepage %}
+		<h3>Clientes <small></small></h3>
+{% endblock %}
+
+
+{% block subtitlepage %}
+            <h2>Lista de todos clientes <small></small></h2>
+{% endblock %}
+
+{# botones de Edicion #}
+{% block buttonpage %}
+    <div class="x_content">
+
+        <div class="buttons">
+            <button type="button" class="btn btn-primary btn-sm"  id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Genenrar Nuevo</button>
+            <button type="button" class="btn btn-secondary btn-sm" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>
+            <button type="button" class="btn btn-secondary btn-sm" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
+            
+        </div>
+        
+    </div>
+{% endblock %}
+
+
+{% block headtable %}
+    <tr>
+        <th><input type="checkbox" id="check-all"></th>
+        <th>Nombre</th>
+        <th>Clientes Activos</th>
+        <th>Clientes Retirados</th>
+        <th>Gastos</th>
+        <th>Ingresos</th>
+        <th>Disponible</th>
+    </tr>
+{% endblock %}
+
+
+{% block bodytable %}
+    <tr>
+        <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
+        <td><a href="#">{{dato.nombre}}</a></td>
+        <td>{{dato.clientes_activos}}</td>
+        <td>{{dato.clientes_retirados}}</td>
+        <td>{{dato.gastos}}</td>
+        <td>{{dato.ingresos}}</td>
+        <td>{{dato.ingresos - dato.gastos}}</td>
+
+    </tr>
+{% endblock %}

@@ -1,0 +1,113 @@
+null
+{"id":2,"mac":"78-8A-20-A8-8C-53","comentario":"Ana María Zambrano de Sachun","AP":"w","Tipo":0}
+{"id":3,"mac":"18-E8-29-84-D8-D1","comentario":"Andrea Arismedi ","AP":"w","Tipo":0}
+{"id":4,"mac":"00-15-6D-E6-7C-10","comentario":"Belkis del Carmen Ramirez (cesar) ","AP":"w","Tipo":0}
+{"id":5,"mac":"B4-FB-E4-6A-EF-00","comentario":"Dayana Medina, familia gutierrez ","AP":"w","Tipo":0}
+{"id":6,"mac":"00-27-22-76-76-CE","comentario":"Deglis Osorio ","AP":"w","Tipo":0}
+{"id":7,"mac":"Sin mac","comentario":"Emilio Urbina ","AP":"w","Tipo":0}
+{"id":8,"mac":"B4-FB-E4-6E-36-B3","comentario":"Erika Foliaco","AP":"w","Tipo":0}
+{"id":9,"mac":"18-E8-29-82-53-B3","comentario":"Familia Camargo ","AP":"w","Tipo":0}
+{"id":10,"mac":"B4-FB-E4-60-E7-24","comentario":"Francy Savedra","AP":"w","Tipo":0}
+{"id":11,"mac":"FC-EC-DA-50-96-99","comentario":"Fray Katteryn Rincon Fernandez ","AP":"w","Tipo":0}
+{"id":12,"mac":"74-AC-B9-7A-86-9A","comentario":"Fredicson Perez ","AP":"w","Tipo":0}
+{"id":13,"mac":"74-83-C2-E8-DD-CD","comentario":"Jesus Alberto Cañizales ","AP":"w","Tipo":0}
+{"id":14,"mac":"78-8A-20-36-71-C4","comentario":"Jesus Vasquez ","AP":"w","Tipo":0}
+{"id":15,"mac":"74-AC-B9-70-29-8A","comentario":"Jose Alfonso Parra Torres ","AP":"w","Tipo":0}
+{"id":16,"mac":"00-27-22-B6-4E-33","comentario":"Luz Mari Rojas ","AP":"w","Tipo":0}
+{"id":17,"mac":"74-AC-B9-76-BA-B6","comentario":"Luz Marina Paez ","AP":"w","Tipo":0}
+{"id":18,"mac":"18-E8-29-8E-FD-9B","comentario":"Marco Jaimez (los puente)","AP":"w","Tipo":0}
+{"id":19,"mac":"00-27-22-B8-1C-78","comentario":"Michell Duarte ","AP":"w","Tipo":0}
+{"id":20,"mac":"68-72-51-0C-B8-D0","comentario":"Miguel Angel Vasquez Calderón  ","AP":"w","Tipo":0}
+{"id":21,"mac":"00-27-22-8A-67-C9","comentario":"Nelly Mosquera","AP":"w","Tipo":0}
+{"id":22,"mac":"Sin mac","comentario":"Raiza Sánchez","AP":"w","Tipo":0}
+{"id":23,"mac":"68-72-51-0C-11-91","comentario":"Rummenigge Mendoza ","AP":"w","Tipo":0}
+{"id":24,"mac":"78-8A-20-A8-89-B0","comentario":"Schneider Ruiz ","AP":"w","Tipo":0}
+{"id":25,"mac":"B4-FB-E4-A2-D7-11","comentario":"Yony Hernandez ","AP":"w","Tipo":0}
+{"id":26,"mac":"68-72-51-76-A6-AA","comentario":"Zoraida Yelibeth Pérez Gómez (zuli) ","AP":"w","Tipo":0}
+{"id":27,"mac":"B4-FB-E4-DE-BE-86","comentario":"Jhoana Chacón ","AP":"w","Tipo":0}
+{"id":28,"mac":"B4-FB-E4-DE-09-FB","comentario":"Jeniffer Ochoa ","AP":"w","Tipo":0}
+{"id":29,"mac":"AC-84-C6-CD-E1-29","comentario":"Ezaul ","AP":"w","Tipo":0}
+{"id":30,"mac":"00-27-22-B6-51-D0","comentario":"Cindy Escalona ","AP":"w","Tipo":0}
+{"id":31,"mac":"74-AC-B9-F0-CE-DC","comentario":"Iris Zambrano ","AP":"w","Tipo":0}
+{"id":32,"mac":"00-27-22-26-ED-E9","comentario":"Carlos Páez  ","AP":"w","Tipo":0}
+{"id":33,"mac":"78-8A-20-3E-3F-61","comentario":"keyla ","AP":"w","Tipo":0}
+{"id":34,"mac":"78-8A-20-A8-76-E7","comentario":"Arwin Osorio ","AP":"w","Tipo":0}
+{"id":35,"mac":"24-A4-3C-00-3F-57","comentario":"Alberto ","AP":"w","Tipo":0}
+{"id":36,"mac":"Sin mac","comentario":"Pilar ","AP":"w","Tipo":0}
+{"id":37,"mac":"18-E8-29-86-58-21","comentario":"Victor Soto ","AP":"w","Tipo":0}
+{"id":38,"mac":"74-AC-B9-0C-B0-6D","comentario":"Jhonatan García ","AP":"w","Tipo":0}
+{"id":39,"mac":"18-E8-29-70-80-61","comentario":"Darwin Uribe ","AP":"w","Tipo":0}
+{"id":40,"mac":"FC-EC-DA-C0-DC-23","comentario":"La chata ","AP":"w","Tipo":0}
+{"id":41,"mac":"00-27-22-2C-A2-EE","comentario":"Guillermo Taxista ","AP":"w","Tipo":0}
+{"id":42,"mac":"74-AC-B9-8C-05-AA","comentario":"Familia Arrollo ","AP":"w","Tipo":0}
+{"id":43,"mac":"00-27-22-46-92-01","comentario":"Yuderkys Jaimes","AP":"w","Tipo":0}
+{"id":44,"mac":"00-27-22-28-1B-E7","comentario":"INVIDEN","AP":"w","Tipo":0}
+{"id":45,"mac":"74-AC-B9-0C-B6-7F","comentario":"Flia Velazco","AP":"w","Tipo":0}
+{"id":46,"mac":"00-22-B0-45-6D-A0","comentario":"Casa de los fiscales","AP":"V","Tipo":2}
+{"id":47,"mac":"BC-2D-EF-DB-23-23","comentario":"Sr Gonzalo nuevo","AP":"W","Tipo":1}
+{"id":48,"mac":"24-11-45-F1-5D-66","comentario":"Redmi Nohe","AP":"W","Tipo":2}
+{"id":49,"mac":"F8-D1-11-81-69-4B","comentario":"Router de Vicente","AP":"V","Tipo":2}
+{"id":50,"mac":"D4-A1-48-4A-DD-2F","comentario":"Sra Sandra","AP":"W","Tipo":1}
+{"id":51,"mac":"7C-2E-DD-CE-FF-9E","comentario":"Hija Señora Sandra","AP":"W","Tipo":1}
+{"id":52,"mac":"D4-C9-4B-BF-24-7E","comentario":"Sra leo","AP":"W","Tipo":1}
+{"id":53,"mac":"B8-AE-ED-52-65-80","comentario":"Hijo de Gonzalo","AP":"W","Tipo":1}
+{"id":54,"mac":"B4-F7-A1-B9-73-C0","comentario":"Gonzalo","AP":"W","Tipo":1}
+{"id":55,"mac":"E4-C8-01-D1-5B-57","comentario":"Ulices","AP":"W","Tipo":1}
+{"id":56,"mac":"00-57-F7-B2-06-1A","comentario":"norelis","AP":"W","Tipo":1}
+{"id":57,"mac":"C0-3F-D5-DA-87-B4","comentario":"Vecina C 2","AP":"W","Tipo":1}
+{"id":58,"mac":"F4-60-E2-F5-3B-70","comentario":"beto","AP":"W","Tipo":1}
+{"id":59,"mac":"B4-F1-DA-E6-4D-99","comentario":"Ulices New","AP":"W","Tipo":1}
+{"id":60,"mac":"60-1D-91-EC-60-A9","comentario":"Reinaldo","AP":"W","Tipo":1}
+{"id":61,"mac":"00-25-1A-29-FC-50","comentario":"Vecina C","AP":"W","Tipo":1}
+{"id":62,"mac":"7C-FD-6B-E2-A9-D9","comentario":"Hija de Ulices","AP":"W","Tipo":1}
+{"id":63,"mac":"BC-44-86-69-DD-AB","comentario":"Aleida","AP":"W","Tipo":1}
+{"id":64,"mac":"04-4F-4C-16-C7-24","comentario":"Blanca","AP":"W","Tipo":1}
+{"id":65,"mac":"5C-03-39-B2-43-DA","comentario":"Esposa De Malacho","AP":"W","Tipo":1}
+{"id":66,"mac":"9E-97-85-9A-5D-BC","comentario":"Sr Gonzalo nuevo","AP":"W","Tipo":1}
+{"id":67,"mac":"C8-9C-DC-94-1E-33","comentario":"Servidor Solucionex","AP":"W","Tipo":2}
+{"id":68,"mac":"80-9B-20-CF-D0-38","comentario":"Lapto de Darwin","AP":"c","Tipo":2}
+{"id":69,"mac":"B0-45-19-FA-07-DB","comentario":"Tlf Sr Laurentino","AP":"c","Tipo":2}
+{"id":70,"mac":"60-72-0B-6B-A2-EA","comentario":"Sr Jose (Tio de Nohe)","AP":"c","Tipo":2}
+{"id":71,"mac":"00-15-6D-49-86-AA","comentario":"Jhonatan de San Josecito 1","AP":"C","Tipo":2}
+{"id":72,"mac":"D8-EB-97-2A-B2-63","comentario":"Suterlan","AP":"C","Tipo":2}
+{"id":73,"mac":"C8-3A-35-36-C6-F8","comentario":"Casa de Antenas Walter","AP":"W","Tipo":2}
+{"id":74,"mac":"00-27-22-88-EA-2B","comentario":"Esposa de Jhonatan Cantv","AP":"C","Tipo":2}
+{"id":75,"mac":"44-87-FC-8D-3C-76","comentario":"Sin Identificar","AP":"W","Tipo":2}
+{"id":76,"mac":"00-1C-25-B4-85-50","comentario":"PC de Alex Vecino","AP":"W","Tipo":2}
+{"id":77,"mac":"5C-3C-27-D5-BF-7A","comentario":"Tio de Nohe","AP":"W","Tipo":2}
+{"id":78,"mac":"10-8E-E0-53-25-4C","comentario":"Sin Identificar","AP":"w","Tipo":2}
+{"id":79,"mac":"A0-CB-FD-D7-7B-D4","comentario":"Mama","AP":"W","Tipo":2}
+{"id":80,"mac":"D0-77-14-A9-73-EA","comentario":"Henry","AP":"W","Tipo":2}
+{"id":81,"mac":"E8-DE-27-37-6A-9B","comentario":"Casa del Alcalde","AP":"V","Tipo":2}
+{"id":82,"mac":"F4-EC-38-87-0E-2D","comentario":"alex pc wifi","AP":"W","Tipo":2}
+{"id":83,"mac":"D0-22-BE-EA-CA-A6","comentario":"Mi TLF (Carlos)","AP":"W","Tipo":2}
+{"id":84,"mac":"10-FE-ED-5D-79-3F","comentario":"Casa De Vicente","AP":"V","Tipo":2}
+{"id":85,"mac":"02-1A-67-CC-8F-AD","comentario":"PC Principal Carlos","AP":"W","Tipo":2}
+{"id":86,"mac":"E8-03-9A-B1-6F-4D","comentario":"Sin Identificar","AP":"W","Tipo":2}
+{"id":87,"mac":"D4-28-D5-19-61-31","comentario":"Tlf de Nohe","AP":"W","Tipo":2}
+{"id":88,"mac":"80-9B-20-C4-6C-E0","comentario":"Lapto de Nohe","AP":"W","Tipo":2}
+{"id":89,"mac":"80-9B-20-C2-50-B0","comentario":"Moises Her de Nohe","AP":"W","Tipo":2}
+{"id":90,"mac":"DC-66-72-59-AF-05","comentario":"Sra isabel","AP":"W","Tipo":2}
+{"id":91,"mac":"F8-1A-67-7A-B4-84","comentario":"PC Mia","AP":"W","Tipo":2}
+{"id":92,"mac":"68-A3-C4-0B-D7-06","comentario":"La lapto","AP":"W","Tipo":2}
+{"id":93,"mac":"1C-99-4C-CF-E0-9B","comentario":"Mi TLF (Nohe)","AP":"W","Tipo":2}
+{"id":94,"mac":"78-92-9C-B5-73-B0","comentario":"La lapto canaima","AP":"W","Tipo":2}
+{"id":95,"mac":"88-11-96-0D-68-17","comentario":"Sin Identificar","AP":"W","Tipo":2}
+{"id":96,"mac":"10-FE-ED-53-CF-39","comentario":"Casa De antenas Sector C","AP":"C","Tipo":2}
+{"id":97,"mac":"B8-03-05-B0-F6-12","comentario":"Router del Señor Jose","AP":"W","Tipo":2}
+{"id":98,"mac":"70-9F-A9-4F-20-88","comentario":"Jorge","AP":"W","Tipo":2}
+{"id":99,"mac":"28-C2-DD-2C-40-3B","comentario":"Lapto Slim Nohe","AP":"W","Tipo":2}
+{"id":100,"mac":"80-9B-20-79-E1-0C","comentario":"Canaima Henry","AP":"W","Tipo":2}
+{"id":101,"mac":"74-F0-6D-9F-E6-62","comentario":"PC Principal wifi","AP":"W","Tipo":2}
+{"id":102,"mac":"08-BF-A0-61-94-FD","comentario":"Galaxy A20s","AP":"W","Tipo":2}
+{"id":103,"mac":"60-8F-5C-18-77-0A","comentario":"Casa del B BelKis","AP":"W","Tipo":2}
+{"id":104,"mac":"D4-CA-6D-D4-DF-E9","comentario":"Mikrotick Nohe","AP":"W","Tipo":2}
+{"id":105,"mac":"FA-17-18-9B-92-8C","comentario":"Casa Belkis","AP":"W","Tipo":2}
+{"id":106,"mac":"28-02-D8-A7-D4-EA","comentario":"Casa Belkis 2","AP":"W","Tipo":2}
+{"id":107,"mac":"74-AC-B9-70-26-03","comentario":"Luz Medina Sector C","AP":"W","Tipo":0}
+{"id":108,"mac":"68-72-51-0C-11-CD","comentario":"Carmen Marquez","AP":"W","Tipo":0}
+{"id":109,"mac":"E0-63-DA-FE-EC-90","comentario":"Breiner Araque","AP":"W","Tipo":0}
+{"id":110,"mac":"74-AC-B9-70-27-1A","comentario":"Flia Martinez Togamoso","AP":"W","Tipo":0}
+null
+null
+null

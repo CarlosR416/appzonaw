@@ -1,0 +1,28 @@
+{% extends "tabla.twig" %}
+
+{% block titlepage %}
+		<h3>Clientes <small></small></h3>
+{% endblock %}
+
+
+{% block subtitlepage %}
+            <h2>Lista de todos clientes <small></small></h2>
+{% endblock %}
+
+
+{% block headtable %}
+    <tr>
+        <th>ID</th>
+        <th>Mac</th>
+        <th>esto es diferente</th>
+    </tr>
+{% endblock %}
+
+
+{% block bodytable %}
+    <tr>
+        <td>{{dato.mac}}</td>
+        <td>{{dato.mac}}</td>
+        <td>{{dato.comentario}}</td>
+    </tr>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "tabla.twig" %}
+
+{% block modalcontent %}
+	hola
+{% endblock %}
+
+{% block titlepage %}
+		<h3>Clientes <small></small></h3>
+{% endblock %}
+
+
+{% block subtitlepage %}
+            <h2>Lista de clientes Activos<small></small></h2>
+{% endblock %}
+
+
+{% block headtable %}
+    <tr>
+        <th>IP</th>
+        <th>Mac</th>
+        <th>Nombre</th>
+        <th>Estatus</th>
+    </tr>
+{% endblock %}
+
+
+{% block bodytable %}
+    <tr>
+        <td><a target="_blank" href="http://{{dato.ip}}">{{dato.ip}}</a></td>
+        <td>{{dato.mac}}</td>
+        <td>{{dato.comentario}}</td>
+        <td>{{dato.estatus}}</td>
+    </tr>
+{% endblock %}

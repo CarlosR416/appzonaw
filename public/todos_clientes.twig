@@ -1,0 +1,184 @@
+{% extends "tabla.twig" %}
+
+{# Rutas #}
+{% block rutaeditar "/clientes/editar" %}
+{% block rutaeliminar "/clientes/eliminar" %}
+{% block rutaagregar "/clientes/add" %}
+{% block rutaobtener "/clientes/getdata" %}
+
+{% block titlepage %}
+		<h3>Clientes <small></small></h3>
+{% endblock %}
+
+{% block subtitlepage %}
+            <h2>Lista de todos clientes <small></small></h2>
+{% endblock %}
+
+{# botones de Edicion #}
+{% block buttonpage %}
+<div class="x_content">
+
+    <div class="buttons">
+        <button type="button" class="btn btn-primary btn-sm"  id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Nuevo Registro</button>
+        <button type="button" class="btn btn-secondary btn-sm" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>
+        <button type="button" class="btn btn-secondary btn-sm" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
+        
+    </div>
+    
+</div>
+{% endblock %}
+
+{# ventana modal #}
+
+{% block modaltitle "Agregar Nuevo Cliente" %}
+
+{% block modalcontent %}
+	<div class="x_panel">
+        
+        <div class="x_content">
+            <br>
+            <form class="form-label-left input_mask" id="modal_form">
+                <input type="hidden" id="form_id" name="id">
+                <div class="col-md-6 col-sm-6  form-group has-feedback">
+                    <input type="text" class="form-control has-feedback-left" id="form_nombre" name="nombre" oninput="this.value = this.value.toUpperCase()" placeholder="Nombre">
+                    <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                </div>
+
+                <div class="col-md-6 col-sm-6  form-group has-feedback">
+                    <input type="text" class="form-control" id="form_apellido" name="apellido" oninput="this.value = this.value.toUpperCase()" placeholder="Apellido"> 
+                    <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                </div>
+                <div class="col-md-6 col-sm-6  form-group has-feedback">
+                    <input type="text" class="form-control has-feedback-left" id="form_cedula" name="cedula" placeholder="Cedula">
+                    <span class="fa fa-credit-card form-control-feedback left" aria-hidden="true"></span>
+                </div>
+                <div class="col-md-6 col-sm-6  form-group has-feedback">
+                    <input type="tel" class="form-control" id="form_direccion" name="direccion" placeholder="Dirección">
+                    <span class="fa fa-home form-control-feedback right" aria-hidden="true"></span>
+                </div>
+                <div class="col-md-6 col-sm-6  form-group has-feedback">
+                    <input type="email" class="form-control has-feedback-left" id="form_email" name="email" placeholder="Email">
+                    <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
+                </div>
+                <div class="col-md-6 col-sm-6  form-group has-feedback">
+                    <input type="tel" class="form-control" id="form_telefono" name="telefono" placeholder="Telefono">
+                    <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Tipo de Servicio</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <select class="form-control" name="tipo_servicio" id="form_tipo_servicio">
+                            <option>Internacional</option>
+                            <option>Nacional</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Estatus del Servicio</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <select class="form-control" name="estatus_servicio" id="form_estatus_servicio"> 
+                            <option>Activo</option>
+                            <option>Suspendido</option>
+                            <option>Retirado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Dia de Cobro</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <input type="number" class="form-control" name="dia_cobro" id="form_dia_cobro" placeholder="Ej. 5 C/Mes">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Modelo del Equipo</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <input type="text" class="form-control" name="modelo_equipo" id="form_modelo_equipo" placeholder="Ej. Lite Beam M5">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Mac Address</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <input type="text" class="form-control" name="mac_address" id="form_mac_address" placeholder="Ej. 00:00:00:00:00:00">
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Ingreso<span class="required">*</span>
+                    </label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <input class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" required="required" name="fecha_ingreso" id="form_fecha_ingreso" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
+                        <script>
+                            function timeFunctionLong(input) {
+                                setTimeout(function() {
+                                    input.type = 'text';
+                                }, 60000);
+                            }
+                        </script>
+                    </div>
+                </div>
+               
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+
+    {{ parent() }}
+
+{% endblock %}
+
+
+{# fin ventana modal #}
+
+
+{# tabla #}
+{% block data_var %}
+{{ parent() }}
+
+<script type="text/javascript">
+
+var index_tb = {
+                     "data": [
+                            ["id"],
+                            [ "nombre", 
+                              "apellido"], 
+                            [ "tipo_servicio"], 
+                            [ "estatus_servicio"], 
+                            [ "dia_cobro" ]
+                        ],
+                     "upper": [1] 
+                    };
+
+
+</script>
+
+
+{% endblock %}
+{% block headtable %}
+    <tr>
+        <th><input type="checkbox" id="check-all"></th>
+        <th>Nombre</th>
+        <th>Tipo de Servicio</th>
+        <th>Estado del Servicio</th>
+        <th>Dia de Cobro</th>
+    </tr>
+
+{% endblock %}
+
+{% block bodytable %}
+    <tr class="id_{{dato.id}}">
+        <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
+        <td>{{dato.nombre|upper }} {{dato.apellido|upper }}</td>
+        <td>{{dato.tipo_servicio}}</td>
+        <td>{{dato.estatus_servicio}}</td>
+        <td>{{dato.dia_cobro}}</td>
+    </tr>
+
+    <script>
+        
+    </script>
+{% endblock %}
+
+{# fin tabla #}

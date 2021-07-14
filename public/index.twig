@@ -1,0 +1,338 @@
+{% set base_dir = 'http://localhost/SolucionexApp/plantilla/gentelella-master' %}
+{% set base_dir_controller = 'http://localhost/SolucionexApp/slim-skeleton/public' %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="images/favicon.ico" type="image/ico" />
+
+    <title>Solucionex App </title>
+    
+    <!-- Bootstrap -->
+    <link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link href="{{base_dir}}/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{{base_dir}}/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{{base_dir}}/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="{{base_dir}}/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    
+    <link href="{{base_dir}}/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="{{base_dir}}/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="{{base_dir}}/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="{{base_dir}}/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="{{base_dir}}/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- PNotify -->
+    <link href="{{base_dir}}/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="{{base_dir}}/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="{{base_dir}}/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+    
+    <!-- Custom Theme Style -->
+    <link href="{{base_dir}}/build/css/custom.min.css" rel="stylesheet">
+    <!-- Datatables
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script src="components.js" type="text/babel"></script>-->
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="#" class="site_title"><i class="fa fa-wifi"></i> <span>Solucionex App</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile clearfix">
+              <div class="profile_info">
+                <h2>Bienvenido</h2>
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>General</h3>
+                <ul class="nav side-menu" >
+                  <li><a><i class="fa fa-money"></i> Pagos <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="{{base_dir_controller}}/pagos/pendientes">Por Cobrar</a></li>
+                      <li><a href="{{base_dir_controller}}/pagos/meses">Meses</a></li>
+                      <li><a href="{{base_dir_controller}}/pagos/cuentas">Cuentas</a></li>
+                      <li><a href="{{base_dir_controller}}/pagos/historico">Historico</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-users"></i> Clientes <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="{{base_dir_controller}}/clientes/todos">Todos</a></li>
+                      <li><a href="{{base_dir_controller}}/clientes/activos">Activos</a></li>
+                      <li><a href="{{base_dir_controller}}/clientes/retirados">Retirados</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+            <!-- /sidebar menu -->
+
+            <!-- /menu footer buttons -->
+            <div class="sidebar-footer hidden-small">
+              <a data-toggle="tooltip" data-placement="top" title="Settings">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Lock">
+                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+              </a>
+            </div>
+            <!-- /menu footer buttons -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+            <div class="nav_menu">
+                <div class="nav toggle">
+                    <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                </div>
+                <nav class="nav navbar-nav">
+                    <ul class=" navbar-right">
+                        <li class="nav-item dropdown open" style="padding-left: 15px;">
+                        <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                            <img src="{{base_dir}}/production/images/img.jpg" alt="">John Doe
+                        </a>
+                        <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item"  href="javascript:;"> Profile</a>
+                            <a class="dropdown-item"  href="javascript:;">
+                                <span class="badge bg-red pull-right">50%</span>
+                                <span>Settings</span>
+                            </a>
+                        <a class="dropdown-item"  href="javascript:;">Help</a>
+                            <a class="dropdown-item"  href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                        </div>
+                        </li>
+
+                        <li role="presentation" class="nav-item dropdown open">
+                        <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-envelope-o"></i>
+                            <span class="badge bg-green">6</span>
+                        </a>
+                        <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
+                            <li class="nav-item">
+                            <a class="dropdown-item">
+                                <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                <span>
+                                <span>John Smith</span>
+                                <span class="time">3 mins ago</span>
+                                </span>
+                                <span class="message">
+                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                </span>
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="dropdown-item">
+                                <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                <span>
+                                <span>John Smith</span>
+                                <span class="time">3 mins ago</span>
+                                </span>
+                                <span class="message">
+                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                </span>
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="dropdown-item">
+                                <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                <span>
+                                <span>John Smith</span>
+                                <span class="time">3 mins ago</span>
+                                </span>
+                                <span class="message">
+                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                </span>
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="dropdown-item">
+                                <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                                <span>
+                                <span>John Smith</span>
+                                <span class="time">3 mins ago</span>
+                                </span>
+                                <span class="message">
+                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                </span>
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                            <div class="text-center">
+                                <a class="dropdown-item">
+                                <strong>See All Alerts</strong>
+                                <i class="fa fa-angle-right"></i>
+                                </a>
+                            </div>
+                            </li>
+                        </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+            {% block content %}
+
+            {% endblock %}
+
+
+
+            {# Modal Principal #}
+            {% block modal %}
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                <div class="modal-header">
+                  <h4 class="modal-title" id="Modaltitle">{% block modaltitle "Modal title" %}</h4>
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  {% block modalcontent %}
+                  <h4>Text in a modal</h4>
+                  <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+                  <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                  {% endblock %}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  <button type="button" class="btn btn-primary" id="modal-btn-save" onclick="event_function(this)">Guardar Cambios</button>
+                </div>
+
+                </div>
+              </div>
+            </div>
+            {% endblock %}
+
+            {# Modal para advertencia #}
+            {% block advertmodal %}
+            <div class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: 150px;">
+              <div class="modal-dialog modal-md">
+                <div class="modal-content">
+
+                <div class="modal-body" style="text-align: center;">
+                  {% block advertmodalcontent %}
+                  <i class="fa fa-warning" style="font-size: 125px; color: #ff9800;"></i>
+                  <br>
+                  <br>
+                  <h4 id="Modaltitleadvert">¿Esta seguro que desea eliminar?</h4>
+                  <br>
+                  <div class="buttons">
+                    <!-- Standard button -->
+                    
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">No, Cancelar</button>
+                    <button type="button" class="btn btn-info btn-sm" id="advertmodal-btn-yes" onclick="event_function(this)">Si, Eliminar</button>
+                    
+                    <br>
+                  </div>
+                 {% endblock %}
+                </div>
+
+                </div>
+              </div>
+            </div>
+            {% endblock %}
+        </div>
+            
+
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="{{base_dir}}/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+   <script src="{{base_dir}}/vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FastClick -->
+    <script src="{{base_dir}}/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="{{base_dir}}/vendors/nprogress/nprogress.js"></script>
+    <!-- iCheck -->
+    <script src="{{base_dir}}/vendors/iCheck/icheck.min.js"></script>
+    <!-- Datatables -->
+    <script src="{{base_dir}}/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="{{base_dir}}/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <script src="{{base_dir}}/vendors/jszip/dist/jszip.min.js"></script>
+    <script src="{{base_dir}}/vendors/pdfmake/build/pdfmake.min.js"></script>
+    <script src="{{base_dir}}/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+    <!-- PNotify -->
+    <script src="{{base_dir}}/vendors/pnotify/dist/pnotify.js"></script>
+    <script src="{{base_dir}}/vendors/pnotify/dist/pnotify.buttons.js"></script>
+    <script src="{{base_dir}}/vendors/pnotify/dist/pnotify.nonblock.js"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="{{base_dir}}/build/js/custom.min.js"></script>
+    <script>
+    //funcion del boton afirmativo de las modals
+		event_function = function(e){
+
+			funcion = e.dataset.event_function;
+      if(funcion == undefined){
+        console.log("data-event_funtion no se encuntra definido");
+      }else{
+        eval(funcion);
+      }
+			
+		
+		}
+    </script>
+    {% block js %}
+
+    {% endblock %}
+
+  </body>
+</html>

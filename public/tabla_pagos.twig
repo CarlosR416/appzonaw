@@ -1,0 +1,243 @@
+{% extends "tabla.twig" %}
+
+{# Rutas #}
+{% block rutaeditar "/pagos/editar" %}
+{% block rutaeliminar "/pagos/eliminar" %}
+{% block rutaagregar "/pagos/add" %}
+{% block rutaobtener "/pagos/getdata" %}
+
+{% block titlepage %}
+		<h3>Pagos <small></small></h3>
+{% endblock %}
+
+{% block subtitlepage %}
+            <h2>Lista de pagos pendientes <small></small></h2>
+{% endblock %}
+
+{# botones de Edicion #}
+{% block buttonpage %}
+    <div class="x_content">
+
+        <div class="buttons">
+            <button type="button" class="btn btn-primary btn-sm"  id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Nuevo Pago</button>
+            <button type="button" class="btn btn-secondary btn-sm" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>
+            <button type="button" class="btn btn-secondary btn-sm" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
+            
+        </div>
+        
+    </div>
+{% endblock %}
+
+{# ventana modal #}
+
+{% block modalcontent %}
+	<div class="x_panel">
+        
+        <div class="x_content">
+            <br>
+            <form class="form-label-left input_mask" id="modal_form">
+                <input type="hidden" id="form_id_cliente" name="id_cliente" value="1">
+                <div class="col-md-12 col-sm-12  form-group has-feedback">
+                    <input type="text" class="form-control has-feedback-left" id="form_buscar_cliente" placeholder="Buscar Cliente">
+                    <span class="fa fa-search form-control-feedback left" aria-hidden="true"></span>
+                </div>
+                <div class="col-md-6 col-sm-6  form-group has-feedback">
+                    <input type="text" class="form-control has-feedback-left" id="form_nombre" placeholder="Nombre" readonly="true">
+                    <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                </div>
+                <script>
+                    document.getElementById("form_buscar_cliente").addEventListener("keyup", function(){
+                    var tableclientes = $('#tb_form_clientes').DataTable();
+                        if(tableclientes.search() != this.value){
+                            tableclientes.search(this.value).draw();
+                            
+                        }
+                       
+                    });
+                </script>
+
+                <div class="col-md-6 col-sm-6  form-group has-feedback">
+                    <input type="text" class="form-control has-feedback-left" id="form_cedula" placeholder="Cedula" readonly="true">
+                    <span class="fa fa-credit-card form-control-feedback left" aria-hidden="true"></span>
+                </div>
+
+                <script>
+                    document.getElementById("form_cedula").addEventListener("keyup", function(){
+                    var tableclientes = $('#tb_form_clientes').DataTable();
+                        if(tableclientes.column("1:visIdx").search() != this.value){
+                            tableclientes.column("1:visIdx").search(this.value).draw()
+                        }
+
+                    });
+                </script>
+                <div class="col-md-6 col-sm-6 has-feedback">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-5 col-sm-5 ">Fecha de Cobro<span class="required">*</span>
+                        </label>
+                        <div class="col-md-7 col-sm-7 ">
+                            <input class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" required="required" name="fecha_cobro" id="form_fecha_cobro" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
+                            <script>
+                                function timeFunctionLong(input) {
+                                    setTimeout(function() {
+                                        input.type = 'text';
+                                    }, 60000);
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 has-feedback">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-5 col-sm-5 ">Monto a Pagar</label>
+                        <div class="col-md-7 col-sm-7 ">
+                            <input type="number" class="form-control"  name="monto" id="form_monto" placeholder="Ej. 50.000$">
+                         </div>
+                    </div>
+                </div>
+                <table id="tb_form_clientes" class="display" width="100%">
+                 <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cedula</th>
+                        <th>Tipo de Servicio</th>
+                        <th>Dia de Cobro</th>
+                        <th></th>
+                    </tr>
+                 </thead>
+                </table>
+               
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+
+    {{ parent() }}
+
+    <script>
+    
+    var datos_clientes = 0;
+    $.get("{{base_dir_controller}}//clientes/obtenerclientes").done(function(data){
+      
+        var index_tb_clientes = {
+                     "data": [
+                            [ "nombre", 
+                              "apellido"],
+                            [ "cedula"],
+                            [ "tipo_servicio"],
+                            [ "dia_cobro" ],
+                            ["id"]
+                        ],
+                     "upper": [0] 
+                    };
+
+        data = JSON.parse(data);
+        datos_clientes = data;
+
+        var datos = addRow(data, index_tb_clientes);
+
+        datos.forEach(function(value, index){
+            datos[index][4] = '<a href="#" onclick="cargar_cliente(this)"  data-value="'+datos[index][4]+'">Seleccionar</a>';
+        });
+
+        $('#tb_form_clientes').DataTable( {
+            "data": datos,
+            "language": spanis,
+            "paging": false,
+            "order": [[ 1, "asc" ]],
+            'sDom': 'tip',
+            "columnDefs": [{
+                searchable: false,
+				sorting: false,
+				targets: 4,
+            }]
+        } );
+
+
+    });
+
+
+    function cargar_cliente($this){
+        console.log(datos_clientes);
+        datos_clientes.forEach(function(values){
+            if(values.id == $this.dataset.value){
+
+                var clon = {id_cliente: 0,
+                            nombre: "",
+                            monto:0,
+                            cedula:0};
+                
+                clon.nombre = values.nombre.toUpperCase()+" "+values.apellido.toUpperCase(); 
+                clon.id_cliente = values.id;
+                clon.monto = values.monto;
+                clon.cedula = values.cedula;
+
+                cargar_form(clon);
+            }
+
+
+        });
+        
+        
+    }
+
+    </script>
+{% endblock %}
+
+
+{# fin ventana modal #}
+
+
+{# tabla #}
+
+{% block data_var %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+        var index_tb = {
+                    "data": [
+                        ["id"],
+                        [ "nombre", 
+                            "apellido"], 
+                        [ "fecha_cobro"], 
+                        [ "monto"], 
+                        [ "estado" ]
+                    ],
+                    "upper": [1] 
+                };
+
+
+    </script>
+
+
+{% endblock %}
+
+{% block headtable %}
+    <tr>
+        <th><input type="checkbox" id="check-all"></th>
+        <th>Cliente</th>
+        <th>Fecha de Cobro</th>
+        <th>Monto</th>
+        <th>Estado</th>
+    </tr>
+
+{% endblock %}
+
+{% block bodytable %}
+    <tr class="id_{{dato.id}}">
+        <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
+        <td>{{dato.nombre|upper}} {{dato.apellido|upper}}</td>
+        <td>{{dato.fecha_cobro}}</td>
+        <td>{{dato.monto}}</td>
+        <td>{{dato.estado}}</td>
+    </tr>
+
+    <script>
+        
+    </script>
+{% endblock %}
+
+{# fin tabla #}

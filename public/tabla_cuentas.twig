@@ -1,0 +1,27 @@
+{% extends "tabla.twig" %}
+
+{% block titlepage %}
+		<h3>Clientes <small></small></h3>
+{% endblock %}
+
+
+{% block subtitlepage %}
+            <h2>Lista de todos clientes <small></small></h2>
+{% endblock %}
+
+
+{% block headtable %}
+    <tr>
+        <th>Nombre</th>
+        <th>Saldo</th>
+    </tr>
+{% endblock %}
+
+
+{% block bodytable %}
+    <tr>
+        <td><a href="#">{{dato.nombre|upper}}</a></td>
+        <td>{{dato.saldo}}</td>
+
+    </tr>
+{% endblock %}
