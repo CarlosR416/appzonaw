@@ -19,4 +19,10 @@ return function (App $app) {
         // Render index view
         return $controller->__run($args["name"], $args["name2"]);
     });
+
+    $app->get("/", function (Request $request, Response $response, array $args) use ($container){
+        $controller = new \App\Controller\Controller($container);
+
+        return $controller->__run(false, false);
+    })->setName('base');
 };

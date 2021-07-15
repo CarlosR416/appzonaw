@@ -1,5 +1,5 @@
-{% set base_dir = 'http://localhost/SolucionexApp/plantilla/gentelella-master' %}
-{% set base_dir_controller = 'http://localhost/SolucionexApp/slim-skeleton/public' %}
+{% set base_dir = path_for('base') ~ '../../plantilla/gentelella-master' %}
+{% set base_dir_controller = path_for('base') %}
 
 
 <!DOCTYPE html>
@@ -83,7 +83,7 @@
                     <ul class="nav child_menu">
                       <li><a href="{{base_dir_controller}}/clientes/todos">Todos</a></li>
                       <li><a href="{{base_dir_controller}}/clientes/activos">Activos</a></li>
-                      <li><a href="{{base_dir_controller}}/clientes/retirados">Retirados</a></li>
+                      <li><a href="{{ path_for('base') }}">Retirados</a></li>
                     </ul>
                   </li>
                 </ul>
