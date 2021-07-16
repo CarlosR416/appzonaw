@@ -36,7 +36,7 @@ class AuthController
 
 	}
 
-	public function logout($request, $response){
+	public function logout(){
 
 		Helpers\Auth::logout();
 
