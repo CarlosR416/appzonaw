@@ -1,7 +1,7 @@
 <?php 
 
 namespace App\Controller;
-use App\helpers;
+use App\Helpers;
 
 
 class AuthController
