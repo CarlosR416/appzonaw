@@ -15,7 +15,7 @@ return function (App $app) {
         return $controller->__run(false, false);
     })->setName('base');
 
-    $app->get("/login[/{name}]", function (Request $request, Response $response, array $args) use ($container){
+    $app->any("/login[/{name}]", function (Request $request, Response $response, array $args) use ($container){
 
         $controller = new \App\Controller\Controller($container);
         
