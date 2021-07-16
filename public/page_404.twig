@@ -1,6 +1,5 @@
-{% set base_dir = 'http://localhost/SolucionexApp/plantilla/gentelella-master' %}
-{% set base_dir_controller = 'http://localhost/SolucionexApp/slim-skeleton/public' %}
-
+{% set base_dir = path_for('base') ~ 'plantilla/gentelella-master' %}
+{% set base_dir_controller = path_for('base') %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,7 +35,7 @@
               <p>Pueder ir a la pagina principal.
               </p>
               <div class="mid_center">
-                <h3><a href="{{base_dir_controller}}">Ir a Inicio</a></h3>
+                <h3><a href="{{path_for('ruta', {'name': 'clientes', 'name2': 'todos'})}}">Ir a Inicio</a></h3>
                 <!--<form>
                   <div class="  form-group pull-right top_search">
                     <div class="input-group">

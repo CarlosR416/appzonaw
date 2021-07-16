@@ -21,7 +21,7 @@ class Controller
 		$class = "\App\\Controller\\".ucfirst($class_c);
 		
 		if(class_exists($class)){
-
+			
 			$controller = new $class($this->container);
 			
 			if(method_exists($controller, $property)){

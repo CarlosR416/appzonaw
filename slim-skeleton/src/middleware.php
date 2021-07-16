@@ -6,6 +6,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 return function (App $app) {
     // e.g: $app->add(new \Slim\Csrf\Guard);
+    $container = $app->getContainer();
+    
+    $container['AuthMiddleware'] = function ($container)
+    {
+        return new \App\Middleware\AuthMiddleware($container);
+    };
 
     $app->add(function (Request $request, Response $response, callable $next) {
        
@@ -31,4 +37,5 @@ return function (App $app) {
 
         return $next($request, $response);
     });
+
 };
