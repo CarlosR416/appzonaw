@@ -8,14 +8,14 @@ class Auth
 	{
 		session_destroy();
 	}
-
-
+	
 	function check()
 	{
 		return isset($_SESSION['usuario']);
 	} 
 
-	function login($pass, $user){
+	function login($pass, $user)
+	{
 
 		$Resul = Models\User::where('usuario',$user)->first();
 
@@ -35,7 +35,8 @@ class Auth
 		return false;
 	}
 
-	function user(){
+	function user()
+	{
 
 		if (isset($_SESSION['usuario'])) {
 

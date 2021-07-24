@@ -8,10 +8,29 @@ class MovCuentas extends Model
 {
 	 
 	protected $fillable = [
+		"id",
 		"id_cuenta", 
+		"id_mes",
+		"id_pago",
+        "tipo",
+		"descripcion",
         "valor",
-        "tipo_mov"
+		"fecha"
 	];
 
+
+	public function cuenta()
+	{
+
+		return  $this->belongsTo('App\Models\Cuentas', 'id_cuenta');
+	
+	}
+
+	public function pago()
+	{
+
+		return  $this->belongsTo('App\Models\Pagos', 'id_pago');
+	
+	}
 	
 }

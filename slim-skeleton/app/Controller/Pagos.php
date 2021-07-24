@@ -20,7 +20,9 @@ class Pagos
         /*if(file_exists($settings['template_path'].$args["name"].".php") && $args["name"] != 'index'){
             $settings["template"] = $args["name"].".php";
         }*/
+        
         $args["data"] = $datos->obtener_pagos();
+        $args["meses"] =  $datos->obtener_meses();
 
         return $this->container->twig->render($this->container->response,  "tabla_pagos.twig", $args);
     }
@@ -56,6 +58,15 @@ class Pagos
         return $this->container->twig->render($this->container->response,  "tabla_meses.twig", $args);
     }
 
+    function cobrar(){
+
+        $datos = new \App\Data;
+        $args = [];
+
+        $args["meses"] =  $datos->obtener_meses();
+        return $this->container->twig->render($this->container->response,  "cobrar.twig", $args);
+    }
+
     function Cuentas(){
         $datos = new \App\Data;
         $args = [];
@@ -71,11 +82,17 @@ class Pagos
         return $this->container->twig->render($this->container->response,  "tabla_cuentas.twig", $args);
     }
 
-    function add(){
+    function agregar(){
         $data = new \App\Data;
         $evaluar = $this->container->request->getParams();
 
-        $resp[0] = $data->crear_pago($evaluar);
+        $property = $evaluar['funcion'];
+
+        if(method_exists($data, $property)){
+            $resp[0] = $data->$property($evaluar['data']);
+        }else{
+            $resp = false;
+        }
         
         return json_encode($resp);
     }
@@ -86,32 +103,70 @@ class Pagos
         $evaluar = $this->container->request->getParams();
         $delete = ["true" => 0, "false" => 0];
 
+        $property = $evaluar['funcion'];
 
-        foreach ($evaluar["id"] as $key => $value) {
-            $data->eliminar_pago($value) == true ? $delete["true"] = $delete["true"]+1 : $delete["false"] = $delete["false"]+1 ;
+        if(method_exists($data, $property)){
+
+            foreach ($evaluar['data']["id"] as $key => $value) {
+                $data->$property($value) == true ? $delete["true"] = $delete["true"]+1 : $delete["false"] = $delete["false"]+1 ;
+            }
+            
+            $evaluar["eliminados"] = $delete; 
+        }else{
+            $evaluar = false;
         }
-        $evaluar["eliminados"] = $delete; 
+        
         
         return json_encode($evaluar);
 
     }
 
-    function editar(){
-        $id = $this->container->request->getParam("id2");
-        $evaluar = '{"id": "'.$id.'", "array": ["<input type=\"checkbox\" name=\"check-all\" onclick=\"this.checked = !this.checked\" value=\"'.$id.'\">", "0000125", "Raiza Gonzales", "90.000", "05"]}';
-        
-        return $evaluar;
+    function modificar(){
 
-    }
-
-    function getdata(){
         $data = new \App\Data;
-        $ids = $this->container->request->getParam("id");
+        $evaluar = $this->container->request->getParams();
+        $property = $evaluar['funcion'];
 
-        $evaluar = $data->obtener_pago($ids);
+        if(method_exists($data, $property)){
+            
+            $resp = $data->$property($evaluar['data']);
+
+        }else{
+            $resp = false;
+        }
+        
+        return json_encode($resp);
+    }
+
+    function obtener(){
+        $data = new \App\Data;
+        $evaluar = $this->container->request->getParams();
 
 
-        return json_encode($evaluar);
+        $property = $evaluar['funcion'];
 
+        if(method_exists($data, $property)){
+            $resp = $data->$property($evaluar['data']);
+        }else{
+            $resp = false;
+        }
+       
+        return json_encode($resp);
+
+    }
+
+    function historico_cuentas(){
+        $datos = new \App\Data;
+        $args = [];
+        //$settings = $this->container->get('settings')['renderer'];
+        //$settings["template"] = "tabla.php";
+
+        /*if(file_exists($settings['template_path'].$args["name"].".php") && $args["name"] != 'index'){
+            $settings["template"] = $args["name"].".php";
+        }*/
+        $args["data"] = $datos->obtener_mov_cuentas();
+        $args["meses"] =  $datos->obtener_meses();
+
+        return $this->container->twig->render($this->container->response,  "tabla_historico_cuentas.twig", $args);
     }
 } 

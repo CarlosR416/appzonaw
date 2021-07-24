@@ -13,12 +13,6 @@ class AuthController
         $this->container = $container;
     }
 
-	public function GetLogin($request, $response){
-		
-		return $this->view->render($response, '/login/login.html');
-		
-	}
-
 	function ingresar(){
 
 		$Auth =	Helpers\Auth::login(

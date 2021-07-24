@@ -8,7 +8,8 @@ class Pagos extends Model
 {
 	 
 	protected $fillable = [
-		"id_cliente", 
+		"id_cliente",
+        "id_mes", 
         "fecha_cobro",  
         "fecha_pago",  
         "estado",  
@@ -21,6 +22,13 @@ class Pagos extends Model
 	{
 
 		return  $this->belongsTo('App\Models\Clientes', 'id_cliente');
+	
+	}
+
+    public function mes()
+	{
+
+		return  $this->belongsTo('App\Models\Meses', 'id_mes');
 	
 	}
 	

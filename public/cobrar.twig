@@ -1,0 +1,385 @@
+{% extends "index.twig" %}
+
+
+{% block modalcontent %}
+	<div class="x_panel">
+        
+        <div class="x_content">
+            <div class="col-md-12 col-sm-12  form-group has-feedback">
+                    <input type="text" class="form-control has-feedback-left" id="form_buscar_cliente" placeholder="Buscar Cliente">
+                    <span class="fa fa-search form-control-feedback left" aria-hidden="true"></span>
+            </div>
+            <script>
+                document.getElementById("form_buscar_cliente").addEventListener("keyup", function(){
+                var tableclientes = $('#tb_form_clientes').DataTable();
+                    if(tableclientes.search() != this.value){
+                        tableclientes.search(this.value).draw();
+                        
+                    }
+                
+                });
+            </script>
+            <br>
+            <table id="tb_form_clientes" class="display" width="100%">
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cedula</th>
+                    <th>Tipo de Servicio</th>
+                    <th>Dia de Cobro</th>
+                    <th></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    {% block modalfooter %}
+    <div class="modal-footer" style="display: none;">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id="modal-btn-save" onclick="event_function(this)">Guardar Cambios</button>
+    </div>
+    {% endblock %}
+{% endblock %}
+
+{% block content %}
+    <div class="">
+        <div class="page-title">
+        <div class="title_left">
+            {% block titlepage %}
+            <h3>Pagos <small></small></h3>
+            {% endblock %}
+        </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 ">
+                <div class="x_panel">
+                    <div class="x_title">
+                        {% block subtitlepage %}
+                            <h2>Cobrar</h2>
+                        {% endblock %}
+                    
+                    
+                        <!--<ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Settings 1</a>
+                                <a class="dropdown-item" href="#">Settings 2</a>
+                            </div>
+                        </li>
+                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                        </ul>-->
+                    
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card-box table-responsive">
+                                    <div class="x_panel">
+            
+                                        <div class="x_content">
+                                            <br>
+                                            <form  data-parsley-validate="" class="form-horizontal form-label-left" novalidate="" id="modal_form">
+                                                
+                                            <div class="item form-group">
+                                                <input type="hidden" id="form_id" name="id" value="1">
+                                                <input type="hidden" id="form_id_cliente" name="id_cliente" value="1">
+                                                
+                                                <button type="button" class="btn btn-success col-md-12 col-sm-12 " onclick="buscar_clientes()"><span class="fa fa-search" aria-hidden="true"></span> Buscar Cliente</button>
+                                            </div>
+                                            <div class="item form-group">
+                                                <div class="col-md-6 col-sm-6  form-group has-feedback">
+                                                    <input type="text" class="form-control has-feedback-left" id="form_nombre" placeholder="Nombre" readonly="true">
+                                                    <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                                                </div>
+
+                                                <div class="col-md-6 col-sm-6  form-group has-feedback">
+                                                    <input type="text" class="form-control has-feedback-left" id="form_cedula" placeholder="Cedula" readonly="true">
+                                                    <span class="fa fa-credit-card form-control-feedback left" aria-hidden="true"></span>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="item form-group">
+                                                <div class="col-md-6 col-sm-6 has-feedback">
+                                                    <div class="form-group row">
+                                                        <label class="col-form-label col-md-3 col-sm-3 ">Cuenta: </label>
+                                                        <div class="col-md-9 col-sm-9 ">
+                                                            <select class="form-control" name="cuenta" id="form_estatus_servicio"> 
+                                                                <option value="1" >Carlos Rodriguez</option>
+                                                                <option value="2" >Vicente Lopez</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 col-sm-6 has-feedback">
+                                                    <div class="form-group row">
+                                                        <label class="col-form-label col-md-4 col-sm-4 ">Fecha de Pago<span class="required">*</span>
+                                                        </label>
+                                                        <div class="col-md-8 col-sm-8 ">
+                                                            <input class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" required="required" name="fecha_cobro" id="form_fecha_cobro" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
+                                                            <script>
+                                                                function timeFunctionLong(input) {
+                                                                    setTimeout(function() {
+                                                                        input.type = 'text';
+                                                                    }, 60000);
+                                                                }
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <table id="tb_form_pagos" class="display" width="100%">
+                                                <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Mes</th>
+                                                    <th>Fecha de Cobro</th>
+                                                    <th>Estado</th>
+                                                    <th>Monto</th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                            
+                                            <div class="ln_solid"></div>
+                                            <div class="item form-group">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <button class="btn btn-primary" type="button" onclick="document.location.href='{{base_dir_controller}}pagos/pendientes'">Pagos Pendientes</button>
+                                                    <button class="btn btn-primary" type="reset" >Borrar</button>
+                                                    <button class="btn btn-success" type="button" onclick="cargar_pago()" id="btn-cobrar">Cobrar</button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+
+    {{ parent() }}
+    <Script>
+
+    buscar_clientes = function(){
+        new template_modal({
+                    title: "Buscar Clientes",
+                    btn_rigth_function: "Modificar_registro_msg()",
+                    btn_rigth_text: "Guardar Cambios"
+                });
+    }
+
+    var datos_clientes = 0;
+    $.get("{{base_dir_controller}}//clientes/obtenerclientes").done(function(data){
+      
+        var index_tb_clientes = {
+                     "data": [
+                            [ "nombre", 
+                              "apellido"],
+                            [ "cedula"],
+                            [ "tipo_servicio"],
+                            [ "dia_cobro" ],
+                            ["id"]
+                        ],
+                     "upper": [0] 
+                    };
+
+        data = JSON.parse(data);
+        datos_clientes = data;
+
+        var datos = addRow(data, index_tb_clientes);
+
+        datos.forEach(function(value, index){
+            datos[index][4] = '<a href="#" onclick="cargar_cliente(this)"  data-value="'+datos[index][4]+'">Seleccionar</a>';
+        });
+
+        $('#tb_form_clientes').DataTable( {
+            "data": datos,
+            "language": spanis,
+            "paging": false,
+            "order": [[ 1, "asc" ]],
+            'sDom': 'tip',
+            "columnDefs": [{
+                searchable: false,
+				sorting: false,
+				targets: 4,
+            }]
+        } );
+
+
+    });
+
+    function cargar_cliente($this){
+
+        var index_tb_pagos = {
+                     "data": [
+                            ["id"], 
+                            ["nombre_mes"],
+                            ["fecha_cobro"],
+                            ["estado"],
+                            ["monto"]
+                        ],
+                     "upper": [1] 
+                    };
+
+        var data = {
+            data: {
+                'id_cliente': 0
+                }, 
+            funcion: 'obtener_pagos_cliente'
+            };
+        
+        datos_clientes.forEach(function(values){
+            if(values.id == $this.dataset.value){
+
+                var clon = {id_cliente: 0,
+                            nombre: "",
+                            monto:0,
+                            cedula:0};
+                
+                clon.nombre = values.nombre.toUpperCase()+" "+values.apellido.toUpperCase(); 
+                clon.id_cliente = values.id;
+                clon.monto = values.monto;
+                clon.cedula = values.cedula;
+
+                data.data.id_cliente = values.id;
+
+                cargar_form(clon);
+            }
+
+
+        });
+
+        $.get("{{base_dir_controller}}//pagos/obtener", data).done(function(data){
+            
+            data = JSON.parse(data);
+
+            if(!validar(data)){
+                return 0;					
+            }
+            
+            var datos = addRow(data, index_tb_pagos);
+            tabla_pagos.rows().remove().draw();
+            datos.forEach(function(value, index){
+                var estado = "";
+                if(value[3] == "Pagado"){
+                    estado = "this.checked = !this.checked; alerta('La factura ya esta pagada')";
+                }
+                console.log(value);
+                datos[index][0] = '<input type="checkbox" name="pagos" onclick="'+estado+'" value="'+value[0]+'">';
+                tabla_pagos.row.add(datos[index]).draw().nodes().to$().addClass( 'id_'+value[0] );
+            });
+            //fila[0][0] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+data[0].id+'">'
+            
+            
+        });
+
+        
+        $(".bs-example-modal-lg").modal('hide');
+
+
+        
+    }
+
+    CeldasCheck = function(){
+        var check_all = document.getElementsByName("pagos");
+        var data = {id: []};
+        var index = 0;
+
+        check_all.forEach(function(check){
+
+            if(check.checked){
+                data.id[index] = check.value;
+                index++;
+            }  
+        
+        });
+        
+        return data;
+    }
+
+    cargar_pago = function(){
+
+        var url = "{{base_dir_controller}}pagos/agregar";
+        document.getElementById("btn-cobrar").disabled = true;
+
+        var temp = $( "#modal_form" ).serializeArray()
+                .reduce(function(a, z) { a[z.name] = z.value; return a; }, {});
+
+        var dataform = {funcion: "", data: ""};
+        dataform.funcion = 'cobrar_pago';
+        dataform.data = temp;
+        dataform.data.pagos = CeldasCheck(); 
+
+        $.post(url, dataform).done(function(data){
+				
+				data = JSON.parse(data);
+				fila = [];
+				if(typeof(data) == "object"){
+					
+                    document.getElementById("btn-cobrar").disabled = false;
+					if(!validar(data)){
+						
+						return 0;					
+					}
+
+
+					ob = {dataset: {value: 0}};
+                    ob.dataset.value = data[0][0].id_cliente;
+					cargar_cliente(ob);
+					
+				}else{
+					new PNotify({
+							title: 'Ocurrio un error',
+							text: 'Los registros No han sido creados correctamente',
+							type: 'error',
+							styling: 'bootstrap3'
+						});
+
+                    document.getElementById("btn-cobrar").disabled = false;
+
+				}
+
+                
+
+			
+				
+				
+				
+				
+
+		});
+    }
+
+    tabla_pagos = $('#tb_form_pagos').DataTable( {
+            "language": spanis,
+            "paging": false,
+            "order": [[ 1, "asc" ]],
+            'sDom': 'tip',
+            "columnDefs": [{
+                searchable: false,
+				sorting: false,
+				targets: 0,
+            }]
+        } );
+    
+    </script>
+{% endblock %}

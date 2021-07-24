@@ -37,12 +37,13 @@
     
     <!-- Custom Theme Style -->
     <link href="{{base_dir}}/build/css/custom.min.css" rel="stylesheet">
-    <!-- Datatables
+    <!--
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
-    <script src="components.js" type="text/babel"></script>-->
+    <script src="{{base_dir_controller}}assets/components.js" type="text/babel"></script>
+    -->  
   </head>
 
   <body class="nav-md">
@@ -66,31 +67,7 @@
 
             <br />
 
-            <!-- sidebar menu -->
-            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-              <div class="menu_section">
-                <h3>General</h3>
-                <ul class="nav side-menu" >
-                  <li><a><i class="fa fa-money"></i> Pagos <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="{{base_dir_controller}}pagos/pendientes">Por Cobrar</a></li>
-                      <li><a href="{{base_dir_controller}}pagos/meses">Meses</a></li>
-                      <li><a href="{{base_dir_controller}}pagos/cuentas">Cuentas</a></li>
-                      <li><a href="{{base_dir_controller}}pagos/historico">Historico</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-users"></i> Clientes <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="{{base_dir_controller}}clientes/todos">Todos</a></li>
-                      <li><a href="{{base_dir_controller}}clientes/activos">Activos</a></li>
-                      <li><a href="{{ path_for('base') }}">Retirados</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-
-            </div>
-            <!-- /sidebar menu -->
+           {% include 'menu.twig' %}
 
             <!-- /menu footer buttons -->
             <div class="sidebar-footer hidden-small">
@@ -230,10 +207,12 @@
                   <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
                   {% endblock %}
                 </div>
+                {% block modalfooter %}
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                   <button type="button" class="btn btn-primary" id="modal-btn-save" onclick="event_function(this)">Guardar Cambios</button>
                 </div>
+                {% endblock %}
 
                 </div>
               </div>
@@ -331,7 +310,336 @@
 		}
     </script>
     {% block js %}
+      <script>
+        //traducion de datatable
+        var spanis ={
+                  "processing": "Procesando...",
+                  "lengthMenu": "Mostrar _MENU_ registros",
+                  "zeroRecords": "No se encontraron resultados",
+                  "emptyTable": "Ningún dato disponible en esta tabla",
+                  "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                  "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                  "search": "Buscar:",
+                  "infoThousands": ",",
+                  "loadingRecords": "Cargando...",
+                  "paginate": {
+                      "first": "Primero",
+                      "last": "Último",
+                      "next": "Siguiente",
+                      "previous": "Anterior"
+                  },
+                  "aria": {
+                      "sortAscending": ": Activar para ordenar la columna de manera ascendente",
+                      "sortDescending": ": Activar para ordenar la columna de manera descendente"
+                  },
+                  "buttons": {
+                      "copy": "Copiar",
+                      "colvis": "Visibilidad",
+                      "collection": "Colección",
+                      "colvisRestore": "Restaurar visibilidad",
+                      "copyKeys": "Presione ctrl o u2318 + C para copiar los datos de la tabla al portapapeles del sistema. <br \/> <br \/> Para cancelar, haga clic en este mensaje o presione escape.",
+                      "copySuccess": {
+                          "1": "Copiada 1 fila al portapapeles",
+                          "_": "Copiadas %d fila al portapapeles"
+                      },
+                      "copyTitle": "Copiar al portapapeles",
+                      "csv": "CSV",
+                      "excel": "Excel",
+                      "pageLength": {
+                          "-1": "Mostrar todas las filas",
+                          "1": "Mostrar 1 fila",
+                          "_": "Mostrar %d filas"
+                      },
+                      "pdf": "PDF",
+                      "print": "Imprimir"
+                  },
+                  "autoFill": {
+                      "cancel": "Cancelar",
+                      "fill": "Rellene todas las celdas con <i>%d<\/i>",
+                      "fillHorizontal": "Rellenar celdas horizontalmente",
+                      "fillVertical": "Rellenar celdas verticalmentemente"
+                  },
+                  "decimal": ",",
+                  "searchBuilder": {
+                      "add": "Añadir condición",
+                      "button": {
+                          "0": "Constructor de búsqueda",
+                          "_": "Constructor de búsqueda (%d)"
+                      },
+                      "clearAll": "Borrar todo",
+                      "condition": "Condición",
+                      "conditions": {
+                          "date": {
+                              "after": "Despues",
+                              "before": "Antes",
+                              "between": "Entre",
+                              "empty": "Vacío",
+                              "equals": "Igual a",
+                              "notBetween": "No entre",
+                              "notEmpty": "No Vacio",
+                              "not": "Diferente de"
+                          },
+                          "number": {
+                              "between": "Entre",
+                              "empty": "Vacio",
+                              "equals": "Igual a",
+                              "gt": "Mayor a",
+                              "gte": "Mayor o igual a",
+                              "lt": "Menor que",
+                              "lte": "Menor o igual que",
+                              "notBetween": "No entre",
+                              "notEmpty": "No vacío",
+                              "not": "Diferente de"
+                          },
+                          "string": {
+                              "contains": "Contiene",
+                              "empty": "Vacío",
+                              "endsWith": "Termina en",
+                              "equals": "Igual a",
+                              "notEmpty": "No Vacio",
+                              "startsWith": "Empieza con",
+                              "not": "Diferente de"
+                          },
+                          "array": {
+                              "not": "Diferente de",
+                              "equals": "Igual",
+                              "empty": "Vacío",
+                              "contains": "Contiene",
+                              "notEmpty": "No Vacío",
+                              "without": "Sin"
+                          }
+                      },
+                      "data": "Data",
+                      "deleteTitle": "Eliminar regla de filtrado",
+                      "leftTitle": "Criterios anulados",
+                      "logicAnd": "Y",
+                      "logicOr": "O",
+                      "rightTitle": "Criterios de sangría",
+                      "title": {
+                          "0": "Constructor de búsqueda",
+                          "_": "Constructor de búsqueda (%d)"
+                      },
+                      "value": "Valor"
+                  },
+                  "searchPanes": {
+                      "clearMessage": "Borrar todo",
+                      "collapse": {
+                          "0": "Paneles de búsqueda",
+                          "_": "Paneles de búsqueda (%d)"
+                      },
+                      "count": "{total}",
+                      "countFiltered": "{shown} ({total})",
+                      "emptyPanes": "Sin paneles de búsqueda",
+                      "loadMessage": "Cargando paneles de búsqueda",
+                      "title": "Filtros Activos - %d"
+                  },
+                  "select": {
+                      "1": "%d fila seleccionada",
+                      "_": "%d filas seleccionadas",
+                      "cells": {
+                          "1": "1 celda seleccionada",
+                          "_": "$d celdas seleccionadas"
+                      },
+                      "columns": {
+                          "1": "1 columna seleccionada",
+                          "_": "%d columnas seleccionadas"
+                      }
+                  },
+                  "thousands": ".",
+                  "datetime": {
+                      "previous": "Anterior",
+                      "next": "Proximo",
+                      "hours": "Horas",
+                      "minutes": "Minutos",
+                      "seconds": "Segundos",
+                      "unknown": "-",
+                      "amPm": [
+                          "am",
+                          "pm"
+                      ]
+                  },
+                  "editor": {
+                      "close": "Cerrar",
+                      "create": {
+                          "button": "Nuevo",
+                          "title": "Crear Nuevo Registro",
+                          "submit": "Crear"
+                      },
+                      "edit": {
+                          "button": "Editar",
+                          "title": "Editar Registro",
+                          "submit": "Actualizar"
+                      },
+                      "remove": {
+                          "button": "Eliminar",
+                          "title": "Eliminar Registro",
+                          "submit": "Eliminar",
+                          "confirm": {
+                              "_": "¿Está seguro que desea eliminar %d filas?",
+                              "1": "¿Está seguro que desea eliminar 1 fila?"
+                          }
+                      },
+                      "error": {
+                          "system": "Ha ocurrido un error en el sistema (<a target=\"\\\" rel=\"\\ nofollow\" href=\"\\\">Más información&lt;\\\/a&gt;).<\/a>"
+                      },
+                      "multi": {
+                          "title": "Múltiples Valores",
+                          "info": "Los elementos seleccionados contienen diferentes valores para este registro. Para editar y establecer todos los elementos de este registro con el mismo valor, hacer click o tap aquí, de lo contrario conservarán sus valores individuales.",
+                          "restore": "Deshacer Cambios",
+                          "noMulti": "Este registro puede ser editado individualmente, pero no como parte de un grupo."
+                      }
+                  },
+                  "info": "Mostrando de _START_ a _END_ de _TOTAL_ entradas"
+        };
 
+        //Cargar datos al Form 
+        function cargar_form(data){
+            
+            keys = Object.keys(data);
+            
+            keys.forEach(function(key){
+
+            temp = "form_"+key;
+
+            try{
+              document.getElementById(temp).value = data[key];
+            }catch{
+              console.log("No se cargaron algunso campos porque no existe el id");
+            }
+            
+
+            });
+        }
+        
+        function addRow(data, index_columns){
+          
+            data_row = [];
+          
+            data.forEach(function(registro, index){
+              
+              data_row[index] = [];
+
+              index_columns.data.forEach(function(value, index2){
+
+                data_row[index][index2] = "";
+                value.forEach(function(key, index3){
+                  data_row[index][index2] += (value.length == index3+1) ? registro[key] : registro[key]+" ";
+                });
+
+              });
+
+              index_columns.upper.forEach(function(key){
+                data_row[index][key] = data_row[index][key].toUpperCase();
+              });
+            });
+            
+
+            
+
+            return data_row;
+        }
+
+        function validar(data){
+
+          var resp = false;
+          
+          if(typeof(data) == "object"){
+            if(data.propertyIsEnumerable(0)){
+              data.forEach(function(value){
+                
+                if(value.hasOwnProperty('error')){
+            
+                  new PNotify({
+                    title: 'Ocurrio un error',
+                    text: value.error,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                  });
+
+
+                }else{
+                  resp = true;
+                }
+                
+              });
+            }
+          }
+
+          return resp;
+          
+        }
+
+        class template_modal {
+
+
+          constructor(datos) {
+            
+            if(typeof(datos) == "object"){
+
+              this.title = datos.title == undefined ? "Sin Titulo" : datos.title;
+              this.btn_rigth_function = datos.btn_rigth_function == undefined ? "alert('Sin funcion')" : datos.btn_rigth_function;
+              this.reset_form = datos.reset_form == undefined ? false : datos.reset_form;
+              this.btn_rigth_text = datos.btn_rigth_text == undefined ? "OK" : datos.btn_rigth_text;
+              
+
+              document.getElementById("modal-btn-save").dataset.event_function = this.btn_rigth_function;
+              document.getElementById("modal-btn-save").textContent = this.btn_rigth_text;
+              document.getElementById("Modaltitle").textContent = this.title;
+              document.getElementById("modal-btn-save").disabled = false;
+             
+              if(this.reset_form != false){
+                document.getElementById(this.reset_form).reset();
+              }
+              
+              $(".bs-example-modal-lg").modal();
+
+            }else{
+              alert("error al definir modal")
+            }
+            
+          
+          }
+        }
+
+        class template_modal_advert {
+
+
+          constructor(datos) {
+            
+            if(typeof(datos) == "object"){
+
+              this.title = datos.title == undefined ? "Sin Titulo" : datos.title;
+              this.btn_rigth_function = datos.btn_rigth_function == undefined ? "alert('Sin funcion')" : datos.btn_rigth_function;
+              this.reset_form = datos.reset_form == undefined ? false : datos.reset_form;
+              this.btn_rigth_text = datos.btn_rigth_text == undefined ? "OK" : datos.btn_rigth_text;
+
+              document.getElementById("advertmodal-btn-yes").dataset.event_function = this.btn_rigth_function;
+              document.getElementById("Modaltitleadvert").textContent = this.title;
+              document.getElementById("advertmodal-btn-yes").textContent = this.btn_rigth_text;
+
+              if(this.reset_form){
+                document.getElementById(this.reset_form).reset();
+              }
+              
+              $(".bs-example-modal-md").modal();
+
+            }else{
+              alert("error al definir modal")
+            }
+            
+          
+          }
+        }
+
+        alerta = function($title){
+          new PNotify({
+                    title: 'Atención',
+                    text: $title,
+                    type: 'alert',
+                    styling: 'bootstrap3'
+                  });
+        }
+      </script>
     {% endblock %}
 
   </body>

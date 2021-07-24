@@ -1,0 +1,33 @@
+ <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>General</h3>
+                <ul class="nav side-menu" >
+                  <li><a><i class="fa fa-money"></i> Pagos <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="{{base_dir_controller}}pagos/cobrar">Cobrar</a></li>
+                      <li><a href="{{base_dir_controller}}pagos/pendientes">Pendientes</a></li>
+                      <li><a href="{{base_dir_controller}}pagos/meses">Meses</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-calculator"></i> Cuentas <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="{{base_dir_controller}}pagos/cuentas">Cuentas</a></li>
+                      <li><a href="{{base_dir_controller}}pagos/historico_cuentas">Historico de Cuentas</a></li>
+                    </ul>
+                  </li>
+                  <li><a><i class="fa fa-users"></i> Clientes <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="{{base_dir_controller}}clientes/todos">Todos</a></li>
+                      <li><a href="{{base_dir_controller}}clientes/activos">Activos</a></li>
+                      <li><a href="{{base_dir_controller}}clientes/suspendidos">Suspendidos</a></li>
+                      <li><a href="{{ path_for('base') }}clientes/retirados">Retirados</a></li>
+                      <li><a href="{{base_dir_controller}}clientes/intrusos">Intrusos</a></li>
+                      <li><a href="{{base_dir_controller}}clientes/opcionales">Opcionales</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+<!-- /sidebar menu -->

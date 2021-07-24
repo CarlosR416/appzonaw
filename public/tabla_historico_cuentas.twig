@@ -1,0 +1,197 @@
+{% extends "tabla.twig" %}
+
+{% block titlepage %}
+		<h3>Pagos <small></small></h3>
+{% endblock %}
+
+
+{% block subtitlepage %}
+            <h2>Historico de Movimientos Cuentas <small></small></h2>
+{% endblock %}
+
+
+{% block modalcontent %}
+	<div class="x_panel">
+        
+        <div class="x_content">
+            <br>
+            <form class="form-label-left input_mask" id="modal_form">
+                <input type="hidden" id="form_id" name="id">
+
+                <div class="col-md-6 col-sm-6 has-feedback">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3 col-sm-3 ">Cuenta: </label>
+                        <div class="col-md-9 col-sm-9 ">
+                            <select class="form-control" name="id_cuenta" id="form_id_cuenta"> 
+                                <option value="1" >Carlos Rodriguez</option>
+                                <option value="2" >Vicente Lopez</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 has-feedback">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3 col-sm-3 ">Tipo de Movimiento: </label>
+                        <div class="col-md-9 col-sm-9 ">
+                            <select class="form-control" name="tipo" id="form_tipo"> 
+                                <option value="1" >Credito</option>
+                                <option value="2" >Debito</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 has-feedback">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3 col-sm-3 ">Mes: </label>
+                        <div class="col-md-9 col-sm-9 ">
+                            <select class="form-control" name="id_mes" id="form_id_mes"> 
+                                {% for mes in meses %} 
+                                    <option value="{{mes.id}}">{{mes.nombre}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 has-feedback">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-5 col-sm-5 ">Monto a Pagar</label>
+                        <div class="col-md-7 col-sm-7 ">
+                            <input type="number" class="form-control"  name="valor" id="form_valor" placeholder="Ej. 50.000$">
+                         </div>
+                    </div>
+                </div>
+
+                <label for="message">Descripción (64 caracteres max) :</label>
+                <textarea id="form_descripcion" required="required" class="form-control" name="descripcion" data-parsley-trigger="keyup" data-parsley-minlength="0" data-parsley-maxlength="64" data-parsley-minlength-message="Come on! You need to enter at least a 20 caracters long comment.." data-parsley-validation-threshold="10"></textarea>
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{# botones de Edicion #}
+{% block buttonpage %}
+    <div class="x_content">
+
+        <div class="buttons">
+            <button type="button" class="option_btn btn btn-primary btn-sm"  data-i="0" id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Nuevo Movimiento</button>
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="1" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="2" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
+            
+        </div>
+        
+    </div>
+{% endblock %}
+
+{% block headtable %}
+    <tr >
+        <th><input type="checkbox" id="check-all"></th>
+        <th>Nombre de la Cuenta</th>
+        <th>Pago</th>
+        <th>Tipo Movimiento</th>
+        <th>Descripción</th>
+        <th>Monto</th>
+        <th>Fecha</th>
+    </tr>
+{% endblock %}
+
+
+{% block bodytable %}
+
+    {% set pago = dato.pago.cliente.nombre ~ dato.pago.cliente.apellido ~ ' - ' ~ dato.pago.mes.nombre %}
+    <tr class="id_{{dato.id}}">
+        <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
+        <td><a href="#">{{dato.cuenta.nombre|upper}}</a></td>
+        <td>{{pago|upper}}</td>
+        <td>{{dato.tipo}}</td>
+        <td>{{dato.descripcion}}</td>
+        <td>{{dato.valor}}</td>
+        <td>{{dato.fecha}}</td>
+    </tr>
+{% endblock %}
+
+
+{% block js %}
+
+{{ parent() }}
+
+<script type="text/javascript">
+
+    rutas.funcion.add = 'crear_mov_cuenta';
+    rutas.funcion.eliminar = 'eliminar_mov_cuenta';
+    rutas.funcion.getdata = 'getmov_cuenta';
+    rutas.funcion.modificar = 'modifmov_cuenta';
+
+    // llama Modals
+    Obtener_registro = function(e){
+
+        var url = "{{base_dir_controller}}"+rutas.obtener;
+        
+        var data = {funcion: "", data: ""};
+			data.data = CeldasCheck();
+			data.funcion = rutas.funcion.getdata;
+
+        if(data.data.id.length == 1){
+
+            $.post(url, data).done(function(resp){
+
+                resp = JSON.parse(resp);
+
+                resp.forEach(function(value){
+
+                    cargar_form(value);
+                    
+                });
+                
+
+                new template_modal({
+                    title: "Modificar Datos del Cliente",
+                    btn_rigth_function: "Modificar_registro_msg()",
+                    btn_rigth_text: "Guardar Cambios"
+                });
+                
+                
+            });
+
+        }
+
+    } 
+
+    Nuevo_registro = function(e){
+
+        new template_modal({
+            title: "Registar Nuevo Movimiento",
+            btn_rigth_function: "Agregar_registro()",
+            reset_form: "modal_form",
+            btn_rigth_text: "Crear Registro"
+        });
+
+    }
+
+    Eliminar_msg = function(e){
+
+        new template_modal_advert({
+            title: "¿Esta Seguro que desea Eliminar?",
+            btn_rigth_function: "Eliminar_registro()",
+            btn_rigth_text: "Si, Eliminar"
+        });
+        
+    }
+
+var index_tb = {
+                     "data": [
+                            ["id"],
+                            ["cuenta"],
+                            ["pago"], 
+                            ["tipo"],
+                            ["descripcion"],
+                            ["valor"], 
+                            ["fecha" ]
+                        ],
+                     "upper": [1] 
+                    };
+
+
+</script>
+
+{% endblock %}

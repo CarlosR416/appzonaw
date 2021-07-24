@@ -1,12 +1,12 @@
 {% extends "tabla.twig" %}
 
 {% block titlepage %}
-		<h3>Clientes <small></small></h3>
+		<h3>Pagos <small></small></h3>
 {% endblock %}
 
 
 {% block subtitlepage %}
-            <h2>Lista de todos clientes <small></small></h2>
+            <h2>Listado de Cuentas <small></small></h2>
 {% endblock %}
 
 
@@ -24,4 +24,71 @@
         <td>{{dato.saldo}}</td>
 
     </tr>
+{% endblock %}
+
+
+{% block js %}
+{{parent()}}
+
+<script>
+    rutas.eliminar = 'cuentas/eliminar';
+    rutas.obtener = 'cuentas/getdata';
+    rutas.agregar = 'cuentas/add'; 
+    rutas.modificar = 'cuentas/editar';
+
+    // llama Modals
+    Obtener_registro = function(e){
+
+        var url = "{{base_dir_controller}}"+rutas.obtener;
+        var data = CeldasCheck();
+        
+
+        if(data.id.length == 1){
+
+            $.post(url, data).done(function(resp){
+
+                resp = JSON.parse(resp);
+
+                resp.forEach(function(value){
+
+                    cargar_form(value);
+                    
+                });
+                
+
+                new template_modal({
+                    title: "Modificar Datos del Cliente",
+                    btn_rigth_function: "Modificar_registro_msg()",
+                    btn_rigth_text: "Guardar Cambios"
+                });
+                
+                
+            });
+
+        }
+
+    } 
+
+    Nuevo_registro = function(e){
+
+        new template_modal({
+            title: "Nuevo Registro de Pago",
+            btn_rigth_function: "Agregar_registro()",
+            reset_form: "modal_form",
+            btn_rigth_text: "Crear Registro"
+        });
+
+    }
+
+    Eliminar_msg = function(e){
+
+        new template_modal_advert({
+            title: "¿Esta Seguro que desea Eliminar?",
+            btn_rigth_function: "Eliminar_registro()",
+            btn_rigth_text: "Si, Eliminar"
+        });
+        
+    }
+</script>
+
 {% endblock %}

@@ -187,17 +187,16 @@
         
     }
 
-var index_tb = {
-                     "data": [
-                            ["id"],
-                            [ "nombre", 
-                              "apellido"], 
-                            [ "tipo_servicio"], 
-                            [ "estatus_servicio"], 
-                            [ "dia_cobro" ]
-                        ],
-                     "upper": [1] 
-                    };
+    var index_tb = {
+                        "data": [
+                                ["id"],
+                                ["ip"], 
+                                ["mac_address"], 
+                                ["nombre"], 
+                                ["estatus_servicio"]
+                            ],
+                        "upper": [3] 
+                        };
 
 
 </script>
@@ -208,10 +207,10 @@ var index_tb = {
 {% block headtable %}
     <tr>
         <th><input type="checkbox" id="check-all"></th>
+        <th>IP</th>
+        <th>Mac</th>
         <th>Nombre</th>
-        <th>Tipo de Servicio</th>
-        <th>Estado del Servicio</th>
-        <th>Dia de Cobro</th>
+        <th>Estatus</th>
     </tr>
 
 {% endblock %}
@@ -219,10 +218,10 @@ var index_tb = {
 {% block bodytable %}
     <tr class="id_{{dato.id}}">
         <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
-        <td>{{dato.nombre|upper }} {{dato.apellido|upper }}</td>
-        <td>{{dato.tipo_servicio}}</td>
+        <td><a target="_blank" href="http://{{dato.ip}}">{{dato.ip}}</a></td>
+        <td>{{dato.mac_address}}</td>
+        <td>{{dato.nombre}}</td>
         <td>{{dato.estatus_servicio}}</td>
-        <td>{{dato.dia_cobro}}</td>
     </tr>
 
     <script>

@@ -90,201 +90,17 @@
 
 
 {% block js %}
-
-{% block data_var %}
+{{ parent() }}
 <script type="text/javascript">
-	
-	var columnDefs = {
-                "targets": [ 0 ],
-                "searchable": false,
-				"sorting": false
-            };
 
-</script>
-{% endblock %}
 
-<script type="text/javascript">
-	
-	//traducion de datatable
-	var spanis ={
-				    "processing": "Procesando...",
-				    "lengthMenu": "Mostrar _MENU_ registros",
-				    "zeroRecords": "No se encontraron resultados",
-				    "emptyTable": "Ningún dato disponible en esta tabla",
-				    "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-				    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
-				    "search": "Buscar:",
-				    "infoThousands": ",",
-				    "loadingRecords": "Cargando...",
-				    "paginate": {
-				        "first": "Primero",
-				        "last": "Último",
-				        "next": "Siguiente",
-				        "previous": "Anterior"
-				    },
-				    "aria": {
-				        "sortAscending": ": Activar para ordenar la columna de manera ascendente",
-				        "sortDescending": ": Activar para ordenar la columna de manera descendente"
-				    },
-				    "buttons": {
-				        "copy": "Copiar",
-				        "colvis": "Visibilidad",
-				        "collection": "Colección",
-				        "colvisRestore": "Restaurar visibilidad",
-				        "copyKeys": "Presione ctrl o u2318 + C para copiar los datos de la tabla al portapapeles del sistema. <br \/> <br \/> Para cancelar, haga clic en este mensaje o presione escape.",
-				        "copySuccess": {
-				            "1": "Copiada 1 fila al portapapeles",
-				            "_": "Copiadas %d fila al portapapeles"
-				        },
-				        "copyTitle": "Copiar al portapapeles",
-				        "csv": "CSV",
-				        "excel": "Excel",
-				        "pageLength": {
-				            "-1": "Mostrar todas las filas",
-				            "1": "Mostrar 1 fila",
-				            "_": "Mostrar %d filas"
-				        },
-				        "pdf": "PDF",
-				        "print": "Imprimir"
-				    },
-				    "autoFill": {
-				        "cancel": "Cancelar",
-				        "fill": "Rellene todas las celdas con <i>%d<\/i>",
-				        "fillHorizontal": "Rellenar celdas horizontalmente",
-				        "fillVertical": "Rellenar celdas verticalmentemente"
-				    },
-				    "decimal": ",",
-				    "searchBuilder": {
-				        "add": "Añadir condición",
-				        "button": {
-				            "0": "Constructor de búsqueda",
-				            "_": "Constructor de búsqueda (%d)"
-				        },
-				        "clearAll": "Borrar todo",
-				        "condition": "Condición",
-				        "conditions": {
-				            "date": {
-				                "after": "Despues",
-				                "before": "Antes",
-				                "between": "Entre",
-				                "empty": "Vacío",
-				                "equals": "Igual a",
-				                "notBetween": "No entre",
-				                "notEmpty": "No Vacio",
-				                "not": "Diferente de"
-				            },
-				            "number": {
-				                "between": "Entre",
-				                "empty": "Vacio",
-				                "equals": "Igual a",
-				                "gt": "Mayor a",
-				                "gte": "Mayor o igual a",
-				                "lt": "Menor que",
-				                "lte": "Menor o igual que",
-				                "notBetween": "No entre",
-				                "notEmpty": "No vacío",
-				                "not": "Diferente de"
-				            },
-				            "string": {
-				                "contains": "Contiene",
-				                "empty": "Vacío",
-				                "endsWith": "Termina en",
-				                "equals": "Igual a",
-				                "notEmpty": "No Vacio",
-				                "startsWith": "Empieza con",
-				                "not": "Diferente de"
-				            },
-				            "array": {
-				                "not": "Diferente de",
-				                "equals": "Igual",
-				                "empty": "Vacío",
-				                "contains": "Contiene",
-				                "notEmpty": "No Vacío",
-				                "without": "Sin"
-				            }
-				        },
-				        "data": "Data",
-				        "deleteTitle": "Eliminar regla de filtrado",
-				        "leftTitle": "Criterios anulados",
-				        "logicAnd": "Y",
-				        "logicOr": "O",
-				        "rightTitle": "Criterios de sangría",
-				        "title": {
-				            "0": "Constructor de búsqueda",
-				            "_": "Constructor de búsqueda (%d)"
-				        },
-				        "value": "Valor"
-				    },
-				    "searchPanes": {
-				        "clearMessage": "Borrar todo",
-				        "collapse": {
-				            "0": "Paneles de búsqueda",
-				            "_": "Paneles de búsqueda (%d)"
-				        },
-				        "count": "{total}",
-				        "countFiltered": "{shown} ({total})",
-				        "emptyPanes": "Sin paneles de búsqueda",
-				        "loadMessage": "Cargando paneles de búsqueda",
-				        "title": "Filtros Activos - %d"
-				    },
-				    "select": {
-				        "1": "%d fila seleccionada",
-				        "_": "%d filas seleccionadas",
-				        "cells": {
-				            "1": "1 celda seleccionada",
-				            "_": "$d celdas seleccionadas"
-				        },
-				        "columns": {
-				            "1": "1 columna seleccionada",
-				            "_": "%d columnas seleccionadas"
-				        }
-				    },
-				    "thousands": ".",
-				    "datetime": {
-				        "previous": "Anterior",
-				        "next": "Proximo",
-				        "hours": "Horas",
-				        "minutes": "Minutos",
-				        "seconds": "Segundos",
-				        "unknown": "-",
-				        "amPm": [
-				            "am",
-				            "pm"
-				        ]
-				    },
-				    "editor": {
-				        "close": "Cerrar",
-				        "create": {
-				            "button": "Nuevo",
-				            "title": "Crear Nuevo Registro",
-				            "submit": "Crear"
-				        },
-				        "edit": {
-				            "button": "Editar",
-				            "title": "Editar Registro",
-				            "submit": "Actualizar"
-				        },
-				        "remove": {
-				            "button": "Eliminar",
-				            "title": "Eliminar Registro",
-				            "submit": "Eliminar",
-				            "confirm": {
-				                "_": "¿Está seguro que desea eliminar %d filas?",
-				                "1": "¿Está seguro que desea eliminar 1 fila?"
-				            }
-				        },
-				        "error": {
-				            "system": "Ha ocurrido un error en el sistema (<a target=\"\\\" rel=\"\\ nofollow\" href=\"\\\">Más información&lt;\\\/a&gt;).<\/a>"
-				        },
-				        "multi": {
-				            "title": "Múltiples Valores",
-				            "info": "Los elementos seleccionados contienen diferentes valores para este registro. Para editar y establecer todos los elementos de este registro con el mismo valor, hacer click o tap aquí, de lo contrario conservarán sus valores individuales.",
-				            "restore": "Deshacer Cambios",
-				            "noMulti": "Este registro puede ser editado individualmente, pero no como parte de un grupo."
-				        }
-				    },
-				    "info": "Mostrando de _START_ a _END_ de _TOTAL_ entradas"
-	};
+	var rutas = { 
+				obtener: 'pagos/obtener',
+				agregar: 'pagos/agregar',
+				eliminar: 'pagos/eliminar',
+				modificar: 'pagos/modificar',
+				funcion: {add: ''}
+				};
 
 
 	// carga funciones 
@@ -336,33 +152,26 @@
 		});
 
 		//Refrecar Estado de las opciones
-		function status_options(){
+		status_options = function(){
 			//console.log("hola");
-
+			b = document.getElementsByClassName('option_btn');
+			
 			cell = CeldasCheck();
 			checkcount = cell.id.length;
 
-			if(checkcount > 0 && checkcount < 2){
-				document.getElementById("btn_editar").disabled = false;
-				document.getElementById("btn_editar").className = "btn btn-primary btn-sm"
-				document.getElementById("btn_eliminar").disabled = false;
-				document.getElementById("btn_eliminar").className = "btn btn-primary btn-sm"
-				document.getElementById("btn_nuevo_registro").disabled = true;
-				document.getElementById("btn_nuevo_registro").className = "btn btn-secondary btn-sm"
-			}else if(checkcount > 1){
-				document.getElementById("btn_editar").disabled = true;
-				document.getElementById("btn_editar").className = "btn btn-secondary btn-sm"
-				document.getElementById("btn_eliminar").disabled = false;
-				document.getElementById("btn_eliminar").className = "btn btn-primary btn-sm"
-				document.getElementById("btn_nuevo_registro").disabled = true;
-				document.getElementById("btn_nuevo_registro").className = "btn btn-secondary btn-sm"
-			}else{
-				document.getElementById("btn_editar").disabled = true;
-				document.getElementById("btn_editar").className = "btn btn-secondary btn-sm"
-				document.getElementById("btn_eliminar").disabled = true;
-				document.getElementById("btn_eliminar").className = "btn btn-secondary btn-sm"
-				document.getElementById("btn_nuevo_registro").disabled = false;
-				document.getElementById("btn_nuevo_registro").className = "btn btn-primary btn-sm"
+			for(i=0; i<b.length; i++){
+				
+				if(b[i].dataset.i == checkcount){
+					b[i].className = 'option_btn btn btn-primary btn-sm';
+					b[i].disabled = false;
+				}else if(checkcount > 0 && b[i].dataset.i == "2"){
+					b[i].className = 'option_btn btn btn-primary btn-sm';
+					b[i].disabled = false;
+				}else{
+					b[i].className = 'option_btn btn btn-secondary btn-sm';
+					b[i].disabled = true;
+				}
+				
 			}
 			 
 		}
@@ -387,83 +196,43 @@
 		}
 		
 		
-		// llama Modals
-		Obtener_registro = function(e){
-
-			var url = "{{base_dir_controller}}{% block rutaobtener "" %}";
-			var data = CeldasCheck();
-			
-
-			if(data.id.length == 1){
-
-				$.post(url, data).done(function(resp){
-
-					resp = JSON.parse(resp);
-
-					resp.forEach(function(value){
-
-						cargar_form(value);
-						
-					});
-					
-
-					new template_modal({
-						title: "Modificar Datos del Cliente",
-						btn_rigth_function: "Modificar_registro_msg()",
-						btn_rigth_text: "Guardar Cambios"
-					});
-					
-					
-				});
-
-			}
-
-		}
-
-		Nuevo_registro = function(e){
-
-			new template_modal({
-				title: "Agregar Nuevo Cliente",
-				btn_rigth_function: "Agregar_registro()",
-				reset_form: "modal_form",
-				btn_rigth_text: "Crear Registro"
-			});
-	
-		}
-
-		Eliminar_msg = function(e){
-
-			new template_modal_advert({
-				title: "¿Esta Seguro que desea Eliminar?",
-				btn_rigth_function: "Eliminar_registro()",
-				btn_rigth_text: "Si, Eliminar"
-			});
-			
-		}
+		
 
 		//
 		Eliminar_registro = function(e){
-			var url = "{{base_dir_controller}}{% block rutaeliminar "" %}";
+			var url = "{{base_dir_controller}}"+rutas.eliminar;
 			
-			var data = CeldasCheck();
+			var data = {funcion: "", data: ""};
+			data.data = CeldasCheck();
+			data.funcion = rutas.funcion.eliminar;
 			
 			$.post(url, data).done(function(resp){
 
 				resp = JSON.parse(resp);
+				
+				if(typeof(resp) == "object"){
 
-				resp.id.forEach(function(value){
-					table.row($('#tb_principal tbody .id_'+value)).remove().draw();
-				});
+					resp.data.id.forEach(function(value){
+						table.row($('#tb_principal tbody .id_'+value)).remove().draw();
+					});
 
-				$(".bs-example-modal-md").modal("hide");
-				status_options();
+					$(".bs-example-modal-md").modal("hide");
+					status_options();
 
-				new PNotify({
-							title: 'Eliminado',
-							text: 'Los registros han sido eliminados correctamente',
-							type: 'success',
+					new PNotify({
+								title: 'Eliminado',
+								text: 'Los registros han sido eliminados correctamente',
+								type: 'success',
+								styling: 'bootstrap3'
+							});
+				}else{
+					new PNotify({
+							title: 'Ocurrio un error',
+							text: 'Los registros No han sido Eliminados correctamente',
+							type: 'error',
 							styling: 'bootstrap3'
 						});
+				}
 				
 			});
 			
@@ -484,11 +253,17 @@
 
 		Modificar_registro = function(e){
 
-			var url = "{{base_dir_controller}}{% block rutaeditar "" %}";
+			var url = "{{base_dir_controller}}"+rutas.modificar;
 			$(".bs-example-modal-md").modal("hide");
 
+			var temp = $( "#modal_form" ).serializeArray()
+    				.reduce(function(a, z) { a[z.name] = z.value; return a; }, {});
 
-			$.post(url, $( "#modal_form" ).serialize()).done(function(data){
+			var dataform = {funcion: "", data: ""};
+			dataform.funcion = rutas.funcion.modificar;
+			dataform.data = temp; 
+
+			$.post(url, dataform).done(function(data){
 				
 				data = JSON.parse(data);
 				fila = [];
@@ -531,23 +306,34 @@
 			
 		}
 
-
 		Agregar_registro = function(e){
 
-			var url = "{{base_dir_controller}}{% block rutaagregar "" %}";
+			var url = "{{base_dir_controller}}"+rutas.agregar;
 			document.getElementById("modal-btn-save").disabled = true;
 
-			$.post(url, $( "#modal_form" ).serialize()).done(function(data){
+			var temp = $( "#modal_form" ).serializeArray()
+    				.reduce(function(a, z) { a[z.name] = z.value; return a; }, {});
+
+			var dataform = {funcion: "", data: ""};
+			dataform.funcion = rutas.funcion.add;
+			dataform.data = temp; 
+
+			$.post(url, dataform).done(function(data){
 				
 				data = JSON.parse(data);
 				fila = [];
 				if(typeof(data) == "object"){
 					
+					if(!validar(data)){
+						document.getElementById("modal-btn-save").disabled = false;
+						return 0;					
+					}
+
 					fila = addRow(data, index_tb);
 					fila[0][0] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+data[0].id+'">'
 					
 
-					table.row.add(fila[0]).draw().nodes().to$().addClass( 'id_'+data[0].id );;
+					table.row.add(fila[0]).draw().nodes().to$().addClass( 'id_'+data[0].id );
 
 					new PNotify({
 							title: 'Registro Creado',
@@ -582,113 +368,6 @@
 
 	});
 
- 	//Cargar datos al Form 
-	function cargar_form(data){
-			
-			keys = Object.keys(data);
-			
-			keys.forEach(function(key){
-
-			temp = "form_"+key;
-
-			try{
-				document.getElementById(temp).value = data[key];
-			}catch{
-				console.log("No se cargaron algunso campos porque no existe el id");
-			}
-			
-
-			});
-	}
-	function addRow(data, index_columns){
-    
-			data_row = [];
-		
-			data.forEach(function(registro, index){
-				
-				data_row[index] = [];
-
-				index_columns.data.forEach(function(value, index2){
-
-					data_row[index][index2] = "";
-					value.forEach(function(key, index3){
-						data_row[index][index2] += (value.length == index3+1) ? registro[key] : registro[key]+" ";
-					});
-
-				});
-
-				index_columns.upper.forEach(function(key){
-					data_row[index][key] = data_row[index][key].toUpperCase();
-				});
-			});
-			
-
-			
-
-			return data_row;
-	}
-
-	class template_modal {
-
-
-		constructor(datos) {
-			
-			if(typeof(datos) == "object"){
-
-				this.title = datos.title == undefined ? "Sin Titulo" : datos.title;
-				this.btn_rigth_function = datos.btn_rigth_function == undefined ? "alert('Sin funcion')" : datos.btn_rigth_function;
-				this.reset_form = datos.reset_form == undefined ? false : datos.reset_form;
-				this.btn_rigth_text = datos.btn_rigth_text == undefined ? "OK" : datos.btn_rigth_text;
-				
-
-				document.getElementById("modal-btn-save").dataset.event_function = this.btn_rigth_function;
-				document.getElementById("modal-btn-save").textContent = this.btn_rigth_text;
-				document.getElementById("Modaltitle").textContent = this.title;
-				document.getElementById("modal-btn-save").disabled = false;
-
-				if(this.reset_form){
-					document.getElementById(this.reset_form).reset();
-				}
-				
-				$(".bs-example-modal-lg").modal();
-
-			}else{
-				alert("error al definir modal")
-			}
-			
-		
-		}
-	}
-
-	class template_modal_advert {
-
-
-		constructor(datos) {
-			
-			if(typeof(datos) == "object"){
-
-				this.title = datos.title == undefined ? "Sin Titulo" : datos.title;
-				this.btn_rigth_function = datos.btn_rigth_function == undefined ? "alert('Sin funcion')" : datos.btn_rigth_function;
-				this.reset_form = datos.reset_form == undefined ? false : datos.reset_form;
-				this.btn_rigth_text = datos.btn_rigth_text == undefined ? "OK" : datos.btn_rigth_text;
-
-				document.getElementById("advertmodal-btn-yes").dataset.event_function = this.btn_rigth_function;
-				document.getElementById("Modaltitleadvert").textContent = this.title;
-				document.getElementById("advertmodal-btn-yes").textContent = this.btn_rigth_text;
-
-				if(this.reset_form){
-					document.getElementById(this.reset_form).reset();
-				}
-				
-				$(".bs-example-modal-md").modal();
-
-			}else{
-				alert("error al definir modal")
-			}
-			
-		
-		}
-	}
 
 </script>
 {% endblock %}

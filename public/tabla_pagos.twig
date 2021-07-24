@@ -1,11 +1,5 @@
 {% extends "tabla.twig" %}
 
-{# Rutas #}
-{% block rutaeditar "/pagos/editar" %}
-{% block rutaeliminar "/pagos/eliminar" %}
-{% block rutaagregar "/pagos/add" %}
-{% block rutaobtener "/pagos/getdata" %}
-
 {% block titlepage %}
 		<h3>Pagos <small></small></h3>
 {% endblock %}
@@ -17,14 +11,71 @@
 {# botones de Edicion #}
 {% block buttonpage %}
     <div class="x_content">
-
+ 
         <div class="buttons">
-            <button type="button" class="btn btn-primary btn-sm"  id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Nuevo Pago</button>
-            <button type="button" class="btn btn-secondary btn-sm" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>
-            <button type="button" class="btn btn-secondary btn-sm" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
+            <button type="button" class="option_btn btn btn-primary btn-sm"  data-i="0" id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Nuevo Pago</button>
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="1" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="2" disabled id="btn_cobrar" onclick="cobrar()" >Cobrar</button>
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="2" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
             
         </div>
         
+    </div>
+    <div class="modal fade bs-example-modal-cobrar" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+        <div class="modal-header">
+            <h4 class="modal-title" id="Modaltitle">Cobrar Pagos</h4>
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="form-label-left input_mask" id="modal_form_cobrar">
+                
+                <div class="col-md-6 col-sm-6 has-feedback">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3 col-sm-3 ">Cuenta: </label>
+                        <div class="col-md-9 col-sm-9 ">
+                            <select class="form-control" name="cuenta" id="form_id_cuenta"> 
+                                <option value="1" >Carlos Rodriguez</option>
+                                <option value="2" >Vicente Lopez</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 has-feedback">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-4 col-sm-4 ">Fecha de Pago<span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 ">
+                            <input class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" required="required" name="fecha_cobro" id="form_fecha_cobro" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
+                            <script>
+                                function timeFunctionLong(input) {
+                                    setTimeout(function() {
+                                        input.type = 'text';
+                                    }, 60000);
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+
+                
+            </form>
+        </div>
+        
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" id="modal-btn-cobrar" onclick="cobrar(true)">Cobrar</button>
+        </div>
+        
+
+        </div>
+        </div>
     </div>
 {% endblock %}
 
@@ -36,6 +87,7 @@
         <div class="x_content">
             <br>
             <form class="form-label-left input_mask" id="modal_form">
+                <input type="hidden" id="form_id" name="id" value="1">
                 <input type="hidden" id="form_id_cliente" name="id_cliente" value="1">
                 <div class="col-md-12 col-sm-12  form-group has-feedback">
                     <input type="text" class="form-control has-feedback-left" id="form_buscar_cliente" placeholder="Buscar Cliente">
@@ -72,19 +124,16 @@
                 </script>
                 <div class="col-md-6 col-sm-6 has-feedback">
                     <div class="form-group row">
-                        <label class="col-form-label col-md-5 col-sm-5 ">Fecha de Cobro<span class="required">*</span>
-                        </label>
+                        <label class="col-form-label col-md-5 col-sm-5 "> Mes a pagar</label>
                         <div class="col-md-7 col-sm-7 ">
-                            <input class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" required="required" name="fecha_cobro" id="form_fecha_cobro" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
-                            <script>
-                                function timeFunctionLong(input) {
-                                    setTimeout(function() {
-                                        input.type = 'text';
-                                    }, 60000);
-                                }
-                            </script>
+                            <select class="form-control" name="mes">
+                            {% for mes in meses %} 
+                                <option value="{{mes.id}}">{{mes.nombre}}</option>
+                            {% endfor %}
+                            </select>
                         </div>
                     </div>
+                    
                 </div>
                 <div class="col-md-6 col-sm-6 has-feedback">
                     <div class="form-group row">
@@ -115,9 +164,136 @@
 {% block js %}
 
     {{ parent() }}
-
-    <script>
     
+    <script>
+
+    var index_tb = {
+                    "data": [
+                        ["id"],
+                        [ "nombre", 
+                            "apellido"],
+                        ["nombre_mes"], 
+                        [ "fecha_cobro"], 
+                        [ "monto"], 
+                        [ "estado" ]
+                    ],
+                    "upper": [1,2] 
+                };
+
+    rutas.funcion.add = 'crear_pago';
+    rutas.funcion.eliminar = 'eliminar_pago';
+    rutas.funcion.getdata = 'obtener_pago';
+    rutas.funcion.modificar = 'modificar_pago';
+
+    // llama Modals
+    Obtener_registro = function(e){
+
+        var url = "{{base_dir_controller}}"+rutas.obtener;
+        
+        var data = {funcion: "", data: ""};
+			data.data = CeldasCheck();
+			data.funcion = rutas.funcion.getdata;
+
+        if(data.data.id.length == 1){
+
+            $.post(url, data).done(function(resp){
+
+                resp = JSON.parse(resp);
+
+                resp.forEach(function(value){
+
+                    cargar_form(value);
+                    
+                });
+                
+
+                new template_modal({
+                    title: "Modificar Datos del Pago",
+                    btn_rigth_function: "Modificar_registro_msg()",
+                    btn_rigth_text: "Guardar Cambios"
+                });
+                
+                
+            });
+
+        }
+
+    } 
+
+    Nuevo_registro = function(e){
+
+        new template_modal({
+            title: "Nuevo Registro de Pago",
+            btn_rigth_function: "Agregar_registro()",
+            reset_form: "modal_form",
+            btn_rigth_text: "Crear Registro"
+        });
+
+    }
+
+    Eliminar_msg = function(e){
+
+        new template_modal_advert({
+            title: "¿Esta Seguro que desea Eliminar?",
+            btn_rigth_function: "Eliminar_registro()",
+            btn_rigth_text: "Si, Eliminar"
+        });
+        
+    }
+
+    cobrar = function(e = false){
+
+        if(e){
+
+            var url = "{{base_dir_controller}}pagos/agregar";
+            document.getElementById("modal-btn-cobrar").disabled = true;
+
+            var temp = $( "#modal_form_cobrar" ).serializeArray()
+                    .reduce(function(a, z) { a[z.name] = z.value; return a; }, {});
+
+            var dataform = {funcion: "", data: ""};
+            dataform.funcion = 'cobrar_pago';
+            dataform.data = temp;
+            dataform.data.pagos = CeldasCheck(); 
+
+            $.post(url, dataform).done(function(resp){
+
+                resp = JSON.parse(resp);
+
+                document.getElementById("modal-btn-cobrar").disabled = false;
+
+                if(!validar(resp)){
+                    
+                    return 0;
+
+                }
+
+                resp[0].forEach(function(value){
+
+                    table.row($('#tb_principal tbody .id_'+value.id)).remove().draw();
+                    
+                });
+
+                $(".bs-example-modal-cobrar").modal("hide");
+				status_options();
+
+                new PNotify({
+                            title: 'Registrado',
+                            text: 'Los pagos han sido registrados correctamente',
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                
+            });
+
+        }else{
+
+            $(".bs-example-modal-cobrar").modal();
+
+        }
+        
+    }
+
     var datos_clientes = 0;
     $.get("{{base_dir_controller}}//clientes/obtenerclientes").done(function(data){
       
@@ -158,7 +334,6 @@
 
     });
 
-
     function cargar_cliente($this){
         console.log(datos_clientes);
         datos_clientes.forEach(function(values){
@@ -192,33 +367,11 @@
 
 {# tabla #}
 
-{% block data_var %}
-    {{ parent() }}
-
-    <script type="text/javascript">
-
-        var index_tb = {
-                    "data": [
-                        ["id"],
-                        [ "nombre", 
-                            "apellido"], 
-                        [ "fecha_cobro"], 
-                        [ "monto"], 
-                        [ "estado" ]
-                    ],
-                    "upper": [1] 
-                };
-
-
-    </script>
-
-
-{% endblock %}
-
 {% block headtable %}
     <tr>
         <th><input type="checkbox" id="check-all"></th>
         <th>Cliente</th>
+        <th>Mes</th>
         <th>Fecha de Cobro</th>
         <th>Monto</th>
         <th>Estado</th>
@@ -229,15 +382,13 @@
 {% block bodytable %}
     <tr class="id_{{dato.id}}">
         <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
-        <td>{{dato.nombre|upper}} {{dato.apellido|upper}}</td>
+        <td>{{dato.cliente.nombre|upper}} {{dato.cliente.apellido|upper}}</td>
+        <td>{{dato.mes.nombre|upper}}</td>
         <td>{{dato.fecha_cobro}}</td>
         <td>{{dato.monto}}</td>
         <td>{{dato.estado}}</td>
     </tr>
 
-    <script>
-        
-    </script>
 {% endblock %}
 
 {# fin tabla #}

@@ -1,12 +1,12 @@
 {% extends "tabla.twig" %}
 
 {% block titlepage %}
-		<h3>Clientes <small></small></h3>
+		<h3>Pagos <small></small></h3>
 {% endblock %}
 
 
 {% block subtitlepage %}
-            <h2>Lista de todos clientes <small></small></h2>
+            <h2>Listado de Meses <small></small></h2>
 {% endblock %}
 
 {# botones de Edicion #}
@@ -14,12 +14,56 @@
     <div class="x_content">
 
         <div class="buttons">
-            <button type="button" class="btn btn-primary btn-sm"  id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Genenrar Nuevo</button>
-            <button type="button" class="btn btn-secondary btn-sm" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>
-            <button type="button" class="btn btn-secondary btn-sm" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
-            
+           <button type="button" class="option_btn btn btn-primary btn-sm"  data-i="0" id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Generar Nuevo</button>
+            <!--<button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="1" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>-->
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="2" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
         </div>
         
+    </div>
+{% endblock %}
+
+{% block modalcontent %}
+	<div class="x_panel">
+        
+        <div class="x_content">
+            <br>
+            <form class="form-label-left input_mask" id="modal_form">
+                <input type="hidden" id="form_id" name="id">
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Mes a Generar</label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <select class="form-control" name="mes"> 
+                            <option>Enero</option>
+                            <option>Febrero</option>
+                            <option>Marzo</option>
+                            <option>Abril</option>
+                            <option>Mayo</option>
+                            <option>Junio</option>
+                            <option>Julio</option>
+                            <option>Agosto</option>
+                            <option>Septiembre</option>
+                            <option>Octubre</option>
+                            <option>Noviembre</option>
+                            <option>Diciembre</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-sm-3 ">
+                        <select class="form-control" name="year"> 
+                            <option>2020</option>
+                            <option>2021</option>
+                            <option>2022</option>
+                            <option>2023</option>
+                            <option>2024</option>
+                            <option>2025</option>
+                            <option>2026</option>
+                            <option>2027</option>
+                            <option>2028</option>
+                        </select>
+                    </div>
+                </div>
+
+            </form>
+        </div>
     </div>
 {% endblock %}
 
@@ -38,9 +82,9 @@
 
 
 {% block bodytable %}
-    <tr>
+    <tr class="id_{{dato.id}}">
         <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
-        <td><a href="#">{{dato.nombre}}</a></td>
+        <td><a href="#">{{dato.nombre|upper}}</a></td>
         <td>{{dato.clientes_activos}}</td>
         <td>{{dato.clientes_retirados}}</td>
         <td>{{dato.gastos}}</td>
@@ -48,4 +92,86 @@
         <td>{{dato.ingresos - dato.gastos}}</td>
 
     </tr>
+{% endblock %}
+
+
+{% block js %}
+{{ parent() }}
+<script>
+
+    var index_tb = {
+                    "data": [
+                        ['id'],
+                        ["nombre"],
+                        ["clientes_activos"], 
+                        ["clientes_retirados"], 
+                        [ "gastos"], 
+                        [ "ingresos"], 
+                        [ "ingresos" ]
+                    ],
+                    "upper": [1] 
+                };
+    rutas.funcion.add = 'generar_mes';
+    rutas.funcion.eliminar = 'eliminar_mes';
+    rutas.funcion.getdata = 'obtener_mes';
+    rutas.funcion.modificar = 'modificar_pago';
+
+    // llama Modals
+     Obtener_registro = function(e){
+
+        var url = "{{base_dir_controller}}"+rutas.obtener;
+        
+        var data = {funcion: "", data: ""};
+			data.data = CeldasCheck();
+			data.funcion = rutas.funcion.getdata;
+
+        if(data.data.id.length == 1){
+
+            $.post(url, data).done(function(resp){
+
+                resp = JSON.parse(resp);
+
+                resp.forEach(function(value){
+
+                    cargar_form(value);
+                    
+                });
+                
+
+                new template_modal({
+                    title: "Modificar Datos del Mes",
+                    btn_rigth_function: "Modificar_registro_msg()",
+                    btn_rigth_text: "Guardar Cambios"
+                });
+                
+                
+            });
+
+        }
+
+    } 
+
+
+    Nuevo_registro = function(e){
+
+        new template_modal({
+            title: "Generar Nuevo Mes",
+            btn_rigth_function: "Agregar_registro()",
+            reset_form: "modal_form",
+            btn_rigth_text: "Crear Registro"
+        });
+
+    }
+
+    Eliminar_msg = function(e){
+
+        new template_modal_advert({
+            title: "¿Esta Seguro que desea Eliminar?",
+            btn_rigth_function: "Eliminar_registro()",
+            btn_rigth_text: "Si, Eliminar"
+        });
+        
+    }
+</script>
+
 {% endblock %}
