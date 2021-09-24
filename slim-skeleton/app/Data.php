@@ -342,7 +342,7 @@ class Data
 	}
 
 	function Clientes(){
-		return Models\Clientes::get();
+		return Models\Clientes::where('estatus_servicio', '!=', 'Opcional')->get();
 	}
 
 	function getCliente($id){
@@ -730,6 +730,24 @@ class Data
 		}
 
 
+	}
+
+	function crear_gasto($data){
+		$gasto = Models\Gastos::create($data);
+		for ($i=0; $i < 100000000; $i++) { 
+			# code...
+		}
+		return $gasto;
+	}
+
+	function procesar_gasto(){
+		return "pasto";
+	}
+
+	function obtener_gasto($data){
+		$gasto = Models\Gastos::find($data["gastos"]);
+
+		return [$gasto];
 	}
 
 }

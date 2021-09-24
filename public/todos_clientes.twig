@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block subtitlepage %}
-            <h2>Lista de todos clientes <small></small></h2>
+            <h2>Lista de todos clientes<small></small></h2>
 {% endblock %}
 
 {# botones de Edicion #}
@@ -125,6 +125,10 @@
 {{ parent() }}
 
 <script type="text/javascript">
+    rutas.obtener = 'data/obtener/cliente';
+    rutas.agregar = 'data/agregar/cliente';
+    rutas.eliminar = 'data/eliminar/cliente';
+    rutas.modificar = 'data/modificar/cliente';
 
     rutas.funcion.add = 'crear_usuario';
     rutas.funcion.eliminar = 'eliminar_usuario';
@@ -145,6 +149,10 @@
             $.post(url, data).done(function(resp){
 
                 resp = JSON.parse(resp);
+
+                if(!validar(resp)){						
+						return 0;					
+				}
 
                 resp.forEach(function(value){
 

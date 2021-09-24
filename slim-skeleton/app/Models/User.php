@@ -15,6 +15,9 @@ class User extends Model
 		'admin'
 	];
 	
+	public function rutas(){
+		return  $this->hasMany('App\Models\RutaUser', 'id_user');
+	}
 }
 
 ?>

@@ -13,6 +13,11 @@ return function (App $app) {
         return new \App\Middleware\AuthMiddleware($container);
     };
 
+    $container['MenuMiddleware'] = function ($container)
+    {
+        return new \App\Middleware\MenuMiddleware($container);
+    };
+
     $app->add(function (Request $request, Response $response, callable $next) {
        
         $uri = $request->getUri();

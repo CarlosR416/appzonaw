@@ -20,5 +20,15 @@ class Meses extends Model
 		return  $this->hasMany('App\Models\Pagos', 'id_mes');
 	}
 
+
+    public function gastos(){
+		return  $this->hasMany('App\Models\Gastos', 'id_mes');
+	}
+
+    public function movimientos(){
+		return  $this->hasMany('App\Models\MovCuentas', 'id_mes');
+	}
+
+   
 	
 }

@@ -1,9 +1,33 @@
  <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
-                <h3>General</h3>
+                <h3>Opciones</h3>
                 <ul class="nav side-menu" >
-                  <li><a><i class="fa fa-money"></i> Pagos <span class="fa fa-chevron-down"></span></a>
+
+                  {% for item in menu %}
+                  
+                  {% set carga_menu = false %}
+
+                    {% for ruta in session_user.rutas %}
+                        {% if ruta.ruta.id_menu == item.id %}
+                          {% set carga_menu = true %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if carga_menu %}
+                    <li><a><i class="fa {{item.icono}}"></i> {{item.nombre}} <span class="fa fa-chevron-down"></span></a>
+                      <ul class="nav child_menu">
+                      {% for ruta in session_user.rutas %}
+                        {% if ruta.ruta.id_menu == item.id %}
+                            <li><a href="{{base_dir_controller}}{{ruta.ruta.ruta}}">{{ruta.ruta.nombre}}</a></li>
+                        {% endif %}
+                      {% endfor %}
+                      </ul>
+                    </li>
+                    {% endif %}
+
+                  {% endfor %}
+                  <!--<li><a><i class="fa fa-money"></i> Pagos <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{{base_dir_controller}}pagos/cobrar">Cobrar</a></li>
                       <li><a href="{{base_dir_controller}}pagos/pendientes">Pendientes</a></li>
@@ -25,9 +49,10 @@
                       <li><a href="{{base_dir_controller}}clientes/intrusos">Intrusos</a></li>
                       <li><a href="{{base_dir_controller}}clientes/opcionales">Opcionales</a></li>
                     </ul>
-                  </li>
+                  </li>-->
                 </ul>
               </div>
 
             </div>
 <!-- /sidebar menu -->
+

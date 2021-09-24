@@ -27,7 +27,6 @@ class Pagos
         return $this->container->twig->render($this->container->response,  "tabla_pagos.twig", $args);
     }
 
-
     function solventes(){
         $datos = new \App\Data;
         $args = [];

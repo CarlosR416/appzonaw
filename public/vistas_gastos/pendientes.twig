@@ -1,0 +1,1307 @@
+{% extends "tabla.twig" %}
+
+{% block js_script %}
+
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+<script src="{{base_dir}}/../js/React/Botones_CRUD.js" type="text/babel"></script>
+<script type="text/babel">
+
+
+
+    class Modal extends React.Component{
+        constructor(props){
+            super(props);
+            let fields = this.getFields(this.props.fields);
+            this.state = {
+                        fields,
+                        loading: false
+                    };
+
+            this.submit = this.submit.bind(this);
+            this.changeState = this.changeState.bind(this);
+        }
+
+        componentDidUpdate(prevProps) {
+            
+            if (this.props.fields.id !== this.state.fields.id) {
+                
+                let fields = this.getFields(this.props.fields);
+           
+                this.setState({fields});
+            }
+
+        }
+
+        getFields(fields){
+            let buffer = {};
+
+            for (const property in fields) {
+                    
+                if(fields[property] == null | fields[property] == undefined){
+                    
+                    buffer[property] = " ";
+                
+                }else{
+                    buffer[property] = fields[property];
+                }
+            } 
+
+            return buffer;
+        }
+
+
+        /*componentDidMount(){
+            
+            let fields = this.getFields(this.props.fields);
+           
+            this.setState({fields});
+        }*/
+
+        /*onChange2(event){
+
+           let value = event.target.value;
+           let name = event.target.name;
+           let buffer = this.props.changeState("get");
+    
+           buffer.InputsData[name] = value;
+
+           this.props.changeState("put", buffer);
+        }*/
+
+        changeState(action, state = {}){
+
+            if(action == "get"){
+                return this.state;
+            }else if(action == "put"){
+                this.setState(state);
+            }else{
+                return false;
+            }
+              
+        }
+
+        resetState(){
+            this.setState({
+                        fields: {
+                            descripcion: "",
+                            valor: "",
+                            id_mes: "",
+                            fecha: "" 
+                        }
+                    });
+
+        }
+        
+        submit(){
+            this.setState({loading: true});
+          
+            let param = this.state.fields;
+
+            let url = this.props.url.put;
+            
+            let data = new FormData();
+
+            //este es temporal
+            data.append("funcion", this.props.funcion);
+            //******
+
+            for (const property in param) {
+
+                data.append("data["+property+"]", param[property]);
+
+            } 
+
+            fetch(url, {
+                method: "POST",
+                body: data
+            })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    validar(result);
+                
+                    let fila = addRow(result, index_tb);
+                    
+                    fila[0][0] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+result[0].id+'">'
+                    
+
+                    table.row.add(fila[0]).draw().nodes().to$().addClass( 'id_'+result[0].id );
+
+                    new PNotify({
+                            title: 'Registro Creado',
+                            text: 'Los registros han sido creados correctamente',
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+
+                    $(".bs-example-modal-cobrar").modal("hide");
+                    this.setState({loading: false});
+                    this.resetState();
+                  
+                },
+                (error) => {
+                    console.error("Error al obtener gasto"+error);
+                    this.setState({loading: false});
+                }
+            );
+        }
+
+        render(){
+
+            return(
+                <div className="modal fade bs-example-modal-cobrar" tabIndex="-1" role="dialog" aria-hidden="true">
+                    <div className="modal-dialog modal-lg">
+                    <div className="modal-content">
+
+                    <div className="modal-header">
+                        <h4 className="modal-title" id="Modaltitle">{this.props.title}</h4>
+                        <button type="button" className="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        {this.props.BodyContent(this.changeState, this.state.fields)}
+                    </div>
+                    
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" disabled={this.state.loading} data-dismiss="modal">Cerrar</button>
+                        <button type="button" className="btn btn-primary" disabled={this.state.loading} id="modal-btn-cobrar" onClick={this.submit}>{this.props.button1}</button>
+                    </div>
+                    
+
+                    </div>
+                    </div>
+                </div>
+            );
+        }
+    }
+
+    class Formdata extends React.Component{
+        
+        constructor(props) {
+            super(props);
+            
+            this.onChange2 = this.onChange2.bind(this);
+
+        }
+        
+        /*componentDidUpdate(prevProps) {
+            
+            if (this.props.idGet !== prevProps.idGet) {
+
+                let buffer = this.props.dataDefault;
+            
+                for (const property in buffer) {
+                    
+                    if(buffer[property] == null | buffer[property] == undefined){
+                        
+                        buffer[property] = " ";
+                    
+                    }
+                    
+
+                } 
+                
+                this.props.changeState("put", {InputsData: buffer});
+            }
+
+        }*/
+
+        /*componentDidMount(){
+            let buffer = this.props.dataDefault;
+            
+                for (const property in buffer) {
+                    
+                    if(buffer[property] == null | buffer[property] == undefined){
+                        
+                        buffer[property] = " ";
+                    
+                    }
+                    
+
+                } 
+             
+            this.props.changeState("put", {CamposForm: buffer});
+        }*/
+
+        onChange2(event){
+
+           let value = event.target.value;
+           let name = event.target.name;
+           let buffer = this.props.changeState("get");
+           
+           buffer.fields[name] = value;
+
+           this.props.changeState("put", buffer);
+        }
+      
+    }
+
+
+    /************************************************************/    
+    class CamposForm extends React.Component{
+        
+        constructor(props) {
+            super(props);
+
+            this.onChange = this.onChange.bind(this);
+        }
+       
+
+        onChange(event = false){
+            
+            if(event){
+
+                this.props.onChange(event);
+                
+            }
+
+        }
+
+        
+    }
+    /*----------------------------------------------------------*/
+
+    class InputFecha extends CamposForm{ 
+
+        render(){
+
+            return(
+                <input 
+                    className="date-picker form-control" 
+                    placeholder="dd/mm/aaaa" 
+                    type="date"
+                    required="required"
+                    value={this.props.defaultValue} 
+                    name={this.props.name} 
+                    onChange={this.onChange}
+                />
+            );  
+        }
+                     
+    }
+
+    class InputData extends CamposForm{
+
+        constructor(props) {
+            super(props);
+            this.state = {
+            error: null,
+            isLoaded: false,
+            items: [],
+            selected: false
+            };
+
+            this.OnSelect = this.OnSelect.bind(this);
+
+        }
+
+        componentDidMount() {
+            this.onChange();
+            let url = null;
+            switch (this.props.data) {
+                case "meses":
+                    
+                    url = "{{base_dir_controller}}data/obtener/meses?funcion=obtener_meses&data=";
+                    
+                    break;
+
+                case "cuentas":
+
+                    url = "{{base_dir_controller}}data/obtener/cuentas?funcion=obtener_cuentas&data=";
+                    
+                    break; 
+
+                default:
+
+                    this.setState({
+                                isLoaded: true,
+                                error: {
+                                    message: "url no definida"
+                                },
+                            });
+
+                    break;  
+            }
+
+            if(url){
+
+                fetch(url)
+                .then(res => res.json())
+                .then(
+                    (result) => {
+
+                        if(result[0].error){
+
+                            this.setState({
+                                isLoaded: true,
+                                error: {
+                                    message: result[0].error
+                                },
+                            });
+
+                        }else{
+                            this.setState({
+                                isLoaded: true,
+                                items: result
+                            });
+                        }
+                        
+                    },
+                
+                    (error) => {
+                        
+                        this.setState({
+                            isLoaded: true,
+                            error
+                        });
+                    }
+                )
+
+            }
+        }
+
+        OnSelect(event){
+            if(event){
+                
+                this.setState({selected: true});
+                this.onChange(event);
+            }
+        }
+        
+        render(){
+            const { error, isLoaded, items } = this.state;
+
+            if (error) {
+                return <div>Error: {error.message}</div>;
+            } else if (!isLoaded) {
+                return <div>Loading...</div>;
+            } else {
+                return(
+                    
+                    <select 
+                        className="form-control" 
+                        name={this.props.name}
+                        value={this.props.defaultValue} 
+                        onChange={this.OnSelect}
+                    > 
+                    <option value="0" disabled={this.state.selected} >Seleccione...</option>
+                    {items.map(item => (
+                        <option value={item.id} key={item.id} >{item.nombre}</option>
+                    ))} 
+                                      
+                    </select>                    
+                ); 
+            }
+        }
+         
+    }
+
+    class InputText extends CamposForm{
+        
+
+        render(){
+
+            return(
+                <input 
+                    type="text" 
+                    className="form-control"
+                    value={this.props.value} 
+                    name={this.props.name}  
+                    placeholder={this.props.placeholder}
+                    onChange={this.onChange}
+                />
+                   
+            );
+        }
+          
+    }
+
+    class InputValue extends CamposForm{
+        
+        render(){
+            return(
+                <input 
+                    type="text" 
+                    className="form-control" 
+                    name={this.props.name}
+                    value={this.props.defaultValue} 
+                    placeholder={this.props.placeholder} 
+                    onChange={this.onChange}
+                />
+                   
+            );
+        }
+          
+    }
+
+    class InputTextarea extends CamposForm{
+        
+        render(){
+            return(
+                <input 
+                    type="text" 
+                    className="form-control" 
+                    name={this.props.name}  
+                    placeholder={this.props.placeholder} 
+                    onChange={this.onChange}
+                    value={this.props.defaultValue} 
+                />
+                   
+            );
+        }
+          
+    }
+    
+    /*************************************************************/
+
+
+
+    class Form extends React.Component{
+        constructor(props) {
+            super(props);
+
+            let dataform = {
+                            url: "{{base_dir_controller}}data/agregar/gastos",
+                            funcion: "crear_gasto",
+                            resp: (resp) => this.resp(resp)
+                        };
+
+            props.changeState(dataform);
+        }
+
+        resp(resp){
+            validar(resp);
+                
+            let fila = addRow(resp, index_tb);
+            
+            fila[0][0] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+resp[0].id+'">'
+            
+
+            table.row.add(fila[0]).draw().nodes().to$().addClass( 'id_'+resp[0].id );
+
+            new PNotify({
+                    title: 'Registro Creado',
+                    text: 'Los registros han sido creados correctamente',
+                    type: 'success',
+                    styling: 'bootstrap3'
+                });
+
+            $(".bs-example-modal-lg").modal("hide");
+        }
+
+        render(){
+            return(
+                <form className="form-label-left input_mask" id="modal_form_cobrar">
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-3 col-sm-3 ">Descripcion: </label>
+                            <div className="col-md-9 col-sm-9 ">
+                                <InputText
+                                    name="descripcion"
+                                    valueDefault="90000"
+                                    placeholder="Ingrese descripcion" 
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-3 col-sm-3 ">Monto: </label>
+                            <div className="col-md-9 col-sm-9 ">
+                                <InputValue 
+                                    name="valor"
+                                    valueDefault="90000"
+                                    placeholder="Monto"  
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-4 col-sm-4 ">Afiliar a Mes<span className="required">*</span>
+                            </label>
+                            <div className="col-md-8 col-sm-8 ">
+                                <InputData
+                                    data="meses"
+                                    name="id_mes"
+                                    valueDefault=""
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-4 col-sm-4 ">Fecha del Gasto<span className="required">*</span>
+                            </label>
+                            <div className="col-md-8 col-sm-8 ">
+                                <InputFecha 
+                                    name="fecha"
+                                    valueDefault=""
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            );
+        }
+        
+    }
+
+    class Form3 extends React.Component{
+        
+        constructor(props) {
+            super(props);
+            
+            let dataform = {
+                            url: "{{base_dir_controller}}data/modificar/gastos",
+                            funcion: "modificar_gasto",
+                            resp: (resp) => this.resp(resp)
+                        };
+
+            props.changeState(dataform);
+
+        }
+
+        resp(resp){
+            validar(resp);
+                
+            let fila = addRow(resp, index_tb);
+            
+            fila[0][0] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+resp[0].id+'">'
+            
+
+            table.row.add(fila[0]).draw().nodes().to$().addClass( 'id_'+resp[0].id );
+
+            new PNotify({
+                    title: 'Registro Creado',
+                    text: 'Los registros han sido creados correctamente',
+                    type: 'success',
+                    styling: 'bootstrap3'
+                });
+
+            $(".bs-example-modal-lg").modal("hide");
+        }
+
+        
+        render(){
+
+            return(
+                 <form className="form-label-left input_mask" id="modal_form_cobrar">
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-3 col-sm-3 ">Descripcion: </label>
+                            <div className="col-md-9 col-sm-9 ">
+                                <InputText
+                                    name="descripcion"
+                                    defaultValue={this.props.data.descripcion}
+                                    placeholder="Ingrese descripcion" 
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-3 col-sm-3 ">Monto: </label>
+                            <div className="col-md-9 col-sm-9 ">
+                                <InputValue 
+                                    name="valor"
+                                    defaultValue={this.props.data.valor}
+                                    placeholder="Monto"  
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-4 col-sm-4 ">Afiliar a Mes<span className="required">*</span>
+                            </label>
+                            <div className="col-md-8 col-sm-8 ">
+                                <InputData
+                                    data="meses"
+                                    name="id_mes"
+                                    defaultValue={this.props.data.id_mes}
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-4 col-sm-4 ">Fecha del Gasto<span className="required">*</span>
+                            </label>
+                            <div className="col-md-8 col-sm-8 ">
+                                <InputFecha 
+                                    name="fecha"
+                                    defaultValue={this.props.data.fecha}
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            );
+        }
+        
+    }
+
+    class Form2 extends React.Component{
+        
+        constructor(props) {
+            super(props);
+            
+            let dataform = {
+                            url: "{{base_dir_controller}}data/modificar/gastos",
+                            funcion: "crear_gasto",
+                            resp: (resp) => this.resp(resp)
+                        };
+
+            props.changeState(dataform);
+        }
+
+        resp(resp){
+            validar(resp);
+                
+            let fila = addRow(resp, index_tb);
+            
+            fila[0][0] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+resp[0].id+'">'
+            
+
+            table.row.add(fila[0]).draw().nodes().to$().addClass( 'id_'+resp[0].id );
+
+            new PNotify({
+                    title: 'Registro Creado',
+                    text: 'Los registros han sido creados correctamente',
+                    type: 'success',
+                    styling: 'bootstrap3'
+                });
+
+            $(".bs-example-modal-lg").modal("hide");
+        }
+
+        render(){
+
+            return(
+                <form className="form-label-left input_mask" id="modal_form_cobrar">
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-3 col-sm-3 ">Mes: </label>
+                            <div className="col-md-9 col-sm-9 ">
+                                <InputData 
+                                    data="cuentas" 
+                                    name="cuenta"
+                                    valueDefault=""
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-3 col-sm-3 ">Mes: </label>
+                            <div className="col-md-9 col-sm-9 ">
+                                <InputText
+                                    name="mes"
+                                    placeholder="Ingrese datos"
+                                    valueDefault={this.props.dataDefault.gasto}
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-3 col-sm-3 ">Mes: </label>
+                            <div className="col-md-9 col-sm-9 ">
+                                <InputData 
+                                    data="meses"
+                                    name="mes"
+                                    valueDefault="" 
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-4 col-sm-4 ">Fecha del Gasto<span className="required">*</span>
+                            </label>
+                            <div className="col-md-8 col-sm-8 ">
+                                <InputFecha 
+                                    name="fecha"
+                                    valueDefault=""
+                                    onChange={this.props.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            );
+        }
+        
+    }
+
+    class ContentModal extends Formdata{
+        
+
+        ContentDispatcher(){
+
+            switch(this.props.content){
+                case "nuevogasto":
+                    return(
+                        <Form 
+                            onChange2={this.onChange2}
+                            changeState={(dataform) => this.changeState(dataform)}
+                        />
+                    );
+                
+                  break;
+
+                case "procesargasto":
+                    return(
+                        <Form2 
+                            onChange2={this.onChange2}
+                            changeState={(dataform) => this.changeState(dataform)}
+                            dataDefault={this.props.dataDefault}
+                        />
+                    );
+                
+                  break;
+
+                case "form3":
+                    return(
+                        <Form3
+                            
+                            changeState={(dataform) => this.changeState(dataform)}
+                            data={this.state.InputsData}
+                            onChange2={this.onChange2}
+                        />
+                    );
+                
+                  break;
+                
+                default:
+
+                    return(
+                        " "
+                    );
+
+                  break;
+            }
+            
+        }
+
+        action_fetch(args){
+    
+            let url = args.dataform.url;
+            const data = new FormData();
+        
+            data.append("funcion", args.dataform.funcion);
+            
+
+            for (const property in args.data) {
+
+                data.append("data["+property+"]", args.data[property]);
+
+            }   
+
+            fetch(url, {
+                method: "POST",
+                body: data
+            })
+            .then(res => res.json())
+            .then(
+                (result) => args.dataform.resp(result),
+                (error) => {
+                    console.log(error);
+                }
+            )
+        }
+
+        render(){
+
+            return(
+                <Modal
+                    title={this.props.title}
+                    button1={this.props.button1}
+                    BodyContent={() => this.ContentDispatcher()}
+                    submit={() => this.action_fetch(this.state)}
+                />
+            );
+
+        } 
+    
+    }
+
+
+    /*ReactDOM.render(
+        <ContentModal />,
+        document.getElementById('carga_modal')
+    );*/
+
+</script>
+
+{# Carga Opciones CRUD #}
+<script type="text/babel">
+
+    class Opciones extends React.Component {
+                
+        render() {
+            return (
+                <div className="buttons">
+                    <ButtonCreate
+                        level={0} 
+                        text="Nuevo Gasto" 
+                        title="Nuevo Gasto" 
+                        button1="Crear Gasto"
+                        url={
+                            {put: "{{base_dir_controller}}data/agregar/gastos"}
+                        }
+                        funcion="crear_gasto"
+                        fields={
+                            {   
+                                descripcion: "",
+                                valor: "",
+                                id_mes: "", 
+                                fecha: ""
+                            }
+                        } 
+                        formTemplate={(changeState, dataDefault) => {
+                            return(
+                                <FormGastos
+                                    dataDefault={dataDefault}
+                                    changeState={changeState}
+                                />
+                            );
+                        }} 
+                    />
+                    <ButtonEdit
+                        level={1}  
+                        text="Editar Gasto"
+                        title="Editar Gasto" 
+                        button1="Guardar Cambios"
+                        url={
+                            {
+                                put: "{{base_dir_controller}}data/agregar/gastos",
+                                get: "{{base_dir_controller}}data/obtener/gastos"
+                            
+                            }
+                        }
+                        funcion={"obtener_gasto"}
+                        fields={
+                            {   
+                                id: "",
+                                descripcion: "",
+                                valor: "",
+                                id_mes: "", 
+                                fecha: ""
+                            }
+                        }
+                        formTemplate={(changeState, dataDefault) => {
+                            return(
+                                <FormGastos
+                                    dataDefault={dataDefault}
+                                    changeState={changeState}
+                                />
+                            );
+                        }} 
+                    />
+                    <ButtonCreate
+                        level={1} 
+                        text="Procesar Gasto"
+                        title="Procesar Gasto" 
+                        button1="Procesar"
+                        url={
+                            {put: "{{base_dir_controller}}data/agregar/gastos"}
+                        }
+                        funcion="crear_gasto"
+                        fields={
+                            {   
+                                id: "",
+                                id_cuenta: "",
+                                valor: "",
+                                id_mes: "", 
+                                fecha: ""
+                            }
+                        } 
+                        formTemplate={(changeState, dataDefault) => {
+                            return(
+                                <FormProcesar
+                                    dataDefault={dataDefault}
+                                    changeState={changeState}
+                                />
+                            );
+                        }}
+                    />
+                    <ButtonDelete
+                        level={2}
+                    />
+                </div>
+            );
+        }
+    }
+
+    ReactDOM.render(
+        <Opciones />,
+        document.getElementById('butones')
+    );
+
+
+    class FormGastos extends Formdata{
+        
+
+        render(){
+            
+            return(
+                 <form className="form-label-left input_mask" id="modal_form_cobrar">
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-3 col-sm-3 ">Descripcion: </label>
+                            <div className="col-md-9 col-sm-9 ">
+                                <InputText
+                                    name="descripcion"
+                                    value={this.props.dataDefault.descripcion}
+                                    placeholder="Ingrese descripcion" 
+                                    onChange={this.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-3 col-sm-3 ">Monto: </label>
+                            <div className="col-md-9 col-sm-9 ">
+                                <InputValue 
+                                    name="valor"
+                                    defaultValue={this.props.dataDefault.valor}
+                                    placeholder="Monto"  
+                                    onChange={this.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-4 col-sm-4 ">Afiliar a Mes<span className="required">*</span>
+                            </label>
+                            <div className="col-md-8 col-sm-8 ">
+                                <InputData
+                                    data="meses"
+                                    name="id_mes"
+                                    defaultValue={this.props.dataDefault.id_mes}
+                                    onChange={this.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-sm-6 has-feedback">
+                        <div className="form-group row">
+                            <label className="col-form-label col-md-4 col-sm-4 ">Fecha del Gasto<span className="required">*</span>
+                            </label>
+                            <div className="col-md-8 col-sm-8 ">
+                                <InputFecha 
+                                    name="fecha"
+                                    defaultValue={this.props.dataDefault.fecha}
+                                    onChange={this.onChange2}/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            );
+        }
+    }
+
+    class FormProcesar extends Formdata{
+        
+        
+        
+        render(){
+
+                return(
+                    <form className="form-label-left input_mask" id="modal_form_cobrar">
+                        <div className="col-md-6 col-sm-6 has-feedback">
+                            <div className="form-group row">
+                                <label className="col-form-label col-md-3 col-sm-3 ">Cuenta: </label>
+                                <div className="col-md-9 col-sm-9 ">
+                                    <InputData 
+                                        data="cuentas" 
+                                        name="id_cuenta"
+                                        valueDefault={this.props.dataDefault.id_cuenta}
+                                        onChange={this.onChange2}/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 has-feedback">
+                            <div className="form-group row">
+                                <label className="col-form-label col-md-3 col-sm-3 ">Monto: </label>
+                                <div className="col-md-9 col-sm-9 ">
+                                    <InputText
+                                        name="valor"
+                                        placeholder="Ingrese datos"
+                                        valueDefault={this.props.dataDefault.valor}
+                                        onChange={this.onChange2}/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 has-feedback">
+                            <div className="form-group row">
+                                <label className="col-form-label col-md-3 col-sm-3 ">Mes: </label>
+                                <div className="col-md-9 col-sm-9 ">
+                                    <InputData 
+                                        data="meses"
+                                        name="id_mes"
+                                        valueDefault={this.props.dataDefault.id_mes}
+                                        onChange={this.onChange2}/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-6 col-sm-6 has-feedback">
+                            <div className="form-group row">
+                                <label className="col-form-label col-md-4 col-sm-4 ">Fecha del Gasto<span className="required">*</span>
+                                </label>
+                                <div className="col-md-8 col-sm-8 ">
+                                    <InputFecha 
+                                        name="fecha"
+                                        valueDefault={this.props.dataDefault.fecha}
+                                        onChange={this.onChange2}/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                );
+        }
+    }
+
+
+</script>
+
+{% endblock %}
+
+{% block titlepage %}
+		<h3>Gastos <small></small></h3>
+{% endblock %}
+
+{% block subtitlepage %}
+            <h2 id="titleid">Lista de Gastos pendientes <small></small></h2>
+{% endblock %}
+
+{# botones de Edicion #}
+{% block buttonpage %}
+    <div class="x_content" id="butones">
+ 
+        <div class="buttons">
+            <button type="button" class="option_btn btn btn-primary btn-sm"  data-i="0" id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Nuevo Gasto</button>
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="1" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="2" disabled id="btn_cobrar" onclick="cobrar()" >Procesar</button>
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="2" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
+            
+        </div>
+        
+    </div>
+
+    <div id="carga_modal"></div>
+{% endblock %}
+
+{# ventana modal #}
+
+{% block modalcontent %}
+	<div class="x_panel">
+        
+        <div class="x_content">
+            <br>
+            <form class="form-label-left input_mask" id="modal_form">
+                <input type="hidden" id="form_id" name="id" value="1">
+                <input type="hidden" id="form_id_cliente" name="id_cliente" value="1">
+                
+                
+                <div class="col-md-6 col-sm-6 has-feedback">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-5 col-sm-5 ">Monto</label>
+                        <div class="col-md-7 col-sm-7 ">
+                            <input type="number" class="form-control"  name="monto" id="form_monto" placeholder="Ej. 50.000$">
+                         </div>
+                    </div>
+                </div>
+
+                 <div class="col-md-6 col-sm-6 has-feedback">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-4 col-sm-4 ">Fecha<span class="required">*</span>
+                        </label>
+                        <div class="col-md-8 col-sm-8 ">
+                            <input class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" required="required" name="fecha_cobro" id="form_fecha_cobro" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
+                            <script>
+                                function timeFunctionLong(input) {
+                                    setTimeout(function() {
+                                        input.type = 'text';
+                                    }, 60000);
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <label for="message">Descripción (64 caracteres max) :</label>
+                <textarea id="form_descripcion" required="required" class="form-control" name="descripcion" data-parsley-trigger="keyup" data-parsley-minlength="0" data-parsley-maxlength="64" data-parsley-minlength-message="Come on! You need to enter at least a 20 caracters long comment.." data-parsley-validation-threshold="10"></textarea>
+
+               
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{# fin ventana modal #}
+
+
+{# tabla #}
+
+{% block headtable %}
+    <tr>
+        <th><input type="checkbox" id="check-all"></th>
+        <th>Descripcion</th>
+        <th>Monto</th>
+        <th>Fecha</th>
+    </tr>
+
+{% endblock %}
+
+{% block bodytable %}
+    <tr class="id_{{dato.id}}">
+        <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
+        <td>{{dato.descripcion|upper}} </td>
+        <td>{{dato.valor}}</td>
+        <td>{{dato.fecha}}</td>
+
+    </tr>
+
+{% endblock %}
+
+{# fin tabla #}
+
+{% block js %}
+    {% block js_conf %}
+
+        var index_tb = {
+                        "data": [
+                            ["id"],
+                            ["descripcion"],
+                            ["valor"], 
+                            [ "fecha"]
+                        ],
+                        "upper": [1,2] 
+                    };
+
+
+        ruta_crud = "gastos";
+
+
+    {% endblock %}
+    {{ parent() }}
+    
+    <script>
+
+    
+    // llama Modals
+    Obtener_registro = function(e){
+
+        var url = "{{base_dir_controller}}"+rutas.obtener;
+        
+        var data = {funcion: "", data: ""};
+			data.data = CeldasCheck();
+			data.funcion = rutas.funcion.getdata;
+
+        if(data.data.id.length == 1){
+
+            $.post(url, data).done(function(resp){
+
+                resp = JSON.parse(resp);
+
+                resp.forEach(function(value){
+
+                    cargar_form(value);
+                    
+                });
+                
+
+                new template_modal({
+                    title: "Modificar Datos del Pago",
+                    btn_rigth_function: "Modificar_registro_msg()",
+                    btn_rigth_text: "Guardar Cambios"
+                });
+                
+                
+            });
+
+        }
+
+    } 
+
+    Nuevo_registro = function(e){
+
+        new template_modal({
+            title: "Nuevo Registro de Pago",
+            btn_rigth_function: "Agregar_registro()",
+            reset_form: "modal_form",
+            btn_rigth_text: "Crear Registro"
+        });
+
+    }
+
+    Eliminar_msg = function(e){
+
+        new template_modal_advert({
+            title: "¿Esta Seguro que desea Eliminar?",
+            btn_rigth_function: "Eliminar_registro()",
+            btn_rigth_text: "Si, Eliminar"
+        });
+        
+    }
+
+    cobrar = function(e = false){
+
+        if(e){
+
+            var url = "{{base_dir_controller}}pagos/agregar";
+            document.getElementById("modal-btn-cobrar").disabled = true;
+
+            var temp = $( "#modal_form_cobrar" ).serializeArray()
+                    .reduce(function(a, z) { a[z.name] = z.value; return a; }, {});
+
+            var dataform = {funcion: "", data: ""};
+            dataform.funcion = 'cobrar_pago';
+            dataform.data = temp;
+            dataform.data.pagos = CeldasCheck(); 
+
+            $.post(url, dataform).done(function(resp){
+
+                resp = JSON.parse(resp);
+
+                document.getElementById("modal-btn-cobrar").disabled = false;
+
+                if(!validar(resp)){
+                    
+                    return 0;
+
+                }
+
+                resp[0].forEach(function(value){
+
+                    table.row($('#tb_principal tbody .id_'+value.id)).remove().draw();
+                    
+                });
+
+                $(".bs-example-modal-cobrar").modal("hide");
+				status_options();
+
+                new PNotify({
+                            title: 'Registrado',
+                            text: 'Los pagos han sido registrados correctamente',
+                            type: 'success',
+                            styling: 'bootstrap3'
+                        });
+                
+            });
+
+        }else{
+
+            $(".bs-example-modal-cobrar").modal();
+
+        }
+        
+    }
+
+    </script>
+{% endblock %}

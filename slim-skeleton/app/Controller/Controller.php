@@ -16,7 +16,7 @@ class Controller
 		$this->container = $container;
 	}
 
-	public function __run($class_c, $property)
+	public function __run($class_c, $property, $args = [])
 	{	
 		$class = "\App\\Controller\\".ucfirst($class_c);
 		
@@ -25,7 +25,7 @@ class Controller
 			$controller = new $class($this->container);
 			
 			if(method_exists($controller, $property)){
-				return $controller->$property();
+				return $controller->$property($args);
 			}else{
 				return $this->container->twig->render($this->container->response,  "page_404.twig");
 			}

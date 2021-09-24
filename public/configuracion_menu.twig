@@ -1,0 +1,215 @@
+{% extends "index.twig" %}
+
+{% block content %}
+	<div class="col-md-6 col-sm-6  ">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Crear <small>Estructura de menu</small></h2>
+                  
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+					
+					<ul class="nav nav-tabs bar_tabs" id="myTab" role="tablist">
+                      <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Menu</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Ruta</a>
+                      </li>
+					  <li class="nav-item">
+                        <a class="nav-link" id="crud-tab" data-toggle="tab" href="#crud" role="tab" aria-controls="crud" aria-selected="false">CRUD</a>
+                      </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <form action="menus" method="post">
+							<input type="hidden" value="menu_crear" name="funcion">
+							<div class="form-group row">
+								<label class="col-form-label col-md-3 col-sm-3 ">Nombre</label>
+								<div class="col-md-9 col-sm-9 ">
+									<input type="text" class="form-control" placeholder="Ingrese Nombre" name="nombre">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-form-label col-md-3 col-sm-3 ">Icono</label>
+								<div class="col-md-9 col-sm-9 ">
+									<input type="text" class="form-control" placeholder="Ej: fa-icon" name="icono">
+								</div>
+							</div>
+							<button type="submit" class="btn btn-success">Crear</button>
+						</form>
+                      </div>
+                      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <form action="menus" method="post">
+							<input type="hidden" value="ruta_crear" name="funcion">
+							<div class="form-group row">
+								<label class="col-form-label col-md-3 col-sm-3 ">Nombre</label>
+								<div class="col-md-9 col-sm-9 ">
+									<input type="text" class="form-control" placeholder="Ingrese Nombre" name="nombre">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-form-label col-md-3 col-sm-3 ">Ruta</label>
+								<div class="col-md-9 col-sm-9 ">
+									<input type="text" class="form-control" placeholder="Ingrese Ruta de Acceso" name="ruta">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="control-label col-md-3 col-sm-3 ">Menu</label>
+								<div class="col-md-9 col-sm-9 ">
+									<select class="form-control" name="id_menu">
+										<option value="0">Ninguno</option>
+										{% for item in menu %}
+											<option value="{{item.id}}">{{item.nombre}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="control-label col-md-3 col-sm-3 ">Descripcion <span class="required">*</span>
+								</label>
+								<div class="col-md-9 col-sm-9 ">
+									<textarea class="form-control" rows="3" placeholder="Descripcion..." name="descripcion"></textarea>
+								</div>
+							</div>
+							<button type="submit" class="btn btn-success">Crear</button>
+						</form>
+                      </div>
+					  <div class="tab-pane fade" id="crud" role="tabpanel" aria-labelledby="crud-tab">
+                        <form action="menus" method="post">
+							<input type="hidden" value="crud_crear" name="funcion">
+							
+							
+							<div class="form-group row">
+								<label class="control-label col-md-3 col-sm-3 ">Menu</label>
+								<div class="col-md-9 col-sm-9 ">
+									<select class="form-control" name="id_menu">
+										<option value="0">Ninguno</option>
+										{% for item in menu %}
+											<option value="{{item.id}}">{{item.nombre}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							
+							<button type="submit" class="btn btn-success">Crear</button>
+						</form>
+                      </div>
+                    </div>
+                  
+                </div>
+              </div>
+            </div>
+
+	<div class="col-md-6 col-sm-6  ">
+		<div class="x_panel">
+			<div class="x_title">
+			<h2><i class="fa fa-align-left"></i> Permisos de Acceso <small>Menus</small></h2>
+			<ul class="nav navbar-right panel_toolbox">
+				<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+				</li>
+				<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<a class="dropdown-item" href="#">Settings 1</a>
+					<a class="dropdown-item" href="#">Settings 2</a>
+					</div>
+				</li>
+				<li><a class="close-link"><i class="fa fa-close"></i></a>
+				</li>
+			</ul>
+			<div class="clearfix"></div>
+			</div>
+
+			<div class="x_content">
+
+			<!-- start accordion -->
+			<div class="accordion" id="accordion1" role="tablist" aria-multiselectable="true">
+				<div class="panel">
+
+				 {% for item in menu %}
+                   
+                    <a class="panel-heading collapsed" role="tab" id="headingOne1" data-toggle="collapse" data-parent="#accordion1" href="#collapse{{item.id}}" aria-expanded="false" aria-controls="collapseOne">
+						<h4 class="panel-title"><input type="checkbox" class="flat"> {{item.nombre}}</h4>
+					</a>
+
+					<div id="collapse{{item.id}}" class="panel-collapse in collapse" role="tabpanel" aria-labelledby="headingOne" style="">
+						<div class="panel-body">
+							<ul class="to_do">
+					  
+					  {% set sin_ruta = true %}
+
+                      {% for ruta in rutas %}
+                        {% if ruta.id_menu == item.id %}
+                            <li style="margin-left: 10px;">
+                        	  <p><input type="checkbox" class="flat"> {{ruta.nombre}} :: {{ruta.ruta}}</p>
+                      		</li>
+							{% set sin_ruta = false %}
+                        {% endif %}
+
+						{% if ruta.crud_menu == item.id %}
+                            <li style="margin-left: 10px;">
+                        	  <p><input type="checkbox" class="flat"> {{ruta.nombre}} :: {{ruta.ruta}} :: CRUD</p>
+                      		</li>
+							{% set sin_ruta = false %}
+                        {% endif %}
+
+                      {% endfor %}
+
+					  {% if sin_ruta %}
+					  		<li>
+                        	  <p> Sin Rutas... </p>
+                      		</li>
+					  {% endif %}
+                    		</ul>
+						</div>
+					</div>
+
+                  {% endfor %}
+
+				  <!--<a class="panel-heading collapsed" role="tab" id="headingOne1" data-toggle="collapse" data-parent="#accordion1" href="#collapsesn" aria-expanded="false" aria-controls="collapseOne">
+						<h4 class="panel-title"><input type="checkbox" class="flat"> Sin Menu</h4>
+					</a>
+
+					<div id="collapsesn" class="panel-collapse in collapse" role="tabpanel" aria-labelledby="headingOne" style="">
+						<div class="panel-body">
+							<ul class="to_do">
+                      {% for ruta in rutas %}
+                        {% if ruta.id_menu == 0 %}
+                            <li style="margin-left: 10px;">
+                        	  <p><input type="checkbox" class="flat"> {{ruta.nombre}} :: {{ruta.ruta}} </p>
+                      		</li>
+                        {% endif %}
+                      {% endfor %}
+                    		</ul>
+						</div>
+					</div>
+				
+				</div>-->
+			</div>
+			<!-- end of accordion -->
+
+
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block js %}
+{{ parent() }}
+
+<script>
+	{% if error %}
+	$(document).ready(function() {
+		validar([{error: '{{error}}'}]);
+	});
+	{% endif %}
+
+</script>
+
+{% endblock %}
+
+

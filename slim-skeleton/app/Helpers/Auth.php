@@ -46,6 +46,40 @@ class Auth
 
 		return false;
 	}
+
+	public function checkpath($path = '/'){
+
+		$permitido[] = "data/no_autorizado";
+		$permitido[] = "clientes/todos";
+		$permitido[] = "pagos/obtener";
+		$resp = false;
+
+		$ruta = Models\Rutas::where('ruta', $path);
+		
+		if($ruta->exists()){
+			$ruta = $ruta->first();
+			$acceso = Models\RutaUser::where(['id_user' => $_SESSION['usuario'], 'id_ruta' => $ruta->id]);
+			
+			if($acceso->exists()){
+				$resp = true;
+			}
+
+		}
+
+		return $resp;
+
+	}
+
+	public function conf(){
+
+		$session_user =  Models\User::find($_SESSION['usuario']);
+		$menu = Models\Menu::orderBy('nivel')->get();
+		
+		$data = ['menu' => $menu, 'session_user' => $session_user];
+
+
+		return $data;
+	}
 }
 
 ?>

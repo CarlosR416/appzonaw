@@ -1,26 +1,14 @@
 {% extends "tabla.twig" %}
 
 {% block titlepage %}
-		<h3>Pagos <small></small></h3>
+		<h3>Gastos <small></small></h3>
 {% endblock %}
 
 
 {% block subtitlepage %}
-            <h2>Listado de Meses <small></small></h2>
+            <h2>Listado de Gastos por meses <small></small></h2>
 {% endblock %}
 
-{# botones de Edicion #}
-{% block buttonpage %}
-    <div class="x_content">
-
-        <div class="buttons">
-           <button type="button" class="option_btn btn btn-primary btn-sm"  data-i="0" id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Generar Nuevo</button>
-            <!--<button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="1" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>-->
-            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="2" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
-        </div>
-        
-    </div>
-{% endblock %}
 
 {% block modalcontent %}
 	<div class="x_panel">
@@ -70,25 +58,20 @@
 
 {% block headtable %}
     <tr>
-        <th><input type="checkbox" id="check-all"></th>
+        <th></th>
         <th>Nombre</th>
-        <th>Pagos Cobrados</th>
-        <th>Pendiente por cobrar</th>
-        <th>Saldo Cobrado</th>
-        <th>Saldo Pendiente por cobrar</th>
+        <th>Nro de movimientos</th>
+        <th>Total</th>
     </tr>
 {% endblock %}
 
 
 {% block bodytable %}
     <tr class="id_{{dato.id}}">
-        <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
+        <td></td>
         <td><a href="#">{{dato.nombre|upper}}</a></td>
-        <td>{{dato.pagos().where("estado", "Pagado").count()}}</td>
-        <td>{{dato.pagos().where("estado", "Pendiente").count()}}</td>
-        <td>{{dato.pagos().where("estado", "Pagado").sum("monto")}}</td>
-        <td>{{dato.pagos().where("estado", "Pendiente").sum("monto")}}</td>
-
+        <td>{{dato.gastos().count()}}</td>
+        <td>{{dato.gastos().sum("valor")}}</td>
     </tr>
 {% endblock %}
 

@@ -15,6 +15,13 @@ return function (App $app) {
         return $controller->__run(false, false);
     })->setName('base');
 
+    
+    $app->any("/noautorizado", function (Request $request, Response $response, array $args) use ($container){
+        
+        echo json_encode([['error' => 'No estas autorizado']]);
+            
+    })->setName('noautorizado');
+
     $app->any("/login[/{name}]", function (Request $request, Response $response, array $args) use ($container){
 
         $controller = new \App\Controller\Controller($container);
@@ -32,7 +39,7 @@ return function (App $app) {
             
     })->setName('login');
 
-    $app->any('/{name}/[{name2}]', function (Request $request, Response $response, array $args) use ($container) {
+    $app->any('/data/{arg1}[/{arg2}]', function (Request $request, Response $response, array $args) use ($container) {
         // Sample log message 
         
         $container->get('logger')->info("Slim-Skeleton '/' route");
@@ -40,8 +47,20 @@ return function (App $app) {
         $controller = new \App\Controller\Controller($container);
        
         // Render index view
-        return $controller->__run($args["name"], $args["name2"]);
-    })->setName('ruta')->add("AuthMiddleware");
+        return $controller->__run('data', $args["arg1"], $args);
+
+    })->setName('data')->add("MenuMiddleware")->add("AuthMiddleware");
+
+    $app->any('/{arg1}/{arg2}', function (Request $request, Response $response, array $args) use ($container) {
+        // Sample log message 
+
+        $container->get('logger')->info("Slim-Skeleton '/' route");
+
+        $controller = new \App\Controller\Controller($container);
+       
+        // Render index view
+        return $controller->__run($args["arg1"], $args["arg2"]);
+    })->setName('ruta')->add("MenuMiddleware")->add("AuthMiddleware");
 
     
 

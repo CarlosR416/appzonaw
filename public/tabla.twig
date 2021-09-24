@@ -45,9 +45,9 @@
 								DataTables has most features enabled by default, so all you need to do to use it with your own tables is to call the construction function: <code>$().DataTable();</code>
 								</p>-->
 								{% block buttonpage %}
-								
+									
 								{% endblock %}
-							
+								<h6 style="margin-left: 5px; display: none;">Has Selecionado <span id="msj_elementos_seleccionados">0 Elementos</span></h6>
 								
 								<table id="tb_principal" class="table table-striped table-bordered" style="width:100%">
 									<thead>
@@ -93,26 +93,16 @@
 {{ parent() }}
 <script type="text/javascript">
 
+	
+	
 
-	var rutas = { 
-				obtener: 'pagos/obtener',
-				agregar: 'pagos/agregar',
-				eliminar: 'pagos/eliminar',
-				modificar: 'pagos/modificar',
-				funcion: {add: ''}
-				};
-
-
-	// carga funciones 
-	$(document).ready(function() {
-
-
-		//Inicializacion de la tabla
-	    table = $('#tb_principal').DataTable( {
+	var datatableconf = {
 	        "scrollY":        "450px",
 	        "scrollCollapse": true,
 	        "paging":         false,
-	        "language": spanis,
+	        "language": {
+				"url": "{{base_dir_controller}}plantilla/js/datatable/traduccion/esp.json"
+			},
 			"order": [[ 1, "asc" ]],
 			"columnDefs": [{
                 searchable: false,
@@ -120,7 +110,43 @@
 				targets: 0,
             }],
 
-	    } );
+	    };
+
+	{% block js_conf " " %}
+	ruta_crud = "gastos";
+	if(typeof(ruta_crud) != "undefined"){
+
+		rutas = { 
+				obtener: 'data/obtener/',
+				agregar: 'data/agregar/',
+				eliminar: 'data/eliminar/',
+				modificar: 'data/modificar/',
+				funcion: {add: 'crear_', eliminar: 'eliminar_', getdata: 'obtener_', modificar: 'modificar_'}
+				};
+
+		rutas.obtener += ruta_crud;
+		rutas.agregar += ruta_crud;
+		rutas.eliminar += ruta_crud;
+		rutas.modificar += ruta_crud;
+		rutas.funcion.add += ruta_crud;
+		rutas.funcion.eliminar += ruta_crud;
+		rutas.funcion.getdata += ruta_crud;
+		rutas.funcion.modificar += ruta_crud;
+
+	}
+
+	console.log(rutas);
+
+	// carga funciones 
+	$(document).ready(function() {
+
+
+		//Inicializacion de la tabla
+	    table = $('#tb_principal').DataTable(datatableconf);
+
+		table.on( 'draw.dt', function () {
+			status_options();
+		} );
 		
 		//N Celdas seleccionadas
 	 	checkcount = 0;
@@ -139,23 +165,33 @@
 		} );
 
 		//Selecionar Todas Las Celdas
-		document.getElementById("check-all").addEventListener("click", function(){
-			var checked = this.checked;
-			checked ? checkcount=document.getElementsByName("check-all").length : checkcount=0;
+		var check_all = document.getElementById("check-all")
+		
+		if(check_all){
+			check_all.addEventListener("click", function(){
+				var checked = this.checked;
+				checked ? checkcount=document.getElementsByName("check-all").length : checkcount=0;
 
-			document.getElementsByName("check-all").forEach(function(e){				
-				e.checked = checked;
+				document.getElementsByName("check-all").forEach(function(e){				
+					e.checked = checked;
+				});
+
+				status_options();
+				
 			});
-
-			status_options();
-			
-		});
+		}
+		
+		
 
 		//Refrecar Estado de las opciones
 		status_options = function(){
 			//console.log("hola");
 			b = document.getElementsByClassName('option_btn');
 			
+			if(b.length == 0){
+				return 0;
+			}
+
 			cell = CeldasCheck();
 			checkcount = cell.id.length;
 
@@ -173,9 +209,11 @@
 				}
 				
 			}
-			 
-		}
 
+			var msj_temp = document.getElementById('msj_elementos_seleccionados');
+			msj_temp.textContent = checkcount == 1 ? checkcount+' Elemento' : checkcount+' Elementos';
+			msj_temp.parentNode.style.display = '';
+		}
 
 		//Obtener Celdas Selecionadas
 		CeldasCheck = function(){
@@ -195,9 +233,6 @@
 			return data;
 		}
 		
-		
-		
-
 		//
 		Eliminar_registro = function(e){
 			var url = "{{base_dir_controller}}"+rutas.eliminar;
@@ -211,6 +246,10 @@
 				resp = JSON.parse(resp);
 				
 				if(typeof(resp) == "object"){
+					
+					if(!validar(resp)){						
+							return 0;					
+					}
 
 					resp.data.id.forEach(function(value){
 						table.row($('#tb_principal tbody .id_'+value)).remove().draw();
@@ -267,9 +306,13 @@
 				
 				data = JSON.parse(data);
 				fila = [];
-				
-				if(typeof(data) == "object"){
 
+				if(!validar(data)){						
+					return 0;					
+				}
+
+				if(typeof(data) == "object"){
+					
 					fila = addRow(data, index_tb);
 					fila[0][0] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+data[0].id+'">';
 					
@@ -365,10 +408,9 @@
 			});
 		} 
 
-
 	});
 
-
+	
 </script>
 {% endblock %}
 
