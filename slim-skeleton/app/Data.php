@@ -4,7 +4,17 @@ use App\Models;
 
 class Data
 {	
+	protected $settings;
 
+	public function __construct($container = null)
+	{
+		if(!is_null($container)){
+
+			$this->settings = $container->get('settings');
+
+		}
+
+	}
 	//Este codigo solo es temporal, solo lo debe ejecutar el controlador. ->>>
     function __run($container){
         return $this->datos_registros();
@@ -205,7 +215,7 @@ class Data
 		$url2 = 'userRpm/FixMapCfgRpm.htm?Mac=68-72-51-28-15-8F&Ip=192.168.1.101&State=1&Changed=0&SelIndex=0&Page=1&btn_save=Save';
 		$url3 = 'userRpm/LanArpBindingListRpm.htm';
 
-		$ch = \curl_init('http://192.168.11.1/'.$url3);
+		$ch = \curl_init($this->settings['router']['ip'].'/'.$url3);
 		curl_setopt($ch, CURLOPT_HEADER, 1);
 		curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);

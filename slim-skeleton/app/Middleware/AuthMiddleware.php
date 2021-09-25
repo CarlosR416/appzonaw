@@ -15,6 +15,8 @@ class AuthMiddleware extends Middleware
 		$uri = $request->getUri();
 		$path = $uri->getPath();
 		
+		$path = substr($path, 0, 1) == "/" ? substr($path, 1) : $path;
+		
 		if (!Helpers\Auth::check()){
 
 			return $response->withRedirect($this->container->router->pathFor('login'));

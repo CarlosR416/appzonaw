@@ -28,10 +28,10 @@ class Clientes
     }
 
     function activos(){
-        $datos = new \App\Data;
+        //$datos = new \App\Data;
 
         
-        $args["data"] =  $datos->clientes_estado();
+        $args["data"] =  $this->container->data->clientes_estado();
 
         return $this->container->twig->render($this->container->response,  "todos_clientes_activos.twig", $args);
 

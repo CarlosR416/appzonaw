@@ -1,7 +1,7 @@
 <?php
 return [
     'settings' => [
-        'displayErrorDetails' => true, // set to false in production
+        'displayErrorDetails' => require __DIR__ . '/../dev-config/displayerrors.php', // set to false in production
         'addContentLengthHeader' => false, // Allow the web server to send the content-length header
 
         // Renderer settings
@@ -15,15 +15,7 @@ return [
             'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
             'level' => \Monolog\Logger::DEBUG,
         ],
-        'db'   =>[
-            'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'database'  => 'solucionexapp',
-            'username'  => 'root',
-            'password'  => '',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => 'sa_'
-        ]
+        'db'   =>  require __DIR__ . '/../dev-config/config_db.php',
+        'router' =>  require __DIR__ . '/../dev-config/config_router.php'
     ],
 ];

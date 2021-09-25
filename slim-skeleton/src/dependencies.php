@@ -11,6 +11,12 @@ return function (App $app) {
         return new \Slim\Views\PhpRenderer($settings['template_path']);
     };
 
+    $container['data'] = function ($c) {
+        
+        return new \App\Data($c);
+
+    };
+    
     $container['twig'] = function ($c) {
         $settings = $c->get('settings')['renderer'];
 
