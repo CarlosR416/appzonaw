@@ -13,14 +13,14 @@ class Data
     
     function agregar($args){
         $data = new \App\Data;
-        $evaluar = $this->container->request->getParams();
+        $params = $this->container->request->getParams();
 
-        $property = $evaluar['funcion'];
+        $property = "agregar_" . $args['arg2']; 
 
         if(method_exists($data, $property)){
-            $resp[0] = $data->$property($evaluar['data']);
+            $resp = $data->$property($params);
         }else{
-            $resp[] = ['error' => 'No existe funcion para agregar registro'];
+            $resp = ['error' => 'No existe funcion para agregar registro'];
         }
         
         return json_encode($resp);
@@ -29,36 +29,33 @@ class Data
     function eliminar($args){
 
         $data = new \App\Data;
-        $evaluar = $this->container->request->getParams();
-        $delete = ["true" => 0, "false" => 0];
+        $params = $this->container->request->getParams();
 
-        $property = $evaluar['funcion'];
+        $property = "eliminar_" . $args['arg2'];
+
 
         if(method_exists($data, $property)){
 
-            foreach ($evaluar['data']["id"] as $key => $value) {
-                $data->$property($value) == true ? $delete["true"] = $delete["true"]+1 : $delete["false"] = $delete["false"]+1 ;
-            }
-            
-            $evaluar["eliminados"] = $delete; 
+            $resp = $data->$property($params);
+
         }else{
-            $evaluar = [['error' => 'No existe funcion para eliminar registro']];
+            $resp = [['error' => 'No existe funcion para eliminar registro']];
         }
         
-        
-        return json_encode($evaluar);
+        return json_encode($resp);
 
     }
 
     function modificar($args){
 
         $data = new \App\Data;
-        $evaluar = $this->container->request->getParams();
-        $property = $evaluar['funcion'];
+        $params = $this->container->request->getParams();
+
+        $property = "modificar_" . $args['arg2'];
 
         if(method_exists($data, $property)){
             
-            $resp = $data->$property($evaluar['data']);
+            $resp = $data->$property($params);
 
         }else{
             $resp[] = ['error' => 'No existe funcion para modificar registro'];
@@ -69,12 +66,12 @@ class Data
 
     function obtener($args){
         $data = new \App\Data;
-        $evaluar = $this->container->request->getParams();
+        $params = $this->container->request->getParams();
 
-        $property = $evaluar['funcion'];
-
+        $property = "obtener_" . $args['arg2']; 
+       
         if(method_exists($data, $property)){
-            $resp = $data->$property($evaluar['data']);
+            $resp = $data->$property($params);
         }else{
             $resp[] = ['error' => 'No existe funcion para obtener registro'];
         }

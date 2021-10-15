@@ -21,9 +21,9 @@ class Clientes
             $settings["template"] = $args["name"].".php";
         }*/
         
-        $args["data"] =  $datos->Clientes();
+        $args["data"] =  $datos->obtener_clientes()['DATA'];
 
-        return $this->container->twig->render($this->container->response,  "todos_clientes.twig", $args);
+        return $this->container->twig->render($this->container->response,  "vistas_clientes/todos_clientes.twig", $args);
         
     }
 
@@ -33,7 +33,7 @@ class Clientes
         
         $args["data"] =  $this->container->data->clientes_estado();
 
-        return $this->container->twig->render($this->container->response,  "todos_clientes_activos.twig", $args);
+        return $this->container->twig->render($this->container->response,  "vistas_clientes/todos_clientes_activos.twig", $args);
 
     }
 
@@ -58,10 +58,8 @@ class Clientes
     }
 
     function intrusos(){
-        $datos = new \App\Data;
-
         
-        $args["data"] =  $datos->intrusos();
+        $args["data"] =  $this->container->data->intrusos();
 
         return $this->container->twig->render($this->container->response,  "clientes_activos.twig", $args);
     }

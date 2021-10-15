@@ -26,9 +26,11 @@ class AuthMiddleware extends Middleware
 			$path = "noautorizado";
 			$uri = $uri->withPath($path);
 
+			$msj = ["MSJ" => ['error' => ["title" => "Sin Permiso", "text" => "No estas autorizado"]]];
+
 			return $response->withStatus(403)
             ->withHeader('Content-Type', 'text/html')
-            ->write(json_encode([['error' => 'No estas autorizado']]));
+            ->write(json_encode($msj));
 		}
 
 		return $response = $next($request, $response);

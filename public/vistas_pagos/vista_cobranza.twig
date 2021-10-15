@@ -1,11 +1,40 @@
 {% extends "tabla.twig" %}
+{% set subtitle = "Todos pagos por cobrar" %}
 
 {% block titlepage %}
-		<h3>Pagos <small></small></h3>
+		<h3>Cobranza<small></small></h3>
 {% endblock %}
 
+            {% for mes in meses %}
+                {% if mes.id == id_mes %}
+                
+                    {% set subtitle = mes.nombre %}
+                    {% set Mes = mes %}
+
+                {% endif %} 
+            {% endfor %}
+
 {% block subtitlepage %}
-            <h2>Lista de pagos pendientes <small></small></h2>
+
+            <h2>
+            {{subtitle}}
+            <small>
+
+                {% for mes in meses %}
+                    {% if mes.id == id_mes %}
+                    
+                        <b>Pagos Cobrados:</b> {{mes.pagos().where("estado", "Pagado").count()}},
+                        <b>Monto Cobrado:</b> {{mes.pagos().where("estado", "Pagado").sum("monto")}},
+                        <b>Pagos Pendientes:</b> {{mes.pagos().where("estado", "Pendiente").count()}},
+                        <b>Monto Pendiente:</b> {{mes.pagos().where("estado", "Pendiente").sum("monto")}}.
+                        
+
+                    {% endif %} 
+                {% endfor %}
+                
+            </small>
+            </h2>
+
 {% endblock %}
 
 {# botones de Edicion #}
@@ -26,7 +55,7 @@
         <div class="modal-content">
 
         <div class="modal-header">
-            <h4 class="modal-title" id="Modaltitle">Cobrar Pagos</h4>
+            <h4 class="modal-title" id="Modaltitl">Cobrar Pagos</h4>
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
             </button>
         </div>
@@ -168,22 +197,21 @@
     <script>
 
     var index_tb = {
-                    "data": [
-                        ["id"],
-                        [ "nombre", 
-                            "apellido"],
-                        ["nombre_mes"], 
-                        [ "fecha_cobro"], 
-                        [ "monto"], 
-                        [ "estado" ]
-                    ],
-                    "upper": [1,2] 
-                };
+        "data": [
+            ["id"],
+            [ "nombre", 
+                "apellido"],
+            ["nombre_mes"], 
+            [ "fecha_cobro"], 
+            [ "monto"], 
+            [ "estado" ]
+        ],
+        "upper": [1,2] 
+    };
 
-    rutas.funcion.add = 'crear_pago';
-    rutas.funcion.eliminar = 'eliminar_pago';
-    rutas.funcion.getdata = 'obtener_pago';
-    rutas.funcion.modificar = 'modificar_pago';
+    rutas.eliminar = 'data/eliminar/pago';
+    rutas.agregar = 'data/agregar/pago';
+    
 
     // llama Modals
     Obtener_registro = function(e){
@@ -214,7 +242,15 @@
                 });
                 
                 
-            });
+            }).error(function(data){
+			
+				data = JSON.parse(data.responseText);
+
+				validar(data);
+
+				document.getElementById("modal-btn-save").disabled = false;
+				
+			});
 
         }
 
@@ -245,28 +281,17 @@
 
         if(e){
 
-            var url = "{{base_dir_controller}}pagos/agregar";
+            var url = "{{base_dir_controller}}data/agregar/cobro";
             document.getElementById("modal-btn-cobrar").disabled = true;
 
-            var temp = $( "#modal_form_cobrar" ).serializeArray()
+            var dataform = $( "#modal_form_cobrar" ).serializeArray()
                     .reduce(function(a, z) { a[z.name] = z.value; return a; }, {});
 
-            var dataform = {funcion: "", data: ""};
-            dataform.funcion = 'cobrar_pago';
-            dataform.data = temp;
-            dataform.data.pagos = CeldasCheck(); 
+            dataform.pagos = CeldasCheck(); 
 
-            $.post(url, dataform).done(function(resp){
-
-                resp = JSON.parse(resp);
+            ajax_post(url, dataform, function(resp){
 
                 document.getElementById("modal-btn-cobrar").disabled = false;
-
-                if(!validar(resp)){
-                    
-                    return 0;
-
-                }
 
                 resp[0].forEach(function(value){
 
@@ -283,8 +308,10 @@
                             type: 'success',
                             styling: 'bootstrap3'
                         });
-                
+
             });
+
+            
 
         }else{
 
@@ -295,7 +322,7 @@
     }
 
     var datos_clientes = 0;
-    $.get("{{base_dir_controller}}//clientes/obtenerclientes").done(function(data){
+    $.get("{{base_dir_controller}}data/obtener/clientes").done(function(data){
       
         var index_tb_clientes = {
                      "data": [
@@ -310,17 +337,20 @@
                     };
 
         data = JSON.parse(data);
-        datos_clientes = data;
-
+        datos_clientes = data.DATA;
+       
         var datos = addRow(data, index_tb_clientes);
-
+        console.log(datos);
         datos.forEach(function(value, index){
             datos[index][4] = '<a href="#" onclick="cargar_cliente(this)"  data-value="'+datos[index][4]+'">Seleccionar</a>';
         });
 
         $('#tb_form_clientes').DataTable( {
             "data": datos,
-            "language": spanis,
+            "paging": true,
+            "language": {
+				"url": "{{base_dir_controller}}plantilla/js/datatable/traduccion/esp.json"
+			},
             "paging": false,
             "order": [[ 1, "asc" ]],
             'sDom': 'tip',
@@ -332,6 +362,14 @@
         } );
 
 
+    }).error(function(data){
+			
+        data = JSON.parse(data.responseText);
+
+        validar(data);
+
+        document.getElementById("modal-btn-save").disabled = false;
+            
     });
 
     function cargar_cliente($this){
@@ -356,6 +394,31 @@
         });
         
         
+    }
+
+
+    function ajax_post(url, dataform, callback){
+
+        $.post(url, dataform).done(function(resp){
+
+                resp = JSON.parse(resp);
+
+                if(!validar(resp)){
+                    
+                    return 0;
+
+                }
+
+                callback(resp);
+
+                
+            }).error(function(data){
+			
+				data = JSON.parse(data.responseText);
+
+				validar(data);
+				
+			});
     }
 
     </script>

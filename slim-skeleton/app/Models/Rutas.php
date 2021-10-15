@@ -16,11 +16,8 @@ class Rutas extends Model
         "ruta"
 	];
 
-    public function menu()
-	{
-
+    public function menu(){
 		return  $this->belongsTo('App\Models\Menu', 'id_menu');
-	
 	}
 
 	public function users(){

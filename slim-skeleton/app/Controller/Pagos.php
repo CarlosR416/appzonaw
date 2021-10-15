@@ -11,9 +11,11 @@ class Pagos
 		$this->container = $container;
 	}
 
-    function pendientes(){
+    function cobranza(){
         $datos = new \App\Data;
         $args = [];
+
+        $paran = $this->container->request->getParams();
         //$settings = $this->container->get('settings')['renderer'];
         //$settings["template"] = "tabla.php";
 
@@ -21,10 +23,12 @@ class Pagos
             $settings["template"] = $args["name"].".php";
         }*/
         
-        $args["data"] = $datos->obtener_pagos();
+        $args["data"] = $datos->obtener_pagos($paran);
         $args["meses"] =  $datos->obtener_meses();
 
-        return $this->container->twig->render($this->container->response,  "tabla_pagos.twig", $args);
+        isset($paran["id_mes"]) ? $args["id_mes"] = $paran["id_mes"] : $args["id_mes"] = 0 ;
+
+        return $this->container->twig->render($this->container->response,  "vistas_pagos/vista_cobranza.twig", $args);
     }
 
     function solventes(){
@@ -54,7 +58,7 @@ class Pagos
 
         $args["data"] =  $datos->obtener_meses();
 
-        return $this->container->twig->render($this->container->response,  "tabla_meses.twig", $args);
+        return $this->container->twig->render($this->container->response,  "vistas_pagos/tabla_meses.twig", $args);
     }
 
     function cobrar(){

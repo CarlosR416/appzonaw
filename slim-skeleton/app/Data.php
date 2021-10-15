@@ -9,12 +9,11 @@ class Data
 	public function __construct($container = null)
 	{
 		if(!is_null($container)){
-
 			$this->settings = $container->get('settings');
-
 		}
-
 	}
+
+
 	//Este codigo solo es temporal, solo lo debe ejecutar el controlador. ->>>
     function __run($container){
         return $this->datos_registros();
@@ -144,6 +143,7 @@ class Data
 
 		return $registros;
 	}
+
 	function c_activos(){
 
 		$registros = $this->datos_registros();
@@ -347,316 +347,145 @@ class Data
 		return false;
 	}
 
+
+	/// Usuarios
+
 	function users(){
 		return Models\User::get();
 	}
 
-	function Clientes(){
-		return Models\Clientes::where('estatus_servicio', '!=', 'Opcional')->get();
-	}
-
-	function getCliente($id){
-		
-		return Models\Clientes::find($id);
-	}
-
-	function modifCliente($data){
-
-		$registro = Models\Clientes::find($data["id"]);
-
-		if(!$registro)
-		{
-			$resultado = false;
-		}else{
-
-			if($registro->update($data)){
-				$resultado[] = $data;
-			}
-			
-		}
-
-		return $resultado;
-	}
-
-	function crear_usuario($data){
-
-		unset($data["id"]);
-		return Models\Clientes::create($data);
-
-	}
-
-	function eliminar_usuario($user_id){
-		$user = Models\Clientes::where('id', $user_id)->first();
-		return $user->delete();
-	}
-
-	function crear_pago($data){
-
-		$cliente = Models\Clientes::find($data["id_cliente"]);
-		$mes = Models\Meses::find($data["mes"]);
-
-		if(!isset($cliente) && !isset($mes)){
-			return $resp = ['error' => 'Cliente o Mes No Seleccionado'];
-		}
-
-		unset($data["id"]);
-		$respuesta=false; 
-
-		
-		$data["id_cliente"] = $cliente->id;
-		$data["estado"] = "Pendiente";
-
-		$num_mes = Data::mes_nun($mes->nombre);
-		$fecha_tem = $num_mes['year'].'-'.$num_mes['mes'].'-'.$cliente->dia_cobro;
-		$test = new \DateTime($fecha_tem);
-
-		$data["fecha_cobro"] = date_format($test, 'Y-m-d');
-
-		$data["id_mes"] = $mes->id;
-
-		$pago = Models\Pagos::create($data);
-
-		if($pago){
-			$respuesta["nombre"] = $cliente->nombre;
-			$respuesta["apellido"] = $cliente->apellido;
-			$respuesta["nombre_mes"] = $mes->nombre;
-			$respuesta["fecha_cobro"] = $pago->fecha_cobro; 
-			$respuesta["monto"] = $pago->monto;
-			$respuesta["estado"] = $pago->estado;
-			$respuesta["id"] = $pago->id;
-		}
-		
-
-		return $respuesta;
-
-	}
-
-	function eliminar_pago($pago_id){
-		$pago = Models\Pagos::where('id', $pago_id)->first();
-
-		if($pago){
-
-			Models\MovCuentas::where('id_pago', $pago->id)->delete();
-			Data::recalcular_saldo_cuentas();
-			
-		}
-
-		return $pago->delete();
-	}
-
-	function obtener_pagos(){
-		//$pagos = Models\Pagos::join("clientes", "pagos.id_cliente" ,"=", "clientes.id" )->select("pagos.id", "clientes.nombre", "clientes.apellido", "pagos.fecha_cobro", "pagos.estado", "pagos.monto")->where("pagos.estado", "Pendiente")->get();
-		$pagos = Models\Pagos::where("pagos.estado", "Pendiente")->get();
-
-		return $pagos;
-	}
-
-	function obtener_pagos_cliente($cliente){
-		//$pagos = Models\Pagos::join("clientes", "pagos.id_cliente" ,"=", "clientes.id" )->select("pagos.id", "clientes.nombre", "clientes.apellido", "pagos.fecha_cobro", "pagos.estado", "pagos.monto")->where("pagos.estado", "Pendiente")->get();
-		$pagos = Models\Pagos::select('meses.nombre as nombre_mes', 'pagos.*')->join('meses', 'pagos.id_mes', '=', 'meses.id')->where("id_cliente", $cliente['id_cliente'])->get();
-
-		return $pagos;
-	}
-
-	function obtener_pago($id){
-		$pagos = Models\Pagos::find($id);
-		
-		if(count($pagos) < 2){
-			
-			$pagos[0]["nombre"] = $pagos[0]->cliente->nombre;
-			$pagos[0]["apellido"] = $pagos[0]->cliente->apellido;
-			$pagos[0]["cedula"] = $pagos[0]->cliente->cedula;
-		}
-		
-		return $pagos;
-	}
-
-	function modificar_pago($data){
-
-		$registro = Models\Pagos::find($data["id"]);
-		$cliente = Models\Clientes::find($data["id_cliente"]);
-		$respuesta=false; 
-
-		if($registro && $cliente)
-		{
-			$respuesta = $registro->update($data);
-
-			if($respuesta){
-
-				$registro['nombre'] = $cliente->nombre;
-				$registro['apellido'] = $cliente->apellido;
-                $respuesta = [];
-                $respuesta[0] = $registro;
-            }
-		}
-
-		return $respuesta;
-	}
-
-	function obtener_meses(){
-		return Models\Meses::all();
-	}
-
-	function obtener_cuentas(){
-		return Models\Cuentas::all();
-	}
-
-	function obtener_mes($id){
-
-		$mes = Models\Meses::find($id);
-		
-		return $mes;
-	}
-
-	function eliminar_mes($id){
-		$mes = Models\Meses::where('id', $id)->first();
-
-		if($mes){
-			Models\Pagos::where('id_mes', $mes->id)->delete();
-			Models\MovCuentas::where('id_mes', $mes->id)->delete();
-			$mes->delete();
-			Data::recalcular_saldo_cuentas();
-		}
-
-		return $mes->delete();
-	}
-
-	function generar_mes($data){
-
-		$nombre_mes = $data['mes'].'/'.$data['year'];
 	
-		if(Models\Meses::where('nombre', $nombre_mes)->exists()){
 
-			$mes['error'] = 'Ya existe el Mes/Año';
+
+	/// Clientes
+
+	function agregar_cliente($data = null){
+
+		if(!is_null($data)){
+
+			unset($data["id"]);
+			$resp["DATA"] = Models\Clientes::create($data);
+			$resp["MSJ"] = MSJ_success("Cliente creado exitosamente", "Cliente Agregado");
 
 		}else{
+			$resp["MSJ"] = MSJ_error("No se suministro parametros de insercion");
+		}
 
-			$mes = Models\Meses::create(['nombre' => $nombre_mes]);
-			$clientes = Models\Clientes::select("id", "dia_cobro", "tipo_servicio", "estatus_servicio")->get();
-			$update_mes = $mes;
-			$update_mes['clientes_activos'] = 0;
-			$update_mes['clientes_retirados'] = 0;
-			$update_mes['ingresos'] = 0;
-			$update_mes['gastos'] = 0;
+		return $resp;
 
-			foreach ($clientes as $key => $value) {
+	}
+
+	function eliminar_cliente($data = null){
+
+		if(!is_null($data) && isset($data['id'])){
+
+			$user_id = $data["id"];
+
+			$d = 0;
+			$nd = 0;
+			$id = [];
+
+			foreach ($user_id as $key => $value) {
 				
-				if($value->estatus_servicio == "Activo"){
+				$user = Models\Clientes::where('id', $value)->first();
 
-					$campos = [];
-					$campos['id_cliente'] = $value->id;
-					$campos['id_mes'] = $mes->id;
-
-					$num_mes = Data::mes_nun($nombre_mes);
-					$campos['fecha_cobro'] = $data['year'].'-'.$num_mes['mes'].'-'.$value->dia_cobro;
-
-					$campos['estado'] = 'Pendiente';
+				if(!is_null($user)){
 					
-					if($value->tipo_servicio == "Nacional"){
-						$campos['monto'] = '50000';
+					if($user->delete()){
+						$d++;
+						$id[] = $value;
 					}else{
-						$campos['monto'] = '90000';
+						$nd++;
 					}
-					
-					$pago = true;
-					if(!Models\Pagos::where('id_cliente', $campos['id_cliente'])->where('id_mes', $campos['id_mes'])->exists()){
-						$pago = Models\Pagos::create($campos);
-					}
-					
 
-					if($pago){
-						$update_mes->clientes_activos++;
-					}
-					
+	
 				}else{
-					$update_mes->clientes_retirados++;
+					$nd++;
+				}
+
+			}
+
+			$resp['DATA']["id"] = $id;
+			if($d > 1){
+
+				$resp['MSJ'] = MSJ_success($d . " Registros Eliminados", "Cliente Eliminado");
+				
+			}else if($d > 0){
+
+				$resp['MSJ'] = MSJ_success($d . " Registro Eliminado", "Cliente Eliminado");
+				
+			}
+
+			if($nd > 1){
+				$resp['MSJ'] = MSJ_warning($nd . " Registros no Eliminados");
+			}else if($nd > 0){
+				$resp['MSJ'] = MSJ_warning($nd . " Registro no Eliminado");
+			}
+
+
+		}else{
+			$resp['MSJ'] = MSJ_error("No se suministro parametro para eliminar");
+		}
+
+		return $resp;
+	}
+
+	function obtener_cliente($data = null){
+		
+		if(!is_null($data) && isset($data['id'])){
+
+			$id = $data["id"];
+			$resp["DATA"] = Models\Clientes::find($id)->first();;
+			
+		}else{
+			$resp["MSJ"] = MSJ_error("No se suministro parametro de busqueda");
+		}
+
+		return $resp;
+	}
+
+	function obtener_clientes(){
+
+		$resp["DATA"] = Models\Clientes::where('estatus_servicio', '!=', 'Opcional')->get();
+		
+		return $resp;
+
+	}
+
+	function modificar_cliente($data = null){
+
+		if(!is_null($data) && isset($data['id'])){
+			$id = $data["id"];
+			$registro = Models\Clientes::find($id);
+
+			if(!$registro)
+			{
+
+				$resp["MSJ"] = MSJ_error("No se existe registro para modificar");
+
+			}else{
+
+				if($registro->update($data)){
+					$resp["DATA"] = $registro;
+					$resp["MSJ"] = MSJ_success("Modificacion exitosa", "Cliente Modificado");
+				}else{
+					$resp["MSJ"] = MSJ_error("No se pudo modificar el registro");
 				}
 				
-				
 			}
 
-			if($update_mes->clientes_activos > 0){
-				$mes->update();
-			}else{
-				$mes->delete();
-			}
+		}else{
+			$resp["MSJ"] = MSJ_error("No se suministro parametro para modificar");
 		}
 
-		return $mes;
-	}
-
-	function cobrar_pago($data){
-
-		$error = [];
-		if(!isset($data['pagos']['id']) | !validateDate($data['fecha_cobro']) | !isset($data['cuenta']) ){
-			return ['error' => 'Faltan datos para procesar la factura'];
-		}
-		
-		$pagos = Models\Pagos::find($data['pagos']['id']);
-		$cuenta = Models\Cuentas::find($data['cuenta']);
-
-		foreach ($pagos as $key => $value) {
-
-			if($value->estado == 'Pagado'){
-				$error = ['error' => 'La Factura Ya Se Pago'];
-			}else{
-				
-				$value->estado = 'Pagado';
-				$value->update();
-				$temp_descrip = 'Pago Mensualidad';
-				$movcuenta = [	
-								'id_cuenta' => $data['cuenta'],
-								'id_pago' => $value->id,
-								'id_mes' => $value->id_mes, 
-								'tipo' => 'CREDITO',
-								'descripcion' => $temp_descrip,
-								'valor' => $value->monto,
-								'fecha' => $data['fecha_cobro']
-							];
-				Models\MovCuentas::create($movcuenta);
-
-				$cuenta->saldo = $cuenta->saldo + $value->monto;
-
-				$error[] = $value;
-			}
-			
-		}
-
-		$cuenta->update();
-		
-		return $error;
-	}
-
-	function mes_nun($mesyear)
-	{	
-
-		$pos = strpos($mesyear, '/');
-
-		if($pos === false){
-			return false;
-		}
-
-		$mes = substr($mesyear, 0, $pos);
-		$year = substr($mesyear, $pos+1);
-
-
-		$meses = [
-			'Enero',
-			'Febrero',
-			'Marzo',
-			'Abril',
-			'Mayo',
-			'Junio',
-			'Agosto',
-			'Septiembre',
-			'Optubre',
-			'Noviembre',
-			'Diciembre'
-		];
-
-		$resp = ['year' => $year];
-		$resp['mes'] = array_search($mes, $meses)+1; 
 		return $resp;
+	}
+	
+	
+	/// Cuentas 
+	
+	function obtener_cuentas(){
+		return Models\Cuentas::all();
 	}
 
 	function obtener_mov_cuentas()
@@ -742,6 +571,9 @@ class Data
 
 	}
 
+
+	/// Gastos
+
 	function crear_gasto($data){
 		$gasto = Models\Gastos::create($data);
 		for ($i=0; $i < 100000000; $i++) { 
@@ -760,12 +592,342 @@ class Data
 		return [$gasto];
 	}
 
+
+
+	/// Pagos divididos por meses
+
+	function agregar_cobranzapormes($data){
+
+		$nombre_mes = $data['mes'].'/'.$data['year'];
+	
+		if(Models\Meses::where('nombre', $nombre_mes)->exists()){
+
+			$resp['MSJ'] = MSJ_error("Ya existe el Mes/Año");
+
+		}else{
+
+			$mes = Models\Meses::create(['nombre' => $nombre_mes]);
+			$clientes = Models\Clientes::select("id", "dia_cobro", "tipo_servicio", "estatus_servicio")->get();
+			$update_mes = $mes;
+			$update_mes['clientes_activos'] = 0;
+			$update_mes['clientes_retirados'] = 0;
+			$update_mes['ingresos'] = 0;
+			$update_mes['gastos'] = 0;
+
+			foreach ($clientes as $key => $value) {
+				
+				if($value->estatus_servicio == "Activo"){
+
+					$campos = [];
+					$campos['id_cliente'] = $value->id;
+					$campos['id_mes'] = $mes->id;
+
+					$num_mes = Data::mes_nun($nombre_mes);
+					$campos['fecha_cobro'] = $data['year'].'-'.$num_mes['mes'].'-'.$value->dia_cobro;
+
+					$campos['estado'] = 'Pendiente';
+					
+					if($value->tipo_servicio == "Nacional"){
+						$campos['monto'] = '50000';
+					}else{
+						$campos['monto'] = '90000';
+					}
+					
+					$pago = true;
+					if(!Models\Pagos::where('id_cliente', $campos['id_cliente'])->where('id_mes', $campos['id_mes'])->exists()){
+						$pago = Models\Pagos::create($campos);
+					}
+					
+
+					if($pago){
+						$update_mes->clientes_activos++;
+					}
+					
+				}else{
+					$update_mes->clientes_retirados++;
+				}
+				
+			}
+
+			if($update_mes->clientes_activos > 0){
+				$mes->update();
+				$resp["DATA"] = $mes;
+				$resp["MSJ"] = MSJ_success("Cobranza por mes generada con éxito", "Cobranza Generada"); 
+			}else{
+				$mes->delete();
+			}
+		}
+
+		return $resp;
+	}
+
+	function obtener_mes($id){
+
+		$mes = Models\Meses::find($id);
+		
+		return $mes;
+	}
+
+	function obtener_meses(){
+		return Models\Meses::all();
+	}
+
+	function eliminar_cobranzapormes($id){
+		$mes = Models\Meses::where('id', $id)->first();
+
+		if($mes){
+			Models\Pagos::where('id_mes', $mes->id)->delete();
+			Models\MovCuentas::where('id_mes', $mes->id)->delete();
+			$mes->delete();
+			Data::recalcular_saldo_cuentas();
+			$resp['MSJ'] = MSJ_success("Cobranza por mes eliminada", "Eliminado");
+			$resp['DATA'] = $id;
+		}else{
+			$resp['MSJ'] = MSJ_error("No se puede eliminar la cobranza por mes");
+		}
+
+		return $resp;
+	}
+
+	function mes_nun($mesyear)
+	{	
+
+		$pos = strpos($mesyear, '/');
+
+		if($pos === false){
+			return false;
+		}
+
+		$mes = substr($mesyear, 0, $pos);
+		$year = substr($mesyear, $pos+1);
+
+
+		$meses = [
+			'Enero',
+			'Febrero',
+			'Marzo',
+			'Abril',
+			'Mayo',
+			'Junio',
+			'Agosto',
+			'Septiembre',
+			'Optubre',
+			'Noviembre',
+			'Diciembre'
+		];
+
+		$resp = ['year' => $year];
+		$resp['mes'] = array_search($mes, $meses)+1; 
+		return $resp;
+	}
+
+
+
+	/// todos los pagos individualmente
+	
+	function obtener_pagos_cliente($cliente){
+		//$pagos = Models\Pagos::join("clientes", "pagos.id_cliente" ,"=", "clientes.id" )->select("pagos.id", "clientes.nombre", "clientes.apellido", "pagos.fecha_cobro", "pagos.estado", "pagos.monto")->where("pagos.estado", "Pendiente")->get();
+		$pagos = Models\Pagos::select('meses.nombre as nombre_mes', 'pagos.*')->join('meses', 'pagos.id_mes', '=', 'meses.id')->where("id_cliente", $cliente['id_cliente'])->get();
+
+		return $pagos;
+	}
+
+	function agregar_pago($data){
+		
+		if(isset($data["id_cliente"]) && isset($data["mes"])){
+
+			$cliente = Models\Clientes::find($data["id_cliente"]);
+			$mes = Models\Meses::find($data["mes"]);
+
+			if(!isset($cliente) && !isset($mes)){
+
+				$resp["MSJ"] = MSJ_error("No se puede crear el pago");
+
+			}else{
+				unset($data["id"]);
+				$respuesta=false; 
+
+				
+				$data["id_cliente"] = $cliente->id;
+				$data["estado"] = "Pendiente";
+
+				$num_mes = Data::mes_nun($mes->nombre);
+				$fecha_tem = $num_mes['year'].'-'.$num_mes['mes'].'-'.$cliente->dia_cobro;
+				$test = new \DateTime($fecha_tem);
+
+				$data["fecha_cobro"] = date_format($test, 'Y-m-d');
+
+				$data["id_mes"] = $mes->id;
+
+				$pago = Models\Pagos::create($data);
+
+				if($pago){
+					$respuesta["nombre"] = $cliente->nombre;
+					$respuesta["apellido"] = $cliente->apellido;
+					$respuesta["nombre_mes"] = $mes->nombre;
+					$respuesta["fecha_cobro"] = $pago->fecha_cobro; 
+					$respuesta["monto"] = $pago->monto;
+					$respuesta["estado"] = $pago->estado;
+					$respuesta["id"] = $pago->id;
+
+					$resp["DATA"] = $respuesta;
+					$resp["MSJ"] = MSJ_success("Pago creado correctamente");
+
+				}else{
+					$resp["MSJ"] = MSJ_error("No se puedo crear el pago");
+				}
+			}
+
+			
+
+		}else{
+			$resp["MSJ"] = MSJ_error("No se proporcionaron datos necesarios");
+		}
+
+		return $resp;
+
+	}
+
+	function eliminar_pago($pago_id){
+		$pago = Models\Pagos::where('id', $pago_id)->first();
+
+		if($pago){
+
+			Models\MovCuentas::where('id_pago', $pago->id)->delete();
+			Data::recalcular_saldo_cuentas();
+			
+			$pago->delete();
+
+			$resp["DATA"] = $pago_id;
+			$resp["MSJ"] = MSJ_success("Pago eliminado correctamente", "Eliminado");
+		}else{
+			$resp["MSJ"] = MSJ_error("No se pudo eliminar el pago");
+		}
+
+		return $resp;
+	}
+
+	function obtener_pagos($data = null){
+
+		if(!is_null($data) && isset($data['id_mes'])){
+			$pagos = Models\Pagos::where("id_mes", $data['id_mes'])->get();
+		}else{
+			$pagos = Models\Pagos::where("pagos.estado", "Pendiente")->get();
+		}
+		//$pagos = Models\Pagos::join("clientes", "pagos.id_cliente" ,"=", "clientes.id" )->select("pagos.id", "clientes.nombre", "clientes.apellido", "pagos.fecha_cobro", "pagos.estado", "pagos.monto")->where("pagos.estado", "Pendiente")->get();
+		
+
+		return $pagos;
+	}
+
+	function obtener_pago($id){
+		$pagos = Models\Pagos::find($id);
+		
+		if(count($pagos) < 2){
+			
+			$pagos[0]["nombre"] = $pagos[0]->cliente->nombre;
+			$pagos[0]["apellido"] = $pagos[0]->cliente->apellido;
+			$pagos[0]["cedula"] = $pagos[0]->cliente->cedula;
+		}
+		
+		return $pagos;
+	}
+
+	function modificar_pago($data){
+
+		$registro = Models\Pagos::find($data["id"]);
+		$cliente = Models\Clientes::find($data["id_cliente"]);
+		$respuesta=false; 
+
+		if($registro && $cliente)
+		{
+			$respuesta = $registro->update($data);
+
+			if($respuesta){
+
+				$registro['nombre'] = $cliente->nombre;
+				$registro['apellido'] = $cliente->apellido;
+                $respuesta = [];
+                $respuesta[0] = $registro;
+            }
+		}
+
+		return $respuesta;
+	}
+
+	function agregar_cobro($data){
+	
+		$resp = [];
+		if(!isset($data['pagos']['id']) | !validateDate($data['fecha_cobro']) | !isset($data['cuenta']) ){
+			return $resp["MSJ"] = MSJ_error("No se proporcionaron datos necesarios");
+		}
+		
+		$pagos = Models\Pagos::find($data['pagos']['id']);
+		$cuenta = Models\Cuentas::find($data['cuenta']);
+
+		foreach ($pagos as $key => $value) {
+
+			if($value->estado == 'Pagado'){
+				$resp["MSJ"] = MSJ_error("La factura ya se pago");
+			}else{
+				
+				$value->estado = 'Pagado';
+				$value->update();
+				$temp_descrip = 'Pago Mensualidad';
+				$movcuenta = [	
+								'id_cuenta' => $data['cuenta'],
+								'id_pago' => $value->id,
+								'id_mes' => $value->id_mes, 
+								'tipo' => 'CREDITO',
+								'descripcion' => $temp_descrip,
+								'valor' => $value->monto,
+								'fecha' => $data['fecha_cobro']
+							];
+							
+				Models\MovCuentas::create($movcuenta);
+
+				$cuenta->saldo = $cuenta->saldo + $value->monto;
+
+				$resp["DATA"] = $value;
+				$resp["MSJ"] = MSJ_success("Pago Cobrado Correctamente", "Cobrado");
+			}
+			
+		}
+
+		$cuenta->update();
+		
+		return $resp;
+	}
+	
+
 }
 
 function validateDate($date, $format = 'Y-m-d')
 {
     $d = \DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) == $date;
+}
+
+
+
+/// Mensajes para la interfas
+
+function MSJ_success($text = "Resultado éxitoso", $title = "Éxito"){
+
+	return ["success" => ["title" => $title, "text" => $text]];
+	
+}
+
+function MSJ_error($text = "Por favor contacte con el adminitrador", $title = "Error"){
+
+	return ["error" => ["title" => $title, "text" => $text]];
+	
+}
+
+function MSJ_warning($text = " ", $title = "Alerta"){
+
+	return ["warning" => ["title" => $title, "text" => $text]];
+	
 }
 
 

@@ -1,11 +1,12 @@
 {% extends "tabla.twig" %}
 
+{# //posiblemete se retire titlepage #}
 {% block titlepage %}
-		<h3>Clientes <small></small></h3>
+		
 {% endblock %}
 
 {% block subtitlepage %}
-            <h2>Lista de todos clientes <small></small></h2>
+            <h4>Listado de Clientes. <small>Total: {{data.count()}}</small></h4>
 {% endblock %}
 
 {# botones de Edicion #}
@@ -126,6 +127,11 @@
 
 <script type="text/javascript">
 
+    rutas.obtener = 'data/obtener/cliente';
+    rutas.agregar = 'data/agregar/cliente';
+    rutas.eliminar = 'data/eliminar/cliente';
+    rutas.modificar = 'data/modificar/cliente';
+
     rutas.funcion.add = 'crear_usuario';
     rutas.funcion.eliminar = 'eliminar_usuario';
     rutas.funcion.getdata = 'getCliente';
@@ -136,23 +142,20 @@
 
         var url = "{{base_dir_controller}}"+rutas.obtener;
         
-        var data = {funcion: "", data: ""};
-			data.data = CeldasCheck();
-			data.funcion = rutas.funcion.getdata;
+        var data =  CeldasCheck();
 
-        if(data.data.id.length == 1){
+        if(data.id.length == 1){
 
             $.post(url, data).done(function(resp){
 
                 resp = JSON.parse(resp);
 
-                resp.forEach(function(value){
-
-                    cargar_form(value);
-                    
-                });
+                if(!validar(resp)){						
+						return 0;					
+				}
                 
-
+                cargar_form(resp.DATA);
+               
                 new template_modal({
                     title: "Modificar Datos del Cliente",
                     btn_rigth_function: "Modificar_registro_msg()",
@@ -188,15 +191,16 @@
     }
 
     var index_tb = {
-                        "data": [
-                                ["id"],
-                                ["ip"], 
-                                ["mac_address"], 
-                                ["nombre"], 
-                                ["estatus_servicio"]
-                            ],
-                        "upper": [3] 
-                        };
+                     "data": [
+                            ["id"],
+                            [ "nombre", 
+                              "apellido"], 
+                            [ "tipo_servicio"], 
+                            [ "estatus_servicio"], 
+                            [ "dia_cobro" ]
+                        ],
+                     "upper": [1] 
+                    };
 
 
 </script>
@@ -207,10 +211,10 @@
 {% block headtable %}
     <tr>
         <th><input type="checkbox" id="check-all"></th>
-        <th>IP</th>
-        <th>Mac</th>
         <th>Nombre</th>
-        <th>Estatus</th>
+        <th>Tipo de Servicio</th>
+        <th>Estado del Servicio</th>
+        <th>Dia de Cobro</th>
     </tr>
 
 {% endblock %}
@@ -218,10 +222,10 @@
 {% block bodytable %}
     <tr class="id_{{dato.id}}">
         <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
-        <td><a target="_blank" href="http://{{dato.ip}}">{{dato.ip}}</a></td>
-        <td>{{dato.mac_address}}</td>
-        <td>{{dato.nombre}}</td>
+        <td>{{dato.nombre|upper }} {{dato.apellido|upper }}</td>
+        <td>{{dato.tipo_servicio}}</td>
         <td>{{dato.estatus_servicio}}</td>
+        <td>{{dato.dia_cobro}}</td>
     </tr>
 
     <script>

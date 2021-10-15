@@ -184,6 +184,33 @@
 					{% endif %}
 				{% endfor %}
 
+				{% if true and true %}
+				  <a class="panel-heading collapsed" role="tab" id="headingOne1" data-toggle="collapse" data-parent="#accordion1" href="#collapse_sin_asignar" aria-expanded="false" aria-controls="collapseOne">
+						<h4 class="panel-title"><input type="checkbox" class="flat"> Sin Asignar</h4>
+					</a>
+					
+					<div id="collapse_sin_asignar" class="panel-collapse in collapse" role="tabpanel" aria-labelledby="headingOne" style="">
+						<div class="panel-body">
+							<ul class="to_do">
+								{% for ruta in rutas %}
+									{% if ruta.crud_menu == 0 and ruta.id_menu == 0  %}
+										{% set checked = '' %}
+										{% if ruta.user_checked %}
+
+											{% set checked = 'checked' %}
+
+										{% endif %}
+										<li style="margin-left: 10px;">
+											<p><input type="checkbox" class="flat" name="permisos[]" value="{{ruta.id}}" {{checked}}> {{ruta.nombre}} :: {{ruta.ruta}}</p>
+										</li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+					
+				{% endif %}
+
 				<!--  <a class="panel-heading collapsed" role="tab" id="headingOne1" data-toggle="collapse" data-parent="#accordion1" href="#collapsesn" aria-expanded="false" aria-controls="collapseOne">
 						<h4 class="panel-title"><input type="checkbox" class="flat" {{checked}}> Sin Menu</h4>
 					</a>

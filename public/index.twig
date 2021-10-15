@@ -307,7 +307,6 @@
       }else{
         eval(funcion);
       }
-			
 		
 		}
     </script>
@@ -332,59 +331,87 @@
 
             });
         }
-        
-        function addRow(data, index_columns){
-          
-            data_row = [];
-          
-            data.forEach(function(registro, index){
-              
-              data_row[index] = [];
-
-              index_columns.data.forEach(function(value, index2){
-
-                data_row[index][index2] = "";
-                value.forEach(function(key, index3){
-                  data_row[index][index2] += (value.length == index3+1) ? registro[key] : registro[key]+" ";
-                });
-
-              });
-
-              index_columns.upper.forEach(function(key){
-                data_row[index][key] = data_row[index][key].toUpperCase();
-              });
-            });
-            
-
-            
-
-            return data_row;
-        }
 
         function validar(data){
 
-          var resp = false;
+          var resp = true;
           
           if(typeof(data) == "object"){
-            if(data.propertyIsEnumerable(0)){
-              data.forEach(function(value){
-                
-                if(value.hasOwnProperty('error')){
-            
+
+            if(data.hasOwnProperty('MSJ')){
+              
+              if(data.MSJ.hasOwnProperty('error')){
+                  
+                  !data.MSJ.error.hasOwnProperty('title') ? data.MSJ.error.title = 'Ocurrio un error' : 0 ;
+                  !data.MSJ.error.hasOwnProperty('text') ? data.MSJ.error.text = 'No se especifico el error' : 0 ;
+
                   new PNotify({
-                    title: 'Ocurrio un error',
-                    text: value.error,
+                    title: data.MSJ.error.title,
+                    text: data.MSJ.error.text,
                     type: 'error',
                     styling: 'bootstrap3'
                   });
 
+                  resp = false;
 
-                }else{
-                  resp = true;
-                }
+              }else if(data.MSJ.hasOwnProperty('warning')){
                 
-              });
+                !data.MSJ.warning.hasOwnProperty('title') ? data.MSJ.warning.title = 'Alerta' : 0 ;
+                !data.MSJ.warning.hasOwnProperty('text') ? data.MSJ.warning.text = 'No se especifico alerta' : 0 ;
+
+                new PNotify({
+                  title: data.MSJ.warning.title,
+                  text: data.MSJ.warning.text,
+                  type: 'warning',
+                  styling: 'bootstrap3'
+                });
+                
+
+              }else if(data.MSJ.hasOwnProperty('success')){
+                
+                !data.MSJ.success.hasOwnProperty('title') ? data.MSJ.success.title = 'Éxito' : 0 ;
+                !data.MSJ.success.hasOwnProperty('text') ? data.MSJ.success.text = 'No se especifico éxito' : 0 ;
+
+                new PNotify({
+                  title: data.MSJ.success.title,
+                  text: data.MSJ.success.text,
+                  type: 'success',
+                  styling: 'bootstrap3'
+                });
+
+              }else{
+
+                new PNotify({
+                    title: 'Ocurrio un error',
+                    text: "Por favor contacte con el administrador del sistema",
+                    type: 'error',
+                    styling: 'bootstrap3'
+                  });
+
+                console.error('Funcion Validar: Parametro recibido no contiene valor Valido');
+
+                resp = false;
+                
+              }
+
             }
+
+            if(!data.hasOwnProperty('DATA')){
+              resp = false;
+            }
+
+          }else{
+
+            new PNotify({
+                    title: 'Ocurrio un error',
+                    text: "Por favor contacte con el administrador del sistema",
+                    type: 'error',
+                    styling: 'bootstrap3'
+                  });
+
+            console.error('Funcion Validar: Parametro Recibido no es Objeto');
+            resp = false;
+
           }
 
           return resp;
@@ -397,7 +424,7 @@
           constructor(datos) {
             
             if(typeof(datos) == "object"){
-
+           
               this.title = datos.title == undefined ? "Sin Titulo" : datos.title;
               this.btn_rigth_function = datos.btn_rigth_function == undefined ? "alert('Sin funcion')" : datos.btn_rigth_function;
               this.reset_form = datos.reset_form == undefined ? false : datos.reset_form;

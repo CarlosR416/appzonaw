@@ -1,12 +1,12 @@
 {% extends "tabla.twig" %}
 
 {% block titlepage %}
-		<h3>Pagos <small></small></h3>
+		<h3> <small></small></h3>
 {% endblock %}
 
 
 {% block subtitlepage %}
-            <h2>Listado de Meses <small></small></h2>
+            <h2>Cobranza por Meses<small></small></h2>
 {% endblock %}
 
 {# botones de Edicion #}
@@ -16,7 +16,7 @@
         <div class="buttons">
            <button type="button" class="option_btn btn btn-primary btn-sm"  data-i="0" id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Generar Nuevo</button>
             <!--<button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="1" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>-->
-            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="2" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="1" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
         </div>
         
     </div>
@@ -83,7 +83,7 @@
 {% block bodytable %}
     <tr class="id_{{dato.id}}">
         <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
-        <td><a href="#">{{dato.nombre|upper}}</a></td>
+        <td><a href="{{base_dir_controller}}pagos/cobranza?id_mes={{dato.id}}" onclick="ver_cobranzapormes(this)">{{dato.nombre|upper}}</a></td>
         <td>{{dato.pagos().where("estado", "Pagado").count()}}</td>
         <td>{{dato.pagos().where("estado", "Pendiente").count()}}</td>
         <td>{{dato.pagos().where("estado", "Pagado").sum("monto")}}</td>
@@ -109,10 +109,8 @@
                     ],
                     "upper": [1] 
                 };
-    rutas.funcion.add = 'generar_mes';
-    rutas.funcion.eliminar = 'eliminar_mes';
-    rutas.funcion.getdata = 'obtener_mes';
-    rutas.funcion.modificar = 'modificar_pago';
+    rutas.eliminar = 'data/eliminar/cobranzapormes';
+    rutas.agregar = 'data/agregar/cobranzapormes';
 
     // llama Modals
      Obtener_registro = function(e){
@@ -170,6 +168,8 @@
         });
         
     }
+
+    
 </script>
 
 {% endblock %}
