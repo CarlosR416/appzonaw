@@ -1,0 +1,139 @@
+{% extends "index.twig" %}
+
+{# //posiblemete se retire titlepage #}
+
+{% block content %}
+    {% block titlepage %}
+            
+    {% endblock %}
+
+    {% block subtitlepage %}
+                <h4>Generar Tickets. <small></small></h4>
+    {% endblock %}
+
+
+
+    <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><small></small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a class="dropdown-item" href="#">Settings 1</a>
+                            </li>
+                            <li><a class="dropdown-item" href="#">Settings 2</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <br>
+                <form id="form_generar_tickets" target="_blank" method="post" action="{{base_dir_controller}}tickets/generando" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
+
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_nombre">Para quien se Genera<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input type="text" id="tickets_nombre" name="tickets_nombre" required="required" class="form-control ">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_user_mik">Ususario Mikrotick<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input type="text" id="tickets_user_mik" name="tickets_user_mik" required="required" class="form-control" value="admin">
+                        </div>
+                    </div>
+                    
+                    <div class="field item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3  label-align">Contraseña Mikrotick<span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6">
+                            <input class="form-control" type="password" id="tickets_password_mik" name="tickets_password_mik" value="admin8891957" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*]).{8,}" title="Minimum 8 Characters Including An Upper And Lower Case Letter, A Number And A Unique Character" required="">
+                            
+                            <span style="position: absolute;right:15px;top:7px;" onclick="hideshow()">
+                                <i id="slash" class="fa fa-eye-slash" style="display: none;"></i>
+                                <i id="eye" class="fa fa-eye" style="display: block;"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_ip_mik">Ip Mikrotick<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input type="text" id="tickets_ip_mik" name="tickets_ip_mik" required="required" class="form-control" value="192.168.88.1">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align">Seleccione Plan</label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <select class="form-control" name="tickets_plan">
+                                <option value='{"titulo": "1 Hora", "plan": "Hora", "tiempo": "01:00:00"}'>1 Hora</option>
+                                <option value='{"titulo": "2 Horas", "plan": "Hora", "tiempo": "02:00:00"}'>2 Horas</option>
+                                <option value='{"titulo": "24 Horas", "plan": "24Horas", "tiempo": "24:00:00"}'>24 Horas</option>
+                                <option value='{"titulo": "7 Dias", "plan": "Mes", "tiempo": "7d 00:00:00"}'>7 Dias</option>
+                                <option value='{"titulo": "1 Mes 768k", "plan": "Mes", "tiempo": ""}'>1 Mes 768k</option>
+                                <option value='{"titulo": "1 Mes 512k", "plan": "Mes2", "tiempo": ""}'>1 Mes 512k</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align">Fecha de Generacion <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input id="tickets_fecha_generacion" class="date-picker form-control" name="tickets_fecha_generacion" placeholder="dd-mm-yyyy" type="text" required="required" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
+                            <script>
+                                function timeFunctionLong(input) {
+                                    setTimeout(function() {
+                                        input.type = 'text';
+                                    }, 60000);
+                                }
+                            </script>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_nun_tickets">Cantida de tickets<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input type="text" id="tickets_nun_tickets" name="tickets_nun_tickets" required="required" class="form-control" value="248">
+                        </div>
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div class="item form-group">
+                        <div class="col-md-6 col-sm-6 offset-md-3">
+                            <button type="submit" class="btn btn-success">Generar</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+		function hideshow(){
+			var password = document.getElementById("tickets_password_mik");
+			var slash = document.getElementById("slash");
+			var eye = document.getElementById("eye");
+			
+			if(password.type === 'password'){
+				password.type = "text";
+				slash.style.display = "block";
+				eye.style.display = "none";
+			}
+			else{
+				password.type = "password";
+				slash.style.display = "none";
+				eye.style.display = "block";
+			}
+
+		}
+	</script>
+{% endblock %}

@@ -256,6 +256,30 @@ class Data
 		return $array2;
 	}
 
+	function agregar_mac_filter($id){
+
+		$ak = 'solucionex';
+		$mi	= 'adminsolucione';
+		
+		$mac = "01-00-00-00-00-00";
+		$desc = "Cliente1";
+		$state = 1;
+
+		$url3 = 'userRpm/LanMacFilterRpm.htm?Mac='.$mac.'&Desc='.$desc.'&State='.$state.'&Changed=0&SelIndex=0&Page=1&btn_save=Save';
+
+		$ch = \curl_init($this->settings['router']['ip'].'/'.$url3);
+		curl_setopt($ch, CURLOPT_HEADER, 1);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+		curl_setopt($ch,CURLOPT_USERPWD,$ak.":".$mi);
+
+		$respuesta = curl_exec ($ch);
+
+		if(curl_errno($ch)){
+			return [];	
+		}
+	}
+
 	function evaluar($ar, $ar2){
 
 		$array1 = array();
@@ -485,7 +509,14 @@ class Data
 	/// Cuentas 
 	
 	function obtener_cuentas(){
+		Data::recalcular_saldo_cuentas();
 		return Models\Cuentas::all();
+	}
+
+	function obtener_cuentas_por_meses(){
+		
+		return Models\Meses::get();
+
 	}
 
 	function obtener_mov_cuentas()
@@ -493,7 +524,8 @@ class Data
 		return Models\MovCuentas::all();
 	}
 
-	function crear_mov_cuenta($data){
+	function crear_mov_cuenta($data)
+	{
 
 		if(isset($data['id_cuenta'])){
 			$cuenta = Models\Cuentas::find($data['id_cuenta']);
@@ -528,7 +560,8 @@ class Data
 
 	}
 
-	function eliminar_mov_cuenta($id){
+	function eliminar_mov_cuenta($id)
+	{
 
 
 		$movcuenta = Models\MovCuentas::where('id', $id)->first();
@@ -552,7 +585,8 @@ class Data
 
 	}
 
-	function recalcular_saldo_cuentas(){
+	function recalcular_saldo_cuentas()
+	{
 
 		$cuentas = Models\Cuentas::all();
 
@@ -837,22 +871,34 @@ class Data
 
 		$registro = Models\Pagos::find($data["id"]);
 		$cliente = Models\Clientes::find($data["id_cliente"]);
-		$respuesta=false; 
+		$resp=''; 
 
 		if($registro && $cliente)
 		{
-			$respuesta = $registro->update($data);
 
-			if($respuesta){
+			if($registro['estado'] == 'Pagado'){
+				$resp["MSJ"]= MSJ_error("No se puede modificar, ya esta pagado. Para modificar elimine el pago y vuelve a crear"); 
+			}else{
 
-				$registro['nombre'] = $cliente->nombre;
-				$registro['apellido'] = $cliente->apellido;
-                $respuesta = [];
-                $respuesta[0] = $registro;
-            }
+				$resp["DATA"] = $registro->update($data);
+
+				if(!is_null($resp["DATA"])){
+
+					$registro['nombre'] = $cliente->nombre;
+					$registro['apellido'] = $cliente->apellido;
+					$resp["DATA"] = [];
+					$resp["DATA"] = $registro;
+
+				}else{
+					$resp["MSJ"]= MSJ_error("No se puede guardar en la base de datos"); 
+				}
+			}	
+				
+		}else{
+			$resp["MSJ"]= MSJ_error("No se puede cargar el pago..."); 
 		}
 
-		return $respuesta;
+		return $resp;
 	}
 
 	function agregar_cobro($data){
@@ -883,7 +929,7 @@ class Data
 								'valor' => $value->monto,
 								'fecha' => $data['fecha_cobro']
 							];
-							
+
 				Models\MovCuentas::create($movcuenta);
 
 				$cuenta->saldo = $cuenta->saldo + $value->monto;

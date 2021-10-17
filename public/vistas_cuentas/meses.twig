@@ -60,9 +60,8 @@
     <tr>
         <th></th>
         <th>Nombre</th>
-        <th>Total Ingresos</th>
-        <th>Total Gastos</th>
-        <th>Disponible</th>
+        <th>Cuenta Carlos</th>
+        <th>Cuenta Vicente</th>
     </tr>
 {% endblock %}
 
@@ -70,15 +69,14 @@
 {% block bodytable %}
     <tr class="id_{{dato.id}}">
 
-        {% set gastos = dato.movimientos().where("tipo","DEBITO").sum("valor") %}
-        {% set ingresos = dato.movimientos().where("tipo","CREDITO").sum("valor") %}
+        {% set Carlos = dato.movimientos().where("id_cuenta","1").sum("valor") %}
+        {% set Vicente = dato.movimientos().where("id_cuenta","2").sum("valor") %}
 
 
         <td></td>
         <td><a href="#">{{dato.nombre|upper}}</a></td>
-        <td>{{ingresos}}</td>
-        <td>{{gastos}}</td>
-        <td>{{ingresos - gastos}}</td>
+        <td>{{Carlos}}</td>
+        <td>{{Vicente}}</td>
         
     </tr>
 {% endblock %}

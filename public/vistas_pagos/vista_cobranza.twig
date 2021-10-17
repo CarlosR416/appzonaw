@@ -211,18 +211,17 @@
 
     rutas.eliminar = 'data/eliminar/pago';
     rutas.agregar = 'data/agregar/pago';
-    
+    rutas.obtener = 'data/obtener/pago';
+    rutas.modificar = rutas.modificar+'pago';
 
     // llama Modals
     Obtener_registro = function(e){
 
         var url = "{{base_dir_controller}}"+rutas.obtener;
         
-        var data = {funcion: "", data: ""};
-			data.data = CeldasCheck();
-			data.funcion = rutas.funcion.getdata;
+        var data = CeldasCheck();
 
-        if(data.data.id.length == 1){
+        if(data.id.length == 1){
 
             $.post(url, data).done(function(resp){
 
@@ -340,7 +339,7 @@
         datos_clientes = data.DATA;
        
         var datos = addRow(data, index_tb_clientes);
-        console.log(datos);
+
         datos.forEach(function(value, index){
             datos[index][4] = '<a href="#" onclick="cargar_cliente(this)"  data-value="'+datos[index][4]+'">Seleccionar</a>';
         });

@@ -29,7 +29,11 @@ class Clientes
 
     function activos(){
         //$datos = new \App\Data;
-
+        $param = $this->container->request->getParams();
+        
+        if(isset($param['id'])){
+            $this->container->data->agregar_mac_filter($param['id']);
+        }
         
         $args["data"] =  $this->container->data->clientes_estado();
 

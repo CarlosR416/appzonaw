@@ -72,6 +72,7 @@
     <tr>
         <th><input type="checkbox" id="check-all"></th>
         <th>Nombre</th>
+        <th>Total Clientes</th>
         <th>Pagos Cobrados</th>
         <th>Pendiente por cobrar</th>
         <th>Saldo Cobrado</th>
@@ -84,6 +85,7 @@
     <tr class="id_{{dato.id}}">
         <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
         <td><a href="{{base_dir_controller}}pagos/cobranza?id_mes={{dato.id}}" onclick="ver_cobranzapormes(this)">{{dato.nombre|upper}}</a></td>
+        <td>{{dato.pagos().count()}}</td>
         <td>{{dato.pagos().where("estado", "Pagado").count()}}</td>
         <td>{{dato.pagos().where("estado", "Pendiente").count()}}</td>
         <td>{{dato.pagos().where("estado", "Pagado").sum("monto")}}</td>
