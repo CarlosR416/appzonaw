@@ -626,6 +626,32 @@ class Data
 		return [$gasto];
 	}
 
+	//giros
+
+	function obtener_giro($data = null)
+	{	
+		
+		if(is_null($data) | !isset($data["id"])){
+			$resp["MSJ"] = MSJ_error("No se puede obtener giro");
+			
+			return $resp;
+		}
+
+		$giro = Models\Giros::where('id', $data['id'][0])->first();
+
+		$giro->update(["estado" => "entregado"]);
+
+		return ['DATA' => [$giro]];
+
+	}
+
+	function obtener_girosp($data = null)
+	{
+		
+		return Models\Giros::where('estado', 'pendiente')->get();
+
+	}
+
 
 
 	/// Pagos divididos por meses

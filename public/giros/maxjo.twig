@@ -1,0 +1,129 @@
+{% extends "tabla.twig" %}
+
+{% block titlepage %}
+		
+{% endblock %}
+
+{% block subtitlepage %}
+            <h2>Giros a Entregar <small></small></h2>
+{% endblock %}
+
+{% block buttonpage %}
+<div class="x_content">
+
+    <div class="buttons">
+            <button type="button" class="option_btn btn btn-primary btn-sm"  data-i="1" id="btn_giro_entregar" onclick="entregar_giro(this)">Entregar</button>
+    </div>
+</div>
+{% endblock %}
+
+{# tabla #}
+
+{% block js %}
+
+{{ parent() }}
+
+<script type="text/javascript">
+
+    rutas.obtener = "data/obtener/giro";
+
+    // llama Modals
+    entregar_giro = function(e){
+
+        var url = "{{base_dir_controller}}"+rutas.obtener;
+        
+        var data = CeldasCheck();
+
+        if(data.id.length == 1){
+
+            $.post(url, data).done(function(resp){
+
+                resp = JSON.parse(resp);
+                validar(resp);
+
+                resp.forEach(function(value){
+
+                    cargar_form(value);
+                    
+                });
+                
+
+                new template_modal({
+                    title: "Modificar Datos del Cliente",
+                    btn_rigth_function: "Modificar_registro_msg()",
+                    btn_rigth_text: "Guardar Cambios"
+                });
+                
+                
+            });
+
+        }
+
+    } 
+
+    Nuevo_registro = function(e){
+
+        new template_modal({
+            title: "Registrar Nuevo Cliente",
+            btn_rigth_function: "Agregar_registro()",
+            reset_form: "modal_form",
+            btn_rigth_text: "Crear Registro"
+        });
+
+    }
+
+    Eliminar_msg = function(e){
+
+        new template_modal_advert({
+            title: "¿Esta Seguro que desea Eliminar?",
+            btn_rigth_function: "Eliminar_registro()",
+            btn_rigth_text: "Si, Eliminar"
+        });
+        
+    }
+
+    var index_tb = {
+                        "data": [
+                                ["id"],
+                                ["ip"], 
+                                ["mac_address"], 
+                                ["nombre"], 
+                                ["estatus_servicio"]
+                            ],
+                        "upper": [3] 
+                        };
+
+
+</script>
+
+{% endblock %}
+
+
+{% block headtable %}
+    <tr>
+        <th><input type="checkbox" id="check-all"></th>
+        <th>Referencia</th>
+        <th>Nombre</th>
+        <th>Cedula</th>
+        <th>Monto enviado</th>
+        <th>Monto a entregar</th>
+    </tr>
+
+{% endblock %}
+
+{% block bodytable %}
+    <tr class="id_{{dato.id}}">
+        <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
+        <td>{{dato.ref}}</td>
+        <td>{{dato.nombre}}</td>
+        <td>{{dato.cedula}}</td>
+        <td>{{dato.monto_env}}</td>
+        <td>{{dato.monto_entregar}}</td>
+    </tr>
+
+    <script>
+        
+    </script>
+{% endblock %}
+
+{# fin tabla #}

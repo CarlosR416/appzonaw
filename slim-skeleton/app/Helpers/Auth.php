@@ -25,9 +25,33 @@ class Auth
 
 		}else if($Resul->pass == $pass){
 
-
 			$_SESSION['usuario'] = $Resul->id;
 			$_SESSION['admin'] = $Resul->admin;
+			
+			if(is_null($Resul->path)){
+
+				$_SESSION['path'] = ['clientes', 'todos'];
+
+			}else{
+
+				$path = $Resul->path;
+				$args = [];
+				do {
+					$pos = strpos($path, "/");
+
+					$arg =  $pos ? substr($path, 0, $pos) : substr($path, 0) ;
+					
+					$args[] = $arg;
+
+					$path = substr($path, $pos+1);
+
+				} while ($pos);
+
+
+				$_SESSION['path'] = $args;
+
+			}
+			
 			return true;
 
 		}

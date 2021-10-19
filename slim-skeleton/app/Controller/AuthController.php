@@ -22,7 +22,7 @@ class AuthController
 	
 		if ($Auth){
 
-			return $this->container->response->withRedirect($this->container->router->pathFor('ruta', ['arg1' => 'clientes', 'arg2' => 'todos']));
+			return $this->container->response->withRedirect($this->container->router->pathFor('ruta', ['arg1' => $_SESSION['path'][0], 'arg2' => $_SESSION['path'][1]]));
 			
 		}
 
