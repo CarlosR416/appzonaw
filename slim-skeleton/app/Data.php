@@ -627,6 +627,29 @@ class Data
 	}
 
 	//giros
+	function agregar_entregagiro($data){
+		
+		if(is_null($data) | !isset($data["id"])){
+			$resp["MSJ"] = MSJ_error("No se puede procesar giro, contacte al administrador");
+			
+			return $resp;
+		}
+
+		if(isset($data["nota"]) && $data["nota"] != ""){
+			$updated["nota"] = $data["nota"];
+		}
+
+		$updated["estado"] = "entregado";
+
+		$giro = Models\Giros::where('id', $data['id'][0])->first();
+
+		$giro->update($updated);
+
+		$resp["DATA"] = ['id' => [$giro->id]];
+		$resp["MSJ"] = MSJ_success("Procesado Correctamente", "Giro entregado");
+
+		return $resp; 
+	}
 
 	function obtener_giro($data = null)
 	{	
@@ -639,9 +662,19 @@ class Data
 
 		$giro = Models\Giros::where('id', $data['id'][0])->first();
 
-		$giro->update(["estado" => "entregado"]);
+		//$giro->update(["estado" => "entregado"]);
 
-		return ['DATA' => [$giro]];
+		return ['DATA' => $giro];
+
+	}
+
+	function obtener_girosentregados($data = null)
+	{
+		$date = time() - (15 * 24 * 60 * 60);
+
+		$date = date('Y-m-d', $date);
+
+		return Models\Giros::where('estado', 'entregado')->get();
 
 	}
 

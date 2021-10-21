@@ -1,0 +1,35 @@
+{% extends "tabla.twig" %}
+
+{% block titlepage %}
+		
+{% endblock %}
+
+{% block subtitlepage %}
+            <h2>Giros entregados <small></small></h2>
+{% endblock %}
+
+{% block headtable %}
+    <tr>
+        <th><input type="checkbox" id="check-all"></th>
+        <th>Referencia</th>
+        <th>Nombre</th>
+        <th>Cedula</th>
+        <th>Monto enviado</th>
+        <th>Monto a entregar</th>
+        <th>Fecha</th>
+    </tr>
+
+{% endblock %}
+
+{% block bodytable %}
+    <tr class="id_{{dato.id}}">
+        <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
+        <td>{{dato.ref}}</td>
+        <td>{{dato.nombre_destinatario|upper}}</td>
+        <td>{{dato.cedula_destinatario}}</td>
+        <td>{{dato.monto_env|number_format(0, ',', '.')}} COP</td>
+        <td>{{dato.monto_entregar|number_format(0, ',', '.')}} COP</td>
+        <td>{{dato.updated_at}}</td>
+
+    </tr>
+{% endblock %}

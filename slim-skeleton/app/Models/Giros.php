@@ -10,11 +10,15 @@ class Giros extends Model
 	protected $fillable = [
 		"id",
         "ref", 
-        "Nombre",  
-        "Cedula",  
-        "monto_env",  
+        "nombre_remitente",  
+        "cedula_remitente",
+        "nombre_destinatario",  
+        "cedula_destinatario",  
+        "monto_env",
+        "tipo_porcentaje",  
         "monto_entregar",   
         "estado",
+        "nota",
         "created_at",  
         "updated_at"  
 	];

@@ -26,6 +26,19 @@
 <script type="text/javascript">
 
     rutas.obtener = "data/obtener/giro";
+    rutas.procesar = "data/agregar/entregagiro";
+
+    var index_tb = {
+                        "data": [
+                                ["id"],
+                                ["ref"], 
+                                ["nombre_destinatario"], 
+                                ["cedula_destinatario"], 
+                                ["monto_enviado"],
+                                ["monto_entregar"]
+                            ],
+                        "upper": [2] 
+                        };
 
     // llama Modals
     entregar_giro = function(e){
@@ -39,21 +52,23 @@
             $.post(url, data).done(function(resp){
 
                 resp = JSON.parse(resp);
-                validar(resp);
+                
+                if(!validar(resp)){	return 0; }
 
-                resp.forEach(function(value){
-
-                    cargar_form(value);
-                    
-                });
+				cargar_form(resp.DATA);
                 
 
                 new template_modal({
-                    title: "Modificar Datos del Cliente",
-                    btn_rigth_function: "Modificar_registro_msg()",
-                    btn_rigth_text: "Guardar Cambios"
+                    title: "Procesar Giro",
+                    btn_rigth_function: "confirmar_giro()",
+                    btn_rigth_text: "Entregar"
                 });
-                
+
+
+                form_nombre_destinatario.value = form_nombre_destinatario.value.toUpperCase();
+                form_nombre_remitente.value = form_nombre_remitente.value.toUpperCase();
+                form_monto_env.value = new Intl.NumberFormat("de-DE", {minimumFractionDigits: 0, style: "currency", currency: "COP"}).format(form_monto_env.value);
+                form_monto_entregar.value = new Intl.NumberFormat("de-DE", {minimumFractionDigits: 0, style: "currency", currency: "COP"}).format(form_monto_entregar.value);
                 
             });
 
@@ -61,40 +76,158 @@
 
     } 
 
-    Nuevo_registro = function(e){
+    confirmar_giro = function(e){
 
-        new template_modal({
-            title: "Registrar Nuevo Cliente",
-            btn_rigth_function: "Agregar_registro()",
-            reset_form: "modal_form",
-            btn_rigth_text: "Crear Registro"
-        });
-
-    }
-
-    Eliminar_msg = function(e){
+        var nombre = form_nombre_destinatario.value;
+        var monto = form_monto_entregar.value;
 
         new template_modal_advert({
-            title: "¿Esta Seguro que desea Eliminar?",
-            btn_rigth_function: "Eliminar_registro()",
-            btn_rigth_text: "Si, Eliminar"
+            title: "¿Esta Seguro que desea entregar "+monto+" a "+nombre+"?",
+            btn_rigth_function: "procesar_giro()",
+            btn_rigth_text: "Si, entregar"
         });
-        
+
     }
 
-    var index_tb = {
-                        "data": [
-                                ["id"],
-                                ["ip"], 
-                                ["mac_address"], 
-                                ["nombre"], 
-                                ["estatus_servicio"]
-                            ],
-                        "upper": [3] 
-                        };
+    procesar_giro = function(e){
 
+        var url = "{{base_dir_controller}}"+rutas.procesar;
+        
+        var data = CeldasCheck();
+        data['nota'] = form_nota.value;
+
+        if(data.id.length == 1){
+
+            $.post(url, data).done(function(resp){
+                
+                resp = JSON.parse(resp);
+
+                if(!validar(resp)){	return 0; }
+
+				if(resp.DATA.hasOwnProperty("id")){
+					resp.DATA.id.forEach(function(value){
+						
+						table.row($('#tb_principal tbody .id_'+value)).remove().draw();
+						
+					});
+				}
+				
+                $(".bs-example-modal-md").modal("hide");
+				$(".bs-example-modal-lg").modal("hide");
+				status_options();
+
+            }).error(function(data){
+			
+				data = JSON.parse(data.responseText);
+
+				validar(data);
+
+				document.getElementById("modal-btn-save").disabled = false;
+				
+			});
+        }
+    }
+
+    
 
 </script>
+
+{% endblock %}
+
+{% block modalcontent %}
+
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Verifique los datos para procesar</small></h2>
+            
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <br>
+            <form class="form-label-left input_mask">
+
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Referencia</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="form_ref" 
+                            readonly="readonly" 
+                            placeholder="No se registro remitente">
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Remitente</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="form_nombre_remitente" 
+                            readonly="readonly" 
+                            placeholder="No se registro remitente">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="form_cedula_remitente" 
+                            readonly="readonly" 
+                            placeholder="">
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Destinatario</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="form_nombre_destinatario" 
+                            readonly="readonly" 
+                            placeholder="No se registro destinatario">
+                        
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="form_cedula_destinatario" 
+                            readonly="readonly" 
+                            placeholder="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Monto Enviado</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            readonly="readonly"
+                            id="form_monto_env" 
+                            placeholder="Read-Only Input">
+                    </div>
+
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Monto a Recibir</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <input type="text" class="form-control" id="form_monto_entregar" readonly="readonly" placeholder="Read-Only Input">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3 col-sm-3 ">Nota</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <textarea
+                            id="form_nota" 
+                            class="resizable_textarea form-control" 
+                            placeholder="Ingrese nota con fines informativos" 
+                            style="margin-top: 0px; margin-bottom: 0px; height: 70px;"></textarea>
+                    </div>
+                </div>
+
+                
+            </form>
+        </div>
+    </div>
 
 {% endblock %}
 
@@ -115,15 +248,11 @@
     <tr class="id_{{dato.id}}">
         <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
         <td>{{dato.ref}}</td>
-        <td>{{dato.nombre}}</td>
-        <td>{{dato.cedula}}</td>
-        <td>{{dato.monto_env}}</td>
-        <td>{{dato.monto_entregar}}</td>
+        <td>{{dato.nombre_destinatario|upper}}</td>
+        <td>{{dato.cedula_destinatario}}</td>
+        <td>{{dato.monto_env|number_format(0, ',', '.')}} COP</td>
+        <td>{{dato.monto_entregar|number_format(0, ',', '.')}} COP</td>
     </tr>
-
-    <script>
-        
-    </script>
 {% endblock %}
 
 {# fin tabla #}

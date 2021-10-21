@@ -8,7 +8,7 @@
     {% endblock %}
 
     {% block subtitlepage %}
-                <h4>Generar Tickets. <small></small></h4>
+                <h4>Cargar Giros<small></small></h4>
     {% endblock %}
 
 
@@ -17,21 +17,6 @@
         <div class="x_panel">
             <div class="x_title">
                 <h2><small></small></h2>
-                <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a class="dropdown-item" href="#">Settings 1</a>
-                            </li>
-                            <li><a class="dropdown-item" href="#">Settings 2</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                    </li>
-                </ul>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -39,72 +24,127 @@
                 <form id="form_generar_tickets" target="_blank" method="post" action="{{base_dir_controller}}tickets/generando" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
 
                     <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_nombre">Para quien se Genera<span class="required">*</span>
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="form_nombre_remitente">Nombre remitente<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 ">
-                            <input type="text" id="tickets_nombre" name="tickets_nombre" required="required" class="form-control ">
+                            <input 
+                                type="text" 
+                                id="tickets_nombre" 
+                                name="tickets_nombre" 
+                                required="required" 
+                                class="form-control ">
                         </div>
                     </div>
                     <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_user_mik">Ususario Mikrotick<span class="required">*</span>
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_user_mik">Cedula remitente<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 ">
-                            <input type="text" id="tickets_user_mik" name="tickets_user_mik" required="required" class="form-control" value="admin">
+                            <input 
+                                type="text" 
+                                id="tickets_user_mik" 
+                                name="tickets_user_mik" 
+                                required="required" 
+                                class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="form_nombre_remitente">Nombre destinatario<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input 
+                                type="text" 
+                                id="tickets_nombre" 
+                                name="tickets_nombre" 
+                                required="required" 
+                                class="form-control ">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_user_mik">Cedula destinatario<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input 
+                                type="text" 
+                                id="tickets_user_mik" 
+                                name="tickets_user_mik" 
+                                required="required" 
+                                class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="form_monto_env">Monto a depositar<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <input 
+                                type="text" 
+                                id="form_monto_env" 
+                                name="form_monto_env" 
+                                required="required" 
+                                class="form-control">
                         </div>
                     </div>
                     
-                    <div class="field item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3  label-align">Contraseña Mikrotick<span class="required">*</span></label>
-                        <div class="col-md-6 col-sm-6">
-                            <input class="form-control" type="password" id="tickets_password_mik" name="tickets_password_mik" value="admin8891957" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*]).{8,}" title="Minimum 8 Characters Including An Upper And Lower Case Letter, A Number And A Unique Character" required="">
-                            
-                            <span style="position: absolute;right:15px;top:7px;" onclick="hideshow()">
-                                <i id="slash" class="fa fa-eye-slash" style="display: none;"></i>
-                                <i id="eye" class="fa fa-eye" style="display: block;"></i>
-                            </span>
-                        </div>
-                    </div>
                     <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_ip_mik">Ip Mikrotick<span class="required">*</span>
+                        <label class="col-form-label col-md-3 col-sm-3 label-align">Tipo de porcentaje<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 ">
-                            <input type="text" id="tickets_ip_mik" name="tickets_ip_mik" required="required" class="form-control" value="192.168.88.1">
+                            <div class="radio">
+                                <label class="">
+                                    <div class="iradio_flat-green" style="position: relative;">
+                                    <input 
+                                        type="radio" 
+                                        class="flat" 
+                                        checked="checked" 
+                                        name="form_tipo_porcentaje"
+                                        value="suma" 
+                                        style="position: absolute; opacity: 0;">
+                                    <ins 
+                                        name="form_radio_porcentaje" 
+                                        class="iCheck-helper" 
+                                        style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
+                                    </ins>
+                                    </div>
+                                    Sumado al monto
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label class="">
+                                    <div class="iradio_flat-green" style="position: relative;">
+                                    <input 
+                                        type="radio" 
+                                        class="flat"
+                                        name="form_tipo_porcentaje"
+                                        value="resta" 
+                                        style="position: absolute; opacity: 0;">
+                                    <ins 
+                                        class="iCheck-helper"
+                                        name="form_radio_porcentaje" 
+                                        style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
+                                    </ins>
+                                    </div> 
+                                    Restado al monto
+                                </label>
+                            </div>
                         </div>
                     </div>
+
                     <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align">Seleccione Plan</label>
-                        <div class="col-md-6 col-sm-6 ">
-                            <select class="form-control" name="tickets_plan">
-                                <option value='{"titulo": "1 Hora", "plan": "Hora", "tiempo": "01:00:00"}'>1 Hora</option>
-                                <option value='{"titulo": "2 Horas", "plan": "Hora", "tiempo": "02:00:00"}'>2 Horas</option>
-                                <option value='{"titulo": "24 Horas", "plan": "24Horas", "tiempo": "24:00:00"}'>24 Horas</option>
-                                <option value='{"titulo": "7 Dias", "plan": "Mes", "tiempo": "7d 00:00:00"}'>7 Dias</option>
-                                <option value='{"titulo": "1 Mes 768k", "plan": "Mes", "tiempo": ""}'>1 Mes 768k</option>
-                                <option value='{"titulo": "1 Mes 512k", "plan": "Mes2", "tiempo": ""}'>1 Mes 512k</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align">Fecha de Generacion <span class="required">*</span>
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="form_monto_entregar">Monto a entregar<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 ">
-                            <input id="tickets_fecha_generacion" class="date-picker form-control" name="tickets_fecha_generacion" placeholder="dd-mm-yyyy" type="text" required="required" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
-                            <script>
-                                function timeFunctionLong(input) {
-                                    setTimeout(function() {
-                                        input.type = 'text';
-                                    }, 60000);
-                                }
-                            </script>
+                            <input 
+                                type="text" 
+                                id="form_monto_entregar" 
+                                name="form_monto_entregar" 
+                                readonly=""
+                                class="form-control">
                         </div>
                     </div>
-                    <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_nun_tickets">Cantida de tickets<span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 ">
-                            <input type="text" id="tickets_nun_tickets" name="tickets_nun_tickets" required="required" class="form-control" value="248">
-                        </div>
-                    </div>
+                    
+                    
                     <div class="ln_solid"></div>
                     <div class="item form-group">
                         <div class="col-md-6 col-sm-6 offset-md-3">
@@ -118,6 +158,58 @@
     </div>
 
     <script>
+
+        /*form_monto_env.oninput = function(){
+
+            if(form_tipo_porcentaje.value == "resta"){
+                form_monto_entregar.value = form_monto_env.value-(form_monto_env.value*0.07);
+            }else if(form_tipo_porcentaje.value == "suma"){
+                form_monto_env.value = form_monto_entregar.value+(form_monto_entregar.value*0.07);
+            }
+            
+        };*/
+
+
+
+        document.getElementsByName('form_radio_porcentaje').forEach(function(a){
+            
+            a.onclick = function(){
+                
+                document.getElementsByName('form_tipo_porcentaje').forEach(function(b){
+
+                    if(b.value == "resta" && b.checked){
+
+                        $("#form_monto_env").removeAttr("readonly");
+                        $("#form_monto_entregar").attr("readonly","readonly");
+                        form_monto_entregar.value = form_monto_env.value-(form_monto_env.value*0.07);
+                    
+                    }else if(b.value == "suma" && b.checked){
+
+                        $("#form_monto_entregar").removeAttr("readonly");
+                        $("#form_monto_env").attr("readonly","readonly");
+                        form_monto_env.value = form_monto_entregar.value+(form_monto_entregar.value*0.07);
+                    
+                    }
+
+                });
+
+            };
+
+        });
+
+        /*form_tipo_porcentaje.onchange = function(){
+
+            if(form_tipo_porcentaje.value == "resta"){
+                form_monto_env.disabled = "false";
+                form_monto_entregar.disabled = "true";
+                form_monto_entregar.value = form_monto_env.value-(form_monto_env.value*0.07);
+            }else if(form_tipo_porcentaje.value == "suma"){
+                form_monto_env.disabled = "true";
+                form_monto_entregar.disabled = "false";
+                form_monto_env.value = form_monto_entregar.value+(form_monto_entregar.value*0.07);
+            }
+        };*/
+
 		function hideshow(){
 			var password = document.getElementById("tickets_password_mik");
 			var slash = document.getElementById("slash");
