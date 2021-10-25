@@ -1,19 +1,57 @@
-{% extends "index.twig" %}
+{% extends "tabla.twig" %}
 
-{# //posiblemete se retire titlepage #}
-
-{% block content %}
+    {# //posiblemete se retire titlepage #}
     {% block titlepage %}
-            
     {% endblock %}
+
 
     {% block subtitlepage %}
                 <h4>Cargar Giros<small></small></h4>
     {% endblock %}
 
 
+    {# botones de Edicion #}
+    {% block buttonpage %}
+    <div class="x_content">
 
-    <div class="col-md-12 col-sm-12 ">
+        <div class="buttons">
+                <button type="button" class="option_btn btn btn-primary btn-sm"  data-i="0" id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Nuevo Giro</button>
+                <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="1" disabled id="btn_editar"   onclick="confirmar_giro(this)">Confirmar</button>
+                <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="2" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block headtable %}
+    <tr>
+        <th><input type="checkbox" id="check-all"></th>
+        <th>Referencia</th>
+        <th>Nombre</th>
+        <th>Cedula</th>
+        <th>Monto enviado</th>
+        <th>Monto a entregar</th>
+        <th>Fecha</th>
+    </tr>
+
+    {% endblock %}
+
+    {% block bodytable %}
+        <tr class="id_{{dato.id}}">
+            <td><input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="{{dato.id}}"></td>
+            <td>{{dato.ref}}</td>
+            <td>{{dato.nombre_destinatario|upper}}</td>
+            <td>{{dato.cedula_destinatario}}</td>
+            <td>{{dato.monto_env|number_format(0, ',', '.')}} COP</td>
+            <td>{{dato.monto_entregar|number_format(0, ',', '.')}} COP</td>
+            <td>{{dato.updated_at}}</td>
+
+        </tr>
+    {% endblock %}
+
+
+    {% block modaltitle "Cargar Nuevo Giro" %}
+
+    {% block modalcontent %}
         <div class="x_panel">
             <div class="x_title">
                 <h2><small></small></h2>
@@ -21,56 +59,98 @@
             </div>
             <div class="x_content">
                 <br>
-                <form id="form_generar_tickets" target="_blank" method="post" action="{{base_dir_controller}}tickets/generando" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
-
+                <form id="modal_form" method="post" action="{{base_dir_controller}}giros/cargar" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">
+                    <input type="hidden" name="ref" id="form_ref"/>
                     <div class="item form-group">
                         <label class="col-form-label col-md-3 col-sm-3 label-align" for="form_nombre_remitente">Nombre remitente<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 ">
                             <input 
                                 type="text" 
-                                id="tickets_nombre" 
-                                name="tickets_nombre" 
+                                id="form_nombre_remitente" 
+                                name="nombre_remitente" 
                                 required="required" 
                                 class="form-control ">
                         </div>
                     </div>
                     <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_user_mik">Cedula remitente<span class="required">*</span>
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="form_cedula_remitente">Cedula remitente<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 ">
                             <input 
                                 type="text" 
-                                id="tickets_user_mik" 
-                                name="tickets_user_mik" 
+                                id="form_cedula_remitente" 
+                                name="cedula_remitente" 
                                 required="required" 
                                 class="form-control">
                         </div>
                     </div>
 
                     <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="form_nombre_remitente">Nombre destinatario<span class="required">*</span>
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="form_nombre_destinatario">Nombre destinatario<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 ">
                             <input 
                                 type="text" 
-                                id="tickets_nombre" 
-                                name="tickets_nombre" 
+                                id="form_nombre_destinatario" 
+                                name="nombre_destinatario" 
                                 required="required" 
                                 class="form-control ">
                         </div>
                     </div>
 
                     <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="tickets_user_mik">Cedula destinatario<span class="required">*</span>
+                        <label class="col-form-label col-md-3 col-sm-3 label-align" for="form_cedula_destinatario">Cedula destinatario<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 ">
                             <input 
                                 type="text" 
-                                id="tickets_user_mik" 
-                                name="tickets_user_mik" 
+                                id="form_cedula_destinatario" 
+                                name="cedula_destinatario" 
                                 required="required" 
                                 class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="col-form-label col-md-3 col-sm-3 label-align">Tipo de porcentaje<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 ">
+                            <div class="radio">
+                                <label class="" name="form_radio_porcentaje" data-p="resta">
+                                    <div class="iradio_flat-green" style="position: relative;">
+                                    <input 
+                                        type="radio" 
+                                        class="flat" 
+                                        checked
+                                        name="form_tipo_porcentaje"
+                                        value="resta" 
+                                        style="position: absolute; opacity: 0;">
+                                    <ins 
+                                        class="iCheck-helper" 
+                                        style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
+                                    </ins>
+                                    </div>
+                                    Restado al monto
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label class="" name="form_radio_porcentaje" data-p="suma">
+                                    <div class="iradio_flat-green" style="position: relative;">
+                                    <input 
+                                        type="radio" 
+                                        class="flat"
+                                        name="form_tipo_porcentaje"
+                                        value="suma" 
+                                        style="position: absolute; opacity: 0;">
+                                    <ins 
+                                        class="iCheck-helper"
+                                        style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
+                                    </ins>
+                                    </div> 
+                                    Sumado al monto
+                                </label>
+                            </div>
                         </div>
                     </div>
 
@@ -81,151 +161,231 @@
                             <input 
                                 type="text" 
                                 id="form_monto_env" 
-                                name="form_monto_env" 
+                                name="monto_env" 
                                 required="required" 
                                 class="form-control">
                         </div>
                     </div>
                     
-                    <div class="item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3 label-align">Tipo de porcentaje<span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 ">
-                            <div class="radio">
-                                <label class="">
-                                    <div class="iradio_flat-green" style="position: relative;">
-                                    <input 
-                                        type="radio" 
-                                        class="flat" 
-                                        checked="checked" 
-                                        name="form_tipo_porcentaje"
-                                        value="suma" 
-                                        style="position: absolute; opacity: 0;">
-                                    <ins 
-                                        name="form_radio_porcentaje" 
-                                        class="iCheck-helper" 
-                                        style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
-                                    </ins>
-                                    </div>
-                                    Sumado al monto
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <label class="">
-                                    <div class="iradio_flat-green" style="position: relative;">
-                                    <input 
-                                        type="radio" 
-                                        class="flat"
-                                        name="form_tipo_porcentaje"
-                                        value="resta" 
-                                        style="position: absolute; opacity: 0;">
-                                    <ins 
-                                        class="iCheck-helper"
-                                        name="form_radio_porcentaje" 
-                                        style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
-                                    </ins>
-                                    </div> 
-                                    Restado al monto
-                                </label>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="item form-group">
                         <label class="col-form-label col-md-3 col-sm-3 label-align" for="form_monto_entregar">Monto a entregar<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 ">
                             <input 
-                                type="text" 
+                                type="text"
+                                readonly="readonly" 
                                 id="form_monto_entregar" 
-                                name="form_monto_entregar" 
-                                readonly=""
+                                name="monto_entregar"
                                 class="form-control">
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="ln_solid"></div>
-                    <div class="item form-group">
-                        <div class="col-md-6 col-sm-6 offset-md-3">
-                            <button type="submit" class="btn btn-success">Generar</button>
                         </div>
                     </div>
 
                 </form>
             </div>
         </div>
-    </div>
+    {% endblock %}
+    
+    
+    {% block js %}
+
+    {{ parent() }}
 
     <script>
 
-        /*form_monto_env.oninput = function(){
+        rutas.obtener = 'data/obtener/giro';
+        rutas.agregar = 'data/agregar/giro';
+        rutas.eliminar = 'data/eliminar/giro';
+        rutas.modificar = 'data/modificar/giro';
+        rutas.procesar = 'data/agregar/confirmagiro';
 
-            if(form_tipo_porcentaje.value == "resta"){
-                form_monto_entregar.value = form_monto_env.value-(form_monto_env.value*0.07);
-            }else if(form_tipo_porcentaje.value == "suma"){
-                form_monto_env.value = form_monto_entregar.value+(form_monto_entregar.value*0.07);
-            }
+        var index_tb = {
+
+            "data": [
+                [ "id" ],
+                [ "ref" ], 
+                [ "nombre_destinatario" ], 
+                [ "cedula_destinatario" ], 
+                [ "monto_env" ],
+                [ "monto_entregar" ],
+                [ "created_at" ]
+            ],
+            "select": [0],
+            "upper": [2],
+            "formato_cop": [4,5] 
+
+        };
+
+        var form_data = {
+            "formato_no_cop": ["monto_env", "monto_entregar"]
+        };
+
+        // llama Modals
+        Nuevo_registro = function(e){
+
+            new template_modal({
+                title: "Registrar Nuevo Giro",
+                btn_rigth_function: "Agregar_registro()",
+                reset_form: "modal_form",
+                btn_rigth_text: "Crear Registro"
+            });
+
+        }
+
+        Obtener_registro = function(e){
+
+            var url = "{{base_dir_controller}}"+rutas.obtener;
             
-        };*/
+            var data =  CeldasCheck();
 
+            if(data.id.length == 1){
 
+                $.post(url, data).done(function(resp){
+
+                    resp = JSON.parse(resp);
+
+                    if(!validar(resp)){						
+                            return 0;					
+                    }
+                    
+                    cargar_form(resp.DATA);
+                
+                    new template_modal({
+                        title: "Modificar Datos del Cliente",
+                        btn_rigth_function: "Modificar_registro_msg()",
+                        btn_rigth_text: "Guardar Cambios"
+                    });
+                    
+                    
+                });
+
+            }
+
+        } 
+        
+        Eliminar_msg = function(e){
+
+            new template_modal_advert({
+                title: "¿Esta Seguro que desea Eliminar?",
+                btn_rigth_function: "Eliminar_registro()",
+                btn_rigth_text: "Si, Eliminar"
+            });
+            
+        }   
+    
+        calcular_giro = function(){
+
+            document.getElementsByName('form_tipo_porcentaje').forEach(function(a){
+
+                var enviado = formato_no_cop(form_monto_env.value);
+                var recibido = formato_no_cop(form_monto_entregar.value);
+
+                
+                if(a.checked){
+                    if(a.value == "resta"){
+
+                        var p = enviado-(enviado*0.07);
+                        form_monto_entregar.value = isNaN(p) ? "0 COP" : formato_cop(p);
+                        form_monto_env.value = isNaN(enviado) ? "0 COP" : formato_cop(enviado);
+
+                        var pos = form_monto_env.value.length-4;
+
+                        setCaretPosition('form_monto_env', pos);
+
+                    }else if(a.value == "suma"){
+
+                        var p = recibido+(recibido*0.07);
+                        form_monto_env.value = isNaN(p) ? "0 COP" : formato_cop(p);
+                        form_monto_entregar.value = isNaN(recibido) ? "0 COP" : formato_cop(recibido);
+
+                        var pos = form_monto_entregar.value.length-4;
+
+                        setCaretPosition('form_monto_entregar', pos);
+                        
+                    }
+                }
+            });
+
+        }
+
+        form_monto_env.oninput = calcular_giro;
+        form_monto_entregar.oninput = calcular_giro;
+        
 
         document.getElementsByName('form_radio_porcentaje').forEach(function(a){
             
             a.onclick = function(){
                 
-                document.getElementsByName('form_tipo_porcentaje').forEach(function(b){
+                form_monto_env.value = 0;
+                form_monto_entregar.value = 0;
 
-                    if(b.value == "resta" && b.checked){
+                if(this.dataset.p == "suma"){
 
-                        $("#form_monto_env").removeAttr("readonly");
-                        $("#form_monto_entregar").attr("readonly","readonly");
-                        form_monto_entregar.value = form_monto_env.value-(form_monto_env.value*0.07);
-                    
-                    }else if(b.value == "suma" && b.checked){
+                    $("#form_monto_entregar").removeAttr("readonly");
+                    $("#form_monto_env").attr("readonly","readonly");
 
-                        $("#form_monto_entregar").removeAttr("readonly");
-                        $("#form_monto_env").attr("readonly","readonly");
-                        form_monto_env.value = form_monto_entregar.value+(form_monto_entregar.value*0.07);
-                    
-                    }
+                }else if(this.dataset.p == "resta"){
 
-                });
+                    $("#form_monto_env").removeAttr("readonly");
+                    $("#form_monto_entregar").attr("readonly","readonly");
+                }
 
             };
 
         });
 
-        /*form_tipo_porcentaje.onchange = function(){
+        confirmar_giro = function(e){
 
-            if(form_tipo_porcentaje.value == "resta"){
-                form_monto_env.disabled = "false";
-                form_monto_entregar.disabled = "true";
-                form_monto_entregar.value = form_monto_env.value-(form_monto_env.value*0.07);
-            }else if(form_tipo_porcentaje.value == "suma"){
-                form_monto_env.disabled = "true";
-                form_monto_entregar.disabled = "false";
-                form_monto_env.value = form_monto_entregar.value+(form_monto_entregar.value*0.07);
+            var monto = form_monto_env.value;
+
+            new template_modal_advert({
+                title: "¿Esta Seguro que desea confirmar deposito por "+monto+"?",
+                btn_rigth_function: "procesar_giro()",
+                btn_rigth_text: "Si, entregar"
+            });
+
+        }
+
+        procesar_giro = function(e){
+
+            var url = "{{base_dir_controller}}"+rutas.procesar;
+            
+            var data = CeldasCheck();
+
+            if(data.id.length == 1){
+                
+                document.getElementById("advertmodal-btn-yes").disabled = true;
+                $.post(url, data).done(function(resp){
+                    
+                    resp = JSON.parse(resp);
+                    document.getElementById("advertmodal-btn-yes").disabled = false;
+                    if(!validar(resp)){	return 0; }
+
+                    if(resp.DATA.hasOwnProperty("id")){
+                        resp.DATA.id.forEach(function(value){
+                            
+                            table.row($('#tb_principal tbody .id_'+value)).remove().draw();
+                            
+                        });
+                    }
+                    
+                    $(".bs-example-modal-md").modal("hide");
+                    status_options();
+
+                }).error(function(data){
+                
+                    data = JSON.parse(data.responseText);
+
+                    validar(data);
+
+                    document.getElementById("advertmodal-btn-yes").disabled = false;
+                    
+                });
             }
-        };*/
+        }
 
-		function hideshow(){
-			var password = document.getElementById("tickets_password_mik");
-			var slash = document.getElementById("slash");
-			var eye = document.getElementById("eye");
-			
-			if(password.type === 'password'){
-				password.type = "text";
-				slash.style.display = "block";
-				eye.style.display = "none";
-			}
-			else{
-				password.type = "password";
-				slash.style.display = "none";
-				eye.style.display = "block";
-			}
 
-		}
 	</script>
-{% endblock %}
+    {% endblock %}
+
+    

@@ -97,11 +97,12 @@
         data['nota'] = form_nota.value;
 
         if(data.id.length == 1){
-
+            
+            document.getElementById("advertmodal-btn-yes").disabled = true;
             $.post(url, data).done(function(resp){
                 
                 resp = JSON.parse(resp);
-
+                document.getElementById("advertmodal-btn-yes").disabled = false;
                 if(!validar(resp)){	return 0; }
 
 				if(resp.DATA.hasOwnProperty("id")){
@@ -122,7 +123,7 @@
 
 				validar(data);
 
-				document.getElementById("modal-btn-save").disabled = false;
+				document.getElementById("advertmodal-btn-yes").disabled = false;
 				
 			});
         }

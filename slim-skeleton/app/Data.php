@@ -647,7 +647,32 @@ class Data
 
 		$resp["DATA"] = ['id' => [$giro->id]];
 		$resp["MSJ"] = MSJ_success("Procesado Correctamente", "Giro entregado");
+		
+		return $resp; 
+	}
 
+	function agregar_confirmagiro($data){
+		
+		if(is_null($data) | !isset($data["id"])){
+			$resp["MSJ"] = MSJ_error("No se puede procesar giro, contacte al administrador");
+			
+			return $resp;
+		}
+
+		if(isset($data["nota"]) && $data["nota"] != ""){
+			$updated["nota"] = $data["nota"];
+		}
+
+
+		$updated["estado"] = "confirmado";
+
+		$giro = Models\Giros::where('id', $data['id'][0])->first();
+
+		$giro->update($updated);
+
+		$resp["DATA"] = ['id' => [$giro->id]];
+		$resp["MSJ"] = MSJ_success("Procesado Correctamente", "Giro Confirmado");
+		
 		return $resp; 
 	}
 
@@ -668,6 +693,94 @@ class Data
 
 	}
 
+	function agregar_giro($data = null){
+
+		if(!is_null($data)){
+
+			unset($data["id"]);
+
+			$permitted_chars2 = '0123456789';
+			function generate_string($input, $strength = 16) {
+                $input_length = strlen($input);
+                $random_string = '';
+                for($i = 0; $i < $strength; $i++) {
+                    $random_character = $input[mt_rand(0, $input_length - 1)];
+                    $random_string .= $random_character;
+                }
+            
+                return $random_string;
+            }
+			do{
+				$data["ref"] = generate_string($permitted_chars2, 10);
+			}while(Models\Giros::where("ref", $data["ref"])->exists());
+			
+
+			$resp["DATA"] = Models\Giros::create($data);
+			$resp["MSJ"] = MSJ_success("Giro creado exitosamente", "Giro Agregado");
+
+		}else{
+			$resp["MSJ"] = MSJ_error("No se suministro parametros de insercion");
+		}
+
+		return $resp;
+
+	}
+
+	function eliminar_giro($data = null){
+
+		if(!is_null($data) && isset($data['id'])){
+
+			$giro_id = $data["id"];
+
+			$d = 0;
+			$nd = 0;
+			$id = [];
+
+			foreach ($giro_id as $key => $value) {
+				
+				$giro = Models\Giros::where('id', $value)->first();
+
+				if(!is_null($giro)){
+					
+					if($giro->delete()){
+						$d++;
+						$id[] = $value;
+					}else{
+						$nd++;
+					}
+
+	
+				}else{
+					$nd++;
+				}
+
+			}
+
+			$resp['DATA']["id"] = $id;
+			if($d > 1){
+
+				$resp['MSJ'] = MSJ_success($d . " Registros Eliminados", "Giro Eliminado");
+				
+			}else if($d > 0){
+
+				$resp['MSJ'] = MSJ_success($d . " Registro Eliminado", "Giro Eliminado");
+				
+			}
+
+			if($nd > 1){
+				$resp['MSJ'] = MSJ_warning($nd . " Registros no Eliminados");
+			}else if($nd > 0){
+				$resp['MSJ'] = MSJ_warning($nd . " Registro no Eliminado");
+			}
+
+
+		}else{
+			$resp['MSJ'] = MSJ_error("No se suministro parametro para eliminar");
+		}
+
+		return $resp;
+	}
+
 	function obtener_girosentregados($data = null)
 	{
 		$date = time() - (15 * 24 * 60 * 60);
@@ -682,6 +795,13 @@ class Data
 	{
 		
 		return Models\Giros::where('estado', 'pendiente')->get();
+
+	}
+
+	function obtener_girosconfirmados($data = null)
+	{
+		
+		return Models\Giros::where('estado', 'confirmado')->get();
 
 	}
 

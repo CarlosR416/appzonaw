@@ -106,9 +106,10 @@
 			},
 			"order": [[ 1, "asc" ]],
 			"columnDefs": [{
+				targets: [0],
                 searchable: false,
 				sorting: false,
-				targets: 0,
+				
             }],
 
 	    };
@@ -118,7 +119,6 @@
 				agregar: 'data/agregar/',
 				eliminar: 'data/eliminar/',
 				modificar: 'data/modificar/',
-				funcion: {add: 'crear_', eliminar: 'eliminar_', getdata: 'obtener_', modificar: 'modificar_'}
 			};
 
 	// carga funciones 
@@ -136,7 +136,7 @@
 	 	checkcount = 0;
 
 		//Selecionar celdas individualmente
-		$('#tb_principal tbody').on('click', 'tr', function () {
+		$('#tb_principal tbody').on('click', 'tr', function (evt) {
 			var data = table.row( this ).data();
 
 			columna = this;
@@ -317,9 +317,20 @@
 
 			var url = "{{base_dir_controller}}"+rutas.agregar;
 			document.getElementById("modal-btn-save").disabled = true;
-
+			
 			var dataform = $( "#modal_form" ).serializeArray()
     				.reduce(function(a, z) { a[z.name] = z.value; return a; }, {});
+
+			if(typeof(form_data) != "undefined"){
+
+				if(form_data.hasOwnProperty("formato_no_cop")){
+					
+					form_data["formato_no_cop"].forEach(function(key){
+						dataform[key] = formato_no_cop(dataform[key]);
+					});
+				}
+			}
+			
 
 
 			$.post(url, dataform).done(function(data){
@@ -333,9 +344,6 @@
 				}
 
 				fila = addRow(data, index_tb);
-
-				fila[0][0] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+fila[0][0]+'">';
-				table.row.add(data_row[0]).draw().nodes().to$().addClass( 'id_'+registro.id );
 
 				$(".bs-example-modal-lg").modal("hide");
 
@@ -360,48 +368,54 @@
 		data_row = [];
 
 		if(data.hasOwnProperty("DATA")){
-			
-			if(data.DATA.propertyIsEnumerable(0)){
-
-				data.DATA.forEach(function(registro, index){
-				
-					data_row[index] = [];
-
-					index_columns.data.forEach(function(value, index2){
-
-					data_row[index][index2] = "";
-					value.forEach(function(key, index3){
-						data_row[index][index2] += (value.length == index3+1) ? registro[key] : registro[key]+" ";
-					});
-
-					});
-
-					
-					index_columns.upper.forEach(function(key){
-					data_row[index][key] = data_row[index][key].toUpperCase();
-					});
-				});
-
+			var Datos = [];
+			if(data.DATA.propertyIsEnumerable(0)){				
+				Datos = data.DATA;
 			}else{
+				Datos[0] = data.DATA;				
+			}
 
-				data_row[0] = [];
-				registro = data.DATA;
+			Datos.forEach(function(registro, index){
+				
+				data_row[index] = [];
 
 				index_columns.data.forEach(function(value, index2){
 
-					data_row[0][index2] = "";
-
-					value.forEach(function(key, index3){
-					data_row[0][index2] += (value.length == index3+1) ? registro[key] : registro[key]+" ";
-					});
-
-				});	
-
-				index_columns.upper.forEach(function(key){
-					data_row[0][key] = data_row[0][key].toUpperCase();
+				data_row[index][index2] = "";
+				value.forEach(function(key, index3){
+					data_row[index][index2] += (value.length == index3+1) ? registro[key] : registro[key]+" ";
 				});
+
+				});
+
 				
-			}
+				index_columns.upper.forEach(function(key){
+					data_row[index][key] = data_row[index][key].toUpperCase();
+				});
+
+				index_columns.formato_cop.forEach(function(key){
+					data_row[index][key] = formato_cop(data_row[index][key]);
+				});
+
+				if(index_columns.hasOwnProperty("checkbox")){
+					
+					if(index_columns.checkbox){
+						index_columns.checkbox.forEach(function(key){
+							var id = data_row[index][key];
+							data_row[index][key] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+data_row[index][key]+'">';
+							table.row.add(data_row[index]).draw().nodes().to$().addClass( 'id_'+id );
+						});
+					}
+
+				}else{
+					var id = data_row[index][0];
+					data_row[index][0] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+data_row[index][0]+'">';
+					table.row.add(data_row[index]).draw().nodes().to$().addClass( 'id_'+id );
+
+				}
+
+				
+			});
 
 		}else{
 			console.log("No se puede agregar fila, formato incorrecto");

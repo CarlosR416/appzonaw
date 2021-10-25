@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="images/favicon.ico" type="image/ico" />
 
-    <title>Solucionex App </title>
+    <title>Web App </title>
     
     <!-- Bootstrap -->
     <link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
@@ -54,7 +54,7 @@
         <div class="col-md-3 left_col menu_fixed">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="#" class="site_title"><i class="fa fa-wifi"></i> <span>Solucionex App</span></a>
+              <a href="#" class="site_title"><i class="fa fa-wifi"></i> <span>Web App</span></a>
             </div>
 
             <div class="clearfix"></div>
@@ -488,6 +488,71 @@
                     styling: 'bootstrap3'
                   });
         }
+
+        formato_cop = function(nun = 0){
+            var cop = " COP";
+            console.log(nun);
+            nun = Math.round(nun);
+            
+            var temp = nun.toString();
+            var temp2 = "";
+
+            var length = temp.length;
+          
+            while(length >= 0){
+                length = length-3;
+
+                if(length <= 0){
+                    temp2 = temp.substr(0, length+3);
+                }else{
+                   
+                    temp2 = temp.substr(length, 3);
+                    temp2 = "."+temp2;
+                }
+
+                cop = temp2 + cop;
+            }
+            console.log(cop);
+            return cop;
+        }
+
+        formato_no_cop = function(text = ""){
+            var cop = "";
+
+            while(text.search('[.]') !== -1){
+                text = text.replace(".", "");
+            }
+
+            cop = text.replace(" COP", "");
+        
+            return parseInt(cop);
+        } 
+
+        function setCaretPosition(elemId, caretPos) { 
+            var elem = document.getElementById(elemId); 
+            
+            if(elem != null) { 
+                
+                if(elem.createTextRange) { 
+                    
+                    var range = elem.createTextRange(); 
+                    range.move('character', caretPos); 
+                    range.select(); 
+                
+                } else { 
+                    
+                    if(elem.selectionStart) {
+                        
+                        elem.focus(); 
+                        elem.setSelectionRange(caretPos, caretPos); 
+                    } else {
+                        elem.focus();
+                    }  
+                } 
+            } 
+        }
+
+        
       </script>
     {% endblock %}
 
