@@ -88,8 +88,8 @@
         <td>{{dato.pagos().count()}}</td>
         <td>{{dato.pagos().where("estado", "Pagado").count()}}</td>
         <td>{{dato.pagos().where("estado", "Pendiente").count()}}</td>
-        <td>{{dato.pagos().where("estado", "Pagado").sum("monto")}}</td>
-        <td>{{dato.pagos().where("estado", "Pendiente").sum("monto")}}</td>
+        <td>{{dato.pagos().where("estado", "Pagado").sum("monto")|number_format(0, ',', '.')}} COP</td>
+        <td>{{dato.pagos().where("estado", "Pendiente").sum("monto")|number_format(0, ',', '.')}} COP</td>
 
     </tr>
 {% endblock %}

@@ -75,8 +75,8 @@
 
         <td></td>
         <td><a href="#">{{dato.nombre|upper}}</a></td>
-        <td>{{Carlos}}</td>
-        <td>{{Vicente}}</td>
+        <td>{{Carlos|number_format(0, ',', '.')}} COP</td>
+        <td>{{Vicente|number_format(0, ',', '.')}} COP</td>
         
     </tr>
 {% endblock %}

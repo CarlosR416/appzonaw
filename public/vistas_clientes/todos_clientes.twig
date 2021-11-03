@@ -16,6 +16,7 @@
     <div class="buttons">
             <button type="button" class="option_btn btn btn-primary btn-sm"  data-i="0" id="btn_nuevo_registro" onclick="Nuevo_registro(this)">Nuevo Cliente</button>
             <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="1" disabled id="btn_editar"   onclick="Obtener_registro(this)">Editar</button>
+            <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="1" disabled id="btn_editar"   onclick="ActualizarEstadomodal(this)">Actualizar Estado</button>
             <button type="button" class="option_btn btn btn-secondary btn-sm"  data-i="2" disabled id="btn_eliminar" onclick="Eliminar_msg(this)" >Eliminar</button>
     </div>
 </div>
@@ -116,6 +117,58 @@
     </div>
 {% endblock %}
 
+{# Ventanas Modals #}
+{% block Modals %}
+    {# Modal 1 Actualizar estado #}
+    <div id="modal-cliente-actualizar_estado" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal_titulo-cliente-actualizar_estado">Actualizar Estado</h4>
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="x_panel">
+        
+                <div class="x_content">
+                    <br>
+                    <form class="form-label-left input_mask" id="modal_form-cliente-actualizar_estado">
+                        <input type="hidden" id="form_id" name="id">
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-3 col-sm-3 ">Actualizar Estado</label>
+                            <input name="id_cliente" type="hidden" id="form_id_cliente">
+                            <div class="col-md-5 col-sm-5 ">
+                                <select class="form-control" name="estado" id="form_estado"> 
+                                    <option>Activo</option>
+                                    <option>Suspendido</option>
+                                    <option>Retirado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 col-sm-4 ">
+                                <input class="date-picker form-control" placeholder="dd-mm-yyyy" type="date" required="required" name="fecha" id="form_fecha" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" id="modal_btn_firs-cliente-actualizar_estado" onclick="ActualizarEstado(this)">Actualizar</button>
+        </div>
+        
+        </div>
+        </div>
+    </div>
+    {# fin modal #}  
+{% endblock %}
+{# fin Modals #}
+
+
 {# fin ventana modal #}
 
 
@@ -131,6 +184,8 @@
     rutas.agregar = 'data/agregar/cliente';
     rutas.eliminar = 'data/eliminar/cliente';
     rutas.modificar = 'data/modificar/cliente';
+    rutas.estado = 'data/obtener/estadoservicio';
+    rutas.addestado = 'data/agregar/estadoservicio';
 
     // llama Modals
     Obtener_registro = function(e){
@@ -183,6 +238,76 @@
             btn_rigth_text: "Si, Eliminar"
         });
         
+    }
+
+    ActualizarEstadomodal = function(e){
+
+        var url = "{{base_dir_controller}}"+rutas.estado;
+        
+        var data =  CeldasCheck();
+        
+        document.getElementById("modal_form-cliente-actualizar_estado").reset();
+        if(data.id.length == 1){
+            cargar_form({'id_cliente': data.id[0]});
+
+            $.post(url, data).done(function(resp){
+
+                resp = JSON.parse(resp);
+
+                if(!validar(resp)){						
+						return 0;					
+				}
+                
+                cargar_form(resp.DATA);
+               
+                $("#modal-cliente-actualizar_estado").modal();
+                
+            });
+
+        }
+    }
+
+    ActualizarEstado = function(e){
+
+            var url = "{{base_dir_controller}}"+rutas.addestado;
+
+			//oculta modal de advertencia
+			document.getElementById("modal_btn_firs-cliente-actualizar_estado").disabled = true;
+
+			var temp = $( "#modal_form-cliente-actualizar_estado" ).serializeArray()
+    				.reduce(function(a, z) { a[z.name] = z.value; return a; }, {});
+
+			var dataform = temp; 
+
+			$.post(url, dataform).done(function(data){
+				
+				data = JSON.parse(data);
+				fila = [];
+                document.getElementById("modal_btn_firs-cliente-actualizar_estado").disabled = false;
+				if(!validar(data)){						
+					return 0;					
+				}
+				
+				table.row($('#tb_principal tbody .id_'+data.DATA.id )).remove().draw();
+
+				fila = addRow(data, index_tb);
+				$("#modal-cliente-actualizar_estado").modal("hide");
+
+				
+				status_options();
+
+			}).error(function(data){
+			
+				data = JSON.parse(data.responseText);
+
+				validar(data);
+
+				document.getElementById("modal_btn_firs-cliente-actualizar_estado").disabled = false;
+				
+			});
+
+        
+
     }
 
     var index_tb = {

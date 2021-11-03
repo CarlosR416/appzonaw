@@ -504,6 +504,60 @@ class Data
 
 		return $resp;
 	}
+
+	function obtener_estadoservicio($data = null){
+		if(!is_null($data) && isset($data['id'])){
+
+			$id = $data["id"];
+			$resp["DATA"] = Models\EstadoServicios::where('id_cliente', $id)->orderBy('fecha', "desc")->first();;
+			
+			if(is_null($resp["DATA"])){
+				$resp["MSJ"] = MSJ_warning("No Existe estado previo");
+				$resp["DATA"] = [];
+			}else{
+				$resp["DATA"]['fecha'] = date('Y-m-d');
+			}
+
+		}else{
+			$resp["MSJ"] = MSJ_error("No se suministro parametro de busqueda");
+		}
+
+		return $resp;
+	}
+
+	function agregar_estadoservicio($data = null){
+		if(!is_null($data) && isset($data['id'])){
+
+			$id = $data["id_cliente"];
+			unset($data["id"]);
+
+			$resp["DATA"] = Models\Clientes::where('id', $id);
+			
+			if(!$resp["DATA"]->exists()){
+				$resp["MSJ"] = MSJ_error("No Existe Cliente para agregar estado");
+				$resp["DATA"] = [];
+			}else{
+
+				$estado = Models\EstadoServicios::create($data);
+				if(!is_null($estado)){
+					$estado = Models\EstadoServicios::where('id_cliente', $id)->orderBy('fecha', "desc")->first();;
+			
+
+					$resp["DATA"] = $resp["DATA"]->first();
+					$resp["DATA"]->update(["estatus_servicio" => $estado["estado"]]);
+					$resp["MSJ"] = MSJ_success("Estado actualizado correctamente", "Estado Actualizado");
+				}else{
+					$resp["MSJ"] = MSJ_error("No se pudo crear el estado");
+				}
+				
+			}
+
+		}else{
+			$resp["MSJ"] = MSJ_error("No se suministro parametro de busqueda");
+		}
+
+		return $resp;
+	}
 	
 	
 	/// Cuentas 

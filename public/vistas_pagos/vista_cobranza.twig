@@ -447,8 +447,14 @@
         <td>{{dato.cliente.nombre|upper}} {{dato.cliente.apellido|upper}}</td>
         <td>{{dato.mes.nombre|upper}}</td>
         <td>{{dato.fecha_cobro}}</td>
-        <td>{{dato.monto}}</td>
-        <td>{{dato.estado}}</td>
+        <td>{{dato.monto|number_format(0, ',', '.')}} COP</td>
+        <td>
+        {% if dato.estado == "Pendiente" %}
+            <span class="badge badge-warning">{{dato.estado}}</span>
+        {% elseif dato.estado == "Pagado" %}
+            <span class="badge badge-success">{{dato.estado}}</span>
+        {% endif %}
+        </td>
     </tr>
 
 {% endblock %}

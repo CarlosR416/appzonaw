@@ -24,6 +24,7 @@ class Pagos
         }*/
         
         $args["data"] = $datos->obtener_pagos($paran);
+
         $args["meses"] =  $datos->obtener_meses();
 
         isset($paran["id_mes"]) ? $args["id_mes"] = $paran["id_mes"] : $args["id_mes"] = 0 ;

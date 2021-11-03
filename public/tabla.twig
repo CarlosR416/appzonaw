@@ -388,14 +388,17 @@
 
 				});
 
-				
-				index_columns.upper.forEach(function(key){
-					data_row[index][key] = data_row[index][key].toUpperCase();
-				});
+				if(index_columns.hasOwnProperty("upper")){
+					index_columns.upper.forEach(function(key){
+						data_row[index][key] = data_row[index][key].toUpperCase();
+					});
+				}
 
-				index_columns.formato_cop.forEach(function(key){
-					data_row[index][key] = formato_cop(data_row[index][key]);
-				});
+				if(index_columns.hasOwnProperty("formato_cop")){
+					index_columns.formato_cop.forEach(function(key){
+						data_row[index][key] = formato_cop(data_row[index][key]);
+					});
+				}
 
 				if(index_columns.hasOwnProperty("checkbox")){
 					
@@ -406,11 +409,6 @@
 							table.row.add(data_row[index]).draw().nodes().to$().addClass( 'id_'+id );
 						});
 					}
-
-				}else{
-					var id = data_row[index][0];
-					data_row[index][0] = '<input type="checkbox" name="check-all" onclick="this.checked = !this.checked" value="'+data_row[index][0]+'">';
-					table.row.add(data_row[index]).draw().nodes().to$().addClass( 'id_'+id );
 
 				}
 

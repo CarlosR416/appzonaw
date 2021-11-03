@@ -249,6 +249,10 @@
               </div>
             </div>
             {% endblock %}
+
+            {% block Modals %}
+            
+            {% endblock %}
         </div>
             
 
@@ -430,7 +434,6 @@
               this.reset_form = datos.reset_form == undefined ? false : datos.reset_form;
               this.btn_rigth_text = datos.btn_rigth_text == undefined ? "OK" : datos.btn_rigth_text;
               
-
               document.getElementById("modal-btn-save").dataset.event_function = this.btn_rigth_function;
               document.getElementById("modal-btn-save").textContent = this.btn_rigth_text;
               document.getElementById("Modaltitle").textContent = this.title;

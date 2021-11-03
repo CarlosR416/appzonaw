@@ -21,7 +21,7 @@
 {% block bodytable %}
     <tr>
         <td><a href="#">{{dato.nombre|upper}}</a></td>
-        <td>{{dato.saldo}}</td>
+        <td>{{dato.saldo|number_format(0, ',', '.')}} COP</td>
 
     </tr>
 {% endblock %}
