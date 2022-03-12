@@ -172,7 +172,7 @@
                          </div>
                     </div>
                 </div>
-                <table id="tb_form_clientes" class="display" width="100%">
+                <table id="tb_form_clientes" class="display" style="width: 100%;">
                  <thead>
                     <tr>
                         <th>Nombre</th>
@@ -341,7 +341,7 @@
         var datos = addRow(data, index_tb_clientes);
 
         datos.forEach(function(value, index){
-            datos[index][4] = '<a href="#" onclick="cargar_cliente(this)"  data-value="'+datos[index][4]+'">Seleccionar</a>';
+            datos[index][4] = '<span class="badge badge-primary"><a href="#" onclick="cargar_cliente(this)"  data-value="'+datos[index][4]+'">Seleccionar</a></span>';
         });
 
         $('#tb_form_clientes').DataTable( {
@@ -350,7 +350,7 @@
             "language": {
 				"url": "{{base_dir_controller}}plantilla/js/datatable/traduccion/esp.json"
 			},
-            "paging": false,
+            "paging": true,
             "order": [[ 1, "asc" ]],
             'sDom': 'tip',
             "columnDefs": [{

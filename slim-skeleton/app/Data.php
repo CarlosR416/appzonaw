@@ -260,24 +260,45 @@ class Data
 
 		$ak = 'solucionex';
 		$mi	= 'adminsolucione';
-		
+		 
 		$mac = "01-00-00-00-00-00";
 		$desc = "Cliente1";
 		$state = 1;
 
-		$url3 = 'userRpm/LanMacFilterRpm.htm?Mac='.$mac.'&Desc='.$desc.'&State='.$state.'&Changed=0&SelIndex=0&Page=1&btn_save=Save';
+		$C = [
+			[ 'nombre' => '25', 'mac' => 'B4-FB-E4-DE-BE-86', 'estado' => 0],
+			[ 'nombre' => '26', 'mac' => '74-F0-6D-9F-E6-62', 'estado' => 0],
+			[ 'nombre' => '27', 'mac' => '2E-29-E9-29-E1-A1', 'estado' => 0],
+			[ 'nombre' => '28', 'mac' => '74-4A-A4-D0-30-F1', 'estado' => 0],
+			[ 'nombre' => '29', 'mac' => '08-BF-A0-61-94-FD', 'estado' => 0],
+			[ 'nombre' => '30', 'mac' => '10-FE-ED-53-CF-39', 'estado' => 0],
+			[ 'nombre' => '31', 'mac' => 'F8-D1-11-81-69-4B', 'estado' => 0],
+			[ 'nombre' => '32', 'mac' => '28-C2-DD-2C-40-3B', 'estado' => 0],
+			[ 'nombre' => '33', 'mac' => 'D4-CA-6D-D4-DF-E9', 'estado' => 0],
+			[ 'nombre' => '34', 'mac' => '08-55-31-70-E8-2C', 'estado' => 0],
+			[ 'nombre' => '35', 'mac' => '60-8F-5C-18-77-0A', 'estado' => 0],
+			[ 'nombre' => '36', 'mac' => '68-A3-C4-0B-D7-06', 'estado' => 0],
+			[ 'nombre' => '37', 'mac' => '00-22-B0-45-6D-A0', 'estado' => 0]
+		];
 
-		$ch = \curl_init($this->settings['router']['ip'].'/'.$url3);
-		curl_setopt($ch, CURLOPT_HEADER, 1);
-		curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-		curl_setopt($ch,CURLOPT_USERPWD,$ak.":".$mi);
+		$i = 0;
+		foreach ($C as $key => $value) {
 
-		$respuesta = curl_exec ($ch);
+			$url3 = 'userRpm/LanMacFilterRpm.htm?Mac='.$value["mac"].'&Desc='.$value["nombre"].'&State='.$value["estado"].'&Changed=0&SelIndex=0&Page=1&btn_save=Save';
+			$i=$i+1;
+			$ch = \curl_init($this->settings['router']['ip'].'/'.$url3);
+			curl_setopt($ch, CURLOPT_HEADER, 1);
+			curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+			curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+			curl_setopt($ch,CURLOPT_USERPWD,$ak.":".$mi);
 
-		if(curl_errno($ch)){
-			return [];	
+			$respuesta = curl_exec ($ch);
+			
+			curl_close($ch);
 		}
+
+		die(var_dump($i));
+		
 	}
 
 	function evaluar($ar, $ar2){

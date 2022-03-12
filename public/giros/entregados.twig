@@ -27,8 +27,8 @@
         <td>{{dato.ref}}</td>
         <td>{{dato.nombre_destinatario|upper}}</td>
         <td>{{dato.cedula_destinatario}}</td>
-        <td>{{dato.monto_env|number_format(0, ',', '.')}} COP</td>
-        <td>{{dato.monto_entregar|number_format(0, ',', '.')}} COP</td>
+        <td data-order="{{dato.monto_env}}">{{dato.monto_env|number_format(0, ',', '.')}} COP</td>
+        <td data-order="{{dato.monto_entregar}}">{{dato.monto_entregar|number_format(0, ',', '.')}} COP</td>
         <td>{{dato.updated_at}}</td>
 
     </tr>
