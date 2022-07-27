@@ -26,6 +26,7 @@ class AuthController
 			
 		}
 
+		
 		return $this->container->response->withRedirect($this->container->router->pathFor('login'));
 
 	}

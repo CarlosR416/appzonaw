@@ -47,6 +47,13 @@ class Tickets
 
     }
 
+    function mikrotiks(){
+
+        
+        return $this->container->twig->render($this->container->response,  "tickets/add_mikrotik.twig");
+    
+    }
+
 }
 
 ?>

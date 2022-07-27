@@ -1,6 +1,7 @@
 <?php
 namespace App; 
 use App\Models;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class Data
 {	
@@ -59,6 +60,7 @@ class Data
 
 		return $data;
 	}
+
 
 	function clientes_estado($estado = 'Activo'){
 
@@ -374,7 +376,7 @@ class Data
 
 	function login($pass, $user){
 
-		$Resul = User::where('usuario',$user)->first();
+		$Resul = Models\User::where('usuario',$user)->first();
 
 		if (!isset($Resul)) {
 
@@ -1162,40 +1164,46 @@ class Data
 			return $resp["MSJ"] = MSJ_error("No se proporcionaron datos necesarios");
 		}
 		
-		$pagos = Models\Pagos::find($data['pagos']['id']);
-		$cuenta = Models\Cuentas::find($data['cuenta']);
-
-		foreach ($pagos as $key => $value) {
-
-			if($value->estado == 'Pagado'){
-				$resp["MSJ"] = MSJ_error("La factura ya se pago");
-			}else{
-				
-				$value->estado = 'Pagado';
-				$value->update();
-				$temp_descrip = 'Pago Mensualidad';
-				$movcuenta = [	
-								'id_cuenta' => $data['cuenta'],
-								'id_pago' => $value->id,
-								'id_mes' => $value->id_mes, 
-								'tipo' => 'CREDITO',
-								'descripcion' => $temp_descrip,
-								'valor' => $value->monto,
-								'fecha' => $data['fecha_cobro']
-							];
-
-				Models\MovCuentas::create($movcuenta);
-
-				$cuenta->saldo = $cuenta->saldo + $value->monto;
-
-				$resp["DATA"] = $value;
-				$resp["MSJ"] = MSJ_success("Pago Cobrado Correctamente", "Cobrado");
-			}
-			
-		}
-
-		$cuenta->update();
 		
+
+		DB::transaction(function() use ($data){
+			
+			$pagos = Models\Pagos::find($data['pagos']['id']);
+			$cuenta = Models\Cuentas::find($data['cuenta']);
+
+			foreach ($pagos as $key => $value) {
+
+				if($value->estado == 'Pagado'){
+					$resp["MSJ"] = MSJ_error("La factura ya se pago");
+				}else{
+					
+					$value->estado = 'Pagado';
+					$value->update();
+					$temp_descrip = 'Pago Mensualidad';
+					$movcuenta = [	
+									'id_cuenta' => $data['cuenta'],
+									'id_pago' => $value->id,
+									'id_mes' => $value->id_mes, 
+									'tipo' => 'CREDITO',
+									'descripcion' => $temp_descrip,
+									'valor' => $value->monto,
+									'fecha' => $data['fecha_cobro']
+								];
+	
+					Models\MovCuentas::create($movcuenta);
+	
+					$cuenta->saldo = $cuenta->saldo + $value->monto;
+	
+					$resp["DATA"] = $value;
+					$resp["MSJ"] = MSJ_success("Pago Cobrado Correctamente", "Cobrado");
+				}
+				
+			}
+	
+			$cuenta->update();
+
+		});
+
 		return $resp;
 	}
 	

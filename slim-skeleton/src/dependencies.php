@@ -16,6 +16,13 @@ return function (App $app) {
         return new \App\Data($c);
 
     };
+
+    $container['DataMikrotick'] = function ($c) {
+        
+        return new \App\Helpers\DataMikrotick($c);
+
+    };
+    
     
     $container['twig'] = function ($c) {
         $settings = $c->get('settings')['renderer'];

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @version v4.1.1
+* @link https://coreui.io
+* Copyright (c) 2022 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://coreui.io/license)
+-->
+
+<!-- Breadcrumb-->
+<html lang="en">
+  <head>
+    <base href="./">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+    <meta name="author" content="Łukasz Holeczek">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
+    <title>CoreUI Free Bootstrap Admin Template</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="{{path_for('base')}}/plantilla/src/assets/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{path_for('base')}}/plantilla/src/assets/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{path_for('base')}}/plantilla/src/assets/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{path_for('base')}}/plantilla/src/assets/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{path_for('base')}}/plantilla/src/assets/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{path_for('base')}}/plantilla/src/assets/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{path_for('base')}}/plantilla/src/assets/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{path_for('base')}}/plantilla/src/assets/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{path_for('base')}}/plantilla/src/assets/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{path_for('base')}}/plantilla/src/assets/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{path_for('base')}}/plantilla/src/assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{path_for('base')}}/plantilla/src/assets/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{path_for('base')}}/plantilla/src/assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="{{path_for('base')}}/plantilla/src/assets/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{path_for('base')}}/plantilla/src/assets/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Vendors styles-->
+    <link rel="stylesheet" href="{{path_for('base')}}/plantilla/src/node_modules/simplebar/dist/simplebar.css">
+    <link rel="stylesheet" href="{{path_for('base')}}/plantilla/src/css/vendors/simplebar.css">
+    <!-- Main styles for this application-->
+    <link href="{{path_for('base')}}/plantilla/src/css/style.css" rel="stylesheet">
+    <!-- We use those styles to show code examples, you should remove them in your application.-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/themes/prism.css">
+    <link href="{{path_for('base')}}/plantilla/src/css/examples.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script type="javascript">
+       
+
+    </script>
+    <style>
+      .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s
+      }
+      .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+      <div class="sidebar-brand d-none d-md-flex">
+        <svg class="sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
+          <use xlink:href="{{path_for('base')}}/plantilla/src/assets/brand/coreui.svg#full"></use>
+        </svg>
+        <svg class="sidebar-brand-narrow" width="46" height="46" alt="CoreUI Logo">
+          <use xlink:href="{{path_for('base')}}/plantilla/src/assets/brand/coreui.svg#signet"></use>
+        </svg>
+      </div>
+      <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
+        
+        <li class="nav-title">Conectados</li>
+        <li class="nav-item"><a class="nav-link" href="{{path_for('base')}}appzona/ticketsactivos">
+            <svg class="nav-icon">
+              <use xlink:href="{{path_for('base')}}/plantilla/src/node_modules/@coreui/icons/sprites/free.svg#cil-drop"></use>
+            </svg>Por Ticket</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{path_for('base')}}appzona/macactivas">
+            <svg class="nav-icon">
+              <use xlink:href="{{path_for('base')}}/plantilla/src/node_modules/@coreui/icons/sprites/free.svg#cil-drop"></use>
+            </svg>Por Mac</a></li>
+        
+      </ul>
+      <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
+    </div>
+    {% block table_content %}
+    {% endblock %}
+    <!-- CoreUI and necessary plugins-->
+    <script src="{{path_for('base')}}/plantilla/src/node_modules/@coreui/coreui/dist/js/coreui.bundle.min.js"></script>
+    <script src="{{path_for('base')}}/plantilla/src/node_modules/simplebar/dist/simplebar.min.js"></script>
+    <script> 
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script>
+
+    //Obtiene el la fecha desde una marca de tiempo
+    var GetDateOfTimestamp = function(timestamp){
+    
+      let ttime = 0
+      let tdia = 0
+      let tmes = "Ene"
+      let tano = 0
+      let bisiesto = 0
+
+      timestamp = parseInt(timestamp)
+      if(timestamp>0){
+        
+            timestamp = (timestamp-946684800)
+            ttime = (timestamp%86400)
+            
+            timestamp = (timestamp-ttime)
+
+            if(timestamp>0){
+                timestamp = (timestamp/86400)
+                tdia = ((timestamp%365))
+                timestamp = (timestamp-tdia)
+            }
+
+            if(timestamp>0){
+                tano = (timestamp/365)
+                bisiesto = ((tano-(tano%4))/4) 
+            }
+
+            tdia = (tdia-bisiesto)
+            
+            var months = ""
+            if((tano%4) == 0){
+                months = {"Ene":0,"Feb":31,"Mar":60,"Abr":91,"May":121,"Jun":152,"Jul":182,"Ago":213,"Sep":244,"Oct":274,"Nov":305,"Dic":335}
+            } else {
+                months = {"Ene":0,"Feb":31,"Mar":59,"Abr":90,"May":120,"Jun":151,"Jul":181,"Ago":212,"Sep":243,"Oct":273,"Nov":304,"Dic":334}
+            }
+            for (let key in months){ 
+                
+                if(months[key]<=tdia && ((months[tmes]) < months[key])){
+                    tmes = key
+                }
+                
+            }
+
+            tdia = (tdia-(months[tmes]))
+
+            tdia = FormatNumToTime(tdia)
+
+            
+      }
+
+      if(ttime>0){
+
+        var seconds = FormatNumToTime(Math.floor((ttime)%60))
+        var minutes = FormatNumToTime(Math.floor((ttime/60)%60))
+        var hours = FormatNumToTime(Math.floor((ttime/(60*60))%24))
+
+        ttime = hours+":"+minutes+":"+seconds
+
+      } else {
+        ttime = "00:00:00"
+      }
+        
+      return  tdia+"/"+tmes+"/20"+tano+" "+ttime
+
+    }
+    //Cambia el formato de Mikrotick a un Formato mas Amigable. Ejemplo: "1w1d3h30m10s" = "8 Dias 03:30:10"
+    //Coloca flag en 0 cuando la hora ya tiene formato 00:00:00  
+    var MikrotickTimeToUsertime = function(Time, flag=1){
+      
+      var TempTime = ""
+      var sem = 0
+      var dia = 0
+      var hora = 0
+      var min = 0
+      var seg = 0
+      var Horas = 0
+
+      var TempTime = Time.split("w")
+      if(TempTime.length > 1){
+        sem = TempTime[0]
+        Time = TempTime[1]
+      }
+
+      var TempTime = Time.split("d")
+      if(TempTime.length > 1){
+        dia = TempTime[0]
+        Time = TempTime[1]
+      }
+
+      if(flag == 1){
+        var TempTime = Time.split("h")
+        if(TempTime.length > 1){
+          hora = TempTime[0]
+          Time = TempTime[1]
+        }
+
+        var TempTime = Time.split("m")
+        if(TempTime.length > 1){
+          min = TempTime[0]
+          Time = TempTime[1]
+        }
+
+        var TempTime = Time.split("s")
+        if(TempTime.length > 1){
+          seg = TempTime[0]
+          Time = TempTime[1]
+        }
+        
+        hora = FormatNumToTime(hora)  
+        min = FormatNumToTime(min)  
+        seg = FormatNumToTime(seg) 
+
+        Horas = hora+":"+min+":"+seg
+
+      }else{
+
+        Horas = Time
+
+      }
+
+      var Dias = (sem*7)+(dia*1)
+      
+      return Dias+" Días "+Horas
+
+    }
+
+    //Formato de tiempo. Ejemplo:[1 = 01],[9 = 09] 
+    var FormatNumToTime = function(num, flag = 0){
+        
+        if (num == 0 && flag == 1){
+          num = "01"
+        }else if(num < 10){
+          num = "0"+num
+        }
+
+        return num
+    }
+
+    </script>
+    {% block Vue_Interface %}
+    {% endblock %}
+    {% include 'app_zona/administracion/index.js.twig' %}
+  </body>
+</html>               
+                

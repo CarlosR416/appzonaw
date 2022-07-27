@@ -1,0 +1,312 @@
+{% extends "app_zona/administracion/index.conectados.twig" %}
+
+{% block table_content %}
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+      <header class="header header-sticky mb-4">
+        
+        <div class="container-fluid">
+          <button class="header-toggler px-md-0 me-md-3" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()">
+            <svg class="icon icon-lg">
+              <use xlink:href="{{path_for('base')}}/plantilla/src/node_modules/@coreui/icons/sprites/free.svg#cil-menu"></use>
+            </svg>
+          </button>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb my-0 ms-2">
+              <li class="breadcrumb-item">
+                <!-- if breadcrumb is single--><span>Administracion</span>
+              </li>
+              <li class="breadcrumb-item "><span>Conectados</span></li>
+              <li class="breadcrumb-item active"><span>Por Mac</span></li>
+            </ol>
+          </nav>
+        </div>
+      </header>
+        <div class="body flex-grow-1 px-3" id="app">
+          <table-host></table-host>
+        </div>
+      
+    </div>
+{% endblock %}
+
+
+{% block Vue_Interface %}
+
+<script>
+
+    Vue.component('table-host', {
+      data: function(){
+        return {
+          items: [],
+          count_result: 0,
+          search: '',
+          spinner_display: ""
+        }
+      },
+      methods: {
+        getHost: function(){
+            
+          fetch(document.location.origin+':3001/mikroticks/hotspot/machost')
+          .then(response => response.json())
+          .then(data => {
+            it = []
+           
+            data.forEach(function(element, key){
+              if((/192.168.88.[\d+$]/).test(element.address) && element.bypassed == "true"){
+                it.push(element)
+              }else if(element.user){
+                if(!element.comment){
+                  element.comment = "Cdate - 0"
+                }
+
+                it.push(element)
+
+              }else{
+                
+              }
+
+              
+            })
+            this.count_result = it.length
+            this.items = it
+            this.spinner_display = "display: none;"
+            
+            this.getHost()
+            
+          }, error => {
+            console.log(error)
+            
+            this.getHost()
+            
+          })
+        }
+      },
+      computed: {
+          datos() {
+            return this.items.filter(element => {
+              if(element.user){
+                return element.user.toLowerCase().includes(this.search.toLowerCase())
+              }else{
+                return element.comment.substr(18, 8).toLowerCase().includes(this.search.toLowerCase())
+              }
+            })
+          },
+      },
+      created: function(){
+        this.getHost()
+
+        
+      },
+      template: '<div class="container-lg" id="container-fluid">\
+            <div class="row">\
+                <div class="card mb-0" style="padding: 0;">\
+                    <div class="card-header"><input class="form-control" v-model="search" placeholder="Busqueda . . ." /></div>\
+                    <div class="card-body" style="padding: 0;" >\
+                        <div class="table-responsive" style="min-height: 220px;">\
+                          <table class="table border mb-0" >\
+                            <thead class="table-light fw-semibold">\
+                                <tr class="align-middle">\
+                                <th class="text-center" >Ticket</th>\
+                                <th>Descripción</th>\
+                                <th class="text-center"> Total: {{ '{{ count_result }}' }}</th>\
+                                </tr>\
+                            </thead>\
+                            <tbody>\
+                            <item-host\
+                              v-for="item in datos"\
+                              v-bind:key="item.address"\
+                              v-bind:datos="item"\
+                              v-on:disconnect_host="count_result--" \
+                            ></item-host>\
+                            </tbody>\
+                          </table>\
+                          <div class="d-flex justify-content-center">\
+                            <div class="spinner-border m-5 text-secondary" role="status" v-bind:style="spinner_display">\
+                              <span class="visually-hidden">Loading...</span>\
+                            </div>\
+                          </div>\
+                        </div>\
+                    </div>\
+                </div>\
+            </div>\
+          </div>'
+    })
+
+    Vue.component('item-host', {
+      props: ['datos'],
+      data: function(){
+        return {
+          bits: [0],
+          background: '',
+          display: ''
+        } 
+      },
+      methods: {
+        time_expires: function(){
+            var ReTime = "Indefinido"
+
+            if(this.datos.comment && (this.datos.comment.substr(0, 2) == 'FV')){
+
+                ReTime  = GetDateOfTimestamp(this.datos.comment.substr(5, 10));
+
+            }else if(this.datos.comment && this.datos.comment.substr(0, 2) == 'Cd'){
+
+                var tempTime = this.datos.comment.substr(6)
+                if(this.datos.comment == "Cdate - 0"){
+                  ReTime  = "Sin actualizar"
+                }else{
+                  ReTime  = GetDateOfTimestamp(tempTime);
+                }
+
+            }
+            
+            return ReTime
+        },
+        getPlan: function(){
+            if(this.datos.comment){
+              switch (this.datos.comment.substr(0, 2)){
+                case 'FV':
+
+                  return "Mesuales"
+                  
+                break
+
+                case 'Cd':
+                  return "Por Horas"
+                break
+              }
+            }
+        },
+        getStatus: function(){
+            if(this.datos.authorized == "true" | this.datos.bypassed == "true"){
+
+                return true
+                
+            }else{
+
+                return false
+            
+            }
+        },
+        getBites(){
+            var cadena = 0
+            
+            cadena = parseInt(this.datos["bytes-out"])-this.bits[0]
+            console.log(this.bits[0])
+            this.bits[0] = parseInt(this.datos["bytes-out"])
+            //((cadena/1000)/15).toFixed()
+            return (((cadena/100000)/5).toFixed(3))
+        },
+        time_available(){
+
+          if(this.datos.comment){
+            switch (this.datos.comment.substr(0, 2)){
+              case 'FV':
+                
+                return MikrotickTimeToUsertime(this.datos.comment.substr(36), 0)
+                
+              break
+
+              case 'Cd':
+                return this.datos['session-time-left']
+              break
+
+              default:
+                return "Indefinido"
+              break;
+            }
+          }
+
+        },
+        getName: function(){
+
+            if(this.datos.comment){
+              switch (this.datos.comment.substr(0, 2)){
+                case 'FV':
+
+                  return this.datos.comment.substr(18, 8)
+                  
+                break
+
+                case 'Cd':
+                  return this.datos["user"]
+                break
+
+                default:
+                  return this.datos.comment
+                break;
+              }
+            }
+        },
+        getMac: function(){
+          return this.datos["mac-address"]
+        },
+        disconnect_host: function(e){
+          e.preventDefault()
+          this.background = "background: #e1e1e1;"
+          this.background_updated = true
+          this.display = 'display: none;'
+          var url = ''
+          if(this.datos.user){
+            url = document.location.origin+":3001/mikroticks/hotspot/active/remove/"
+          }else{
+            url = document.location.origin+":3001/mikroticks/hotspot/host/remove/"
+          }
+
+          url += this.datos[".id"]
+
+          fetch(url)
+          .then(res => res.json())
+          .then(data => {
+
+            alert("Usuario desconectado")
+            
+          }, error => {
+            alert('Error de conexion')
+          })
+          
+
+          this.$emit('disconnect_host')
+          //console.log('desconectado'+ this.datos.address)
+        }
+      },
+      updated: function(){
+
+        if(this.background_updated){
+          this.background_updated = false
+          
+        }else if(this.background == "background: #e1e1e1;"){
+          this.background = ''
+          this.display = ''
+         
+        }
+
+      },
+      template: '<tr class="align-middle" v-bind:style="display">\
+                      <td class="text-center">\
+                          <div ><b>{{ '{{ getName() }}' }}</b></div>\
+                          <div class="small text-medium-emphasis">{{ '{{ getMac() }}' }}</div>\
+                      </td>\
+                      <td>\
+                          <div class="small text-medium-emphasis"><b>Plan:</b> {{ '{{ getPlan() }}' }}</div>\
+                          <div class="small text-medium-emphasis"><b>Disponible:</b> {{'{{ time_available() }}'}} </div>\
+                          <div class="small text-medium-emphasis"><b>Caduca:</b> {{'{{ time_expires() }}'}} </div>\
+                      </td>\
+                      <td class="text-center">\
+                          <div class="dropdown">\
+                          <button class="btn btn-transparent p-0" type="button" data-coreui-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\
+                              <svg class="icon">\
+                              <use xlink:href="{{path_for('base')}}plantilla/src/node_modules/@coreui/icons/sprites/free.svg#cil-options"></use>\
+                              </svg>\
+                          </button>\
+                          <div class="dropdown-menu dropdown-menu-end" >\
+                            <a class="dropdown-item text-danger" href="#" v-on:click="disconnect_host">Desconectar</a>\
+                          </div>\
+                          </div>\
+                      </td>\
+                  </tr>'
+    })
+
+</script>
+
+{% endblock %}
+        

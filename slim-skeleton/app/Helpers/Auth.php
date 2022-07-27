@@ -23,7 +23,7 @@ class Auth
 
 			return false;
 
-		}else if($Resul->pass == $pass){
+		}else if(password_verify($pass, $Resul->pass)){
 
 			$_SESSION['usuario'] = $Resul->id;
 			$_SESSION['admin'] = $Resul->admin;
@@ -46,7 +46,6 @@ class Auth
 					$path = substr($path, $pos+1);
 
 				} while ($pos);
-
 
 				$_SESSION['path'] = $args;
 
